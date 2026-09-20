@@ -8,6 +8,7 @@ import {
   listCategories,
   listCollections,
 } from '#/domain/catalog/service'
+import { getLibraryItem } from '#/domain/library/service'
 import { listPlans } from '#/domain/plans/service'
 import {
   ensureSeeded,
@@ -16,7 +17,14 @@ import {
   seedDatabase,
   syncCatalog,
 } from '#/db/seed'
-import { createTestDb, faker, makeBook, makeCategory } from '#/test/factories'
+import {
+  createTestDb,
+  faker,
+  makeBook,
+  makeCategory,
+  makeLibraryItem,
+  makeUser,
+} from '#/test/factories'
 
 let db: Db
 
@@ -74,25 +82,33 @@ describe('seedDatabase', () => {
     expect(countBooks(db)).toBe(26)
   })
 
-  it('migrates legacy rows that reuse a slug with a different id', () => {
+  it('updates legacy rows in place, preserving ids and user progress', () => {
     const legacyCategory = makeCategory(db, {
       slug: 'produtividade-foco',
-      name: 'Produtividade & Foco',
+      name: 'Categoria Antiga',
     })
     const legacyBook = makeBook(db, {
       categoryId: legacyCategory.id,
       slug: 'habitos-atomicos',
-      title: 'Hábitos Atômicos',
+      title: 'Título Antigo',
+    })
+    const user = makeUser(db)
+    makeLibraryItem(db, {
+      userId: user.id,
+      bookId: legacyBook.id,
+      status: 'in_progress',
+      progressPercent: 40,
     })
 
     const summary = syncCatalog(db)
 
     expect(summary.books).toBe(26)
     const detail = getBookDetail(db, 'habitos-atomicos')
-    expect(detail.id).not.toBe(legacyBook.id)
-    expect(detail.id).toBe('book_habitos-atomicos')
-    expect(detail.category.id).toBe('cat_produtividade-foco')
+    expect(detail.id).toBe(legacyBook.id)
+    expect(detail.title).toBe('Hábitos Atômicos')
+    expect(detail.category.id).toBe(legacyCategory.id)
     expect(countBooks(db)).toBe(26)
+    expect(getLibraryItem(db, user.id, legacyBook.id)?.progressPercent).toBe(40)
   })
 
   it('resets the catalog safely', () => {

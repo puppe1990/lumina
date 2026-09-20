@@ -1,10 +1,9 @@
 import { createHash } from 'node:crypto'
 
-import { and, eq, inArray, notInArray, sql } from 'drizzle-orm'
+import { eq, notInArray, sql } from 'drizzle-orm'
 
 import type { Db } from '#/db/client'
 import { CATALOG_BOOKS } from '#/db/catalog-data'
-import { books } from '#/db/schema'
 import * as schema from '#/db/schema'
 import { normalizeForSearch } from '#/lib/text'
 
@@ -236,7 +235,7 @@ export const CATALOG_VERSION = createHash('sha1')
   .digest('hex')
   .slice(0, 12)
 
-const id = (prefix: string, slug: string) => `${prefix}_${slug}`
+const newId = (prefix: string, slug: string) => `${prefix}_${slug}`
 
 export function resetDatabase(db: Db): void {
   const tables = [
@@ -263,9 +262,10 @@ export function resetDatabase(db: Db): void {
 }
 
 /**
- * Sincroniza o catálogo de forma idempotente, preservando usuários e progresso:
- * ids são determinísticos por slug, então os livros são atualizados no lugar e
- * apenas os títulos que saíram do acervo são removidos.
+ * Sincroniza o catálogo de forma idempotente e segura em produção:
+ * o upsert é por `slug`, então livros existentes são atualizados no lugar
+ * (preservando ids e o progresso do usuário) e apenas títulos que saíram
+ * do acervo são removidos.
  */
 export function syncCatalog(db: Db): SeedSummary {
   const now = Date.now()
@@ -274,102 +274,72 @@ export function syncCatalog(db: Db): SeedSummary {
   const categorySlugs = CATEGORIES.map((category) => category.slug)
   const collectionSlugs = COLLECTIONS.map((collection) => collection.slug)
 
-  // Migração: remove linhas antigas que compartilham o slug mas usam outro id
-  // (ex.: seeds anteriores com UUID aleatório), liberando o índice único.
-  db.delete(schema.books)
-    .where(
-      and(
-        inArray(schema.books.slug, bookSlugs),
-        notInArray(
-          schema.books.id,
-          bookSlugs.map((slug) => id('book', slug)),
-        ),
-      ),
-    )
-    .run()
-  db.delete(schema.categories)
-    .where(
-      and(
-        inArray(schema.categories.slug, categorySlugs),
-        notInArray(
-          schema.categories.id,
-          categorySlugs.map((slug) => id('cat', slug)),
-        ),
-      ),
-    )
-    .run()
-  db.delete(schema.collections)
-    .where(
-      and(
-        inArray(schema.collections.slug, collectionSlugs),
-        notInArray(
-          schema.collections.id,
-          collectionSlugs.map((slug) => id('col', slug)),
-        ),
-      ),
-    )
-    .run()
-
   for (const category of CATEGORIES) {
     db.insert(schema.categories)
-      .values({ id: id('cat', category.slug), ...category })
+      .values({ id: newId('cat', category.slug), ...category })
       .onConflictDoUpdate({
-        target: schema.categories.id,
-        set: {
-          slug: category.slug,
-          name: category.name,
-          description: category.description,
-          icon: category.icon,
-          bookCount: category.bookCount,
-        },
+        target: schema.categories.slug,
+        set: { ...category },
       })
       .run()
   }
+
+  const categoryIdBySlug = new Map(
+    db
+      .select({ slug: schema.categories.slug, id: schema.categories.id })
+      .from(schema.categories)
+      .all()
+      .map((row) => [row.slug, row.id]),
+  )
+
+  CATALOG_BOOKS.forEach((book, index) => {
+    const categoryId =
+      categoryIdBySlug.get(book.category) ?? newId('cat', book.category)
+    const derived = {
+      categoryId,
+      tagline: book.tagline,
+      description: book.description,
+      coverColor: book.color,
+      audioMinutes: 11 + ((index * 3) % 9),
+      readingMinutes: 8 + ((index * 2) % 7),
+      rating: 4.4 + ((index * 7) % 6) / 10,
+      ratingsCount: 800 + ((index * 373) % 8200),
+      isFeatured: index < 4,
+      publishedAt: now - index * 3 * DAY_MS,
+      searchIndex: normalizeForSearch(
+        `${book.title} ${book.author} ${book.tagline}`,
+      ),
+    }
+
+    db.insert(schema.books)
+      .values({
+        id: newId('book', book.slug),
+        slug: book.slug,
+        title: book.title,
+        author: book.author,
+        ...derived,
+      })
+      .onConflictDoUpdate({
+        target: schema.books.slug,
+        set: { title: book.title, author: book.author, ...derived },
+      })
+      .run()
+  })
+
+  const bookIdBySlug = new Map(
+    db
+      .select({ slug: schema.books.slug, id: schema.books.id })
+      .from(schema.books)
+      .all()
+      .map((row) => [row.slug, row.id]),
+  )
 
   let chapters = 0
   let insights = 0
   let quotes = 0
 
-  CATALOG_BOOKS.forEach((book, index) => {
-    const bookId = id('book', book.slug)
-    const categoryId = id('cat', book.category)
-
-    db.insert(schema.books)
-      .values({
-        id: bookId,
-        slug: book.slug,
-        title: book.title,
-        author: book.author,
-        categoryId,
-        tagline: book.tagline,
-        description: book.description,
-        coverColor: book.color,
-        audioMinutes: 11 + ((index * 3) % 9),
-        readingMinutes: 8 + ((index * 2) % 7),
-        rating: 4.4 + ((index * 7) % 6) / 10,
-        ratingsCount: 800 + ((index * 373) % 8200),
-        isFeatured: index < 4,
-        publishedAt: now - index * 3 * DAY_MS,
-        searchIndex: normalizeForSearch(
-          `${book.title} ${book.author} ${book.tagline}`,
-        ),
-      })
-      .onConflictDoUpdate({
-        target: schema.books.id,
-        set: {
-          slug: book.slug,
-          title: book.title,
-          author: book.author,
-          categoryId,
-          tagline: book.tagline,
-          description: book.description,
-          coverColor: book.color,
-          searchIndex: normalizeForSearch(
-            `${book.title} ${book.author} ${book.tagline}`,
-          ),
-        },
-      })
-      .run()
+  for (const book of CATALOG_BOOKS) {
+    const bookId = bookIdBySlug.get(book.slug)!
 
     db.delete(schema.bookChapters)
       .where(eq(schema.bookChapters.bookId, bookId))
@@ -384,7 +354,7 @@ export function syncCatalog(db: Db): SeedSummary {
     book.chapters.forEach((chapter, position) => {
       db.insert(schema.bookChapters)
         .values({
-          id: id('chap', `${book.slug}-${position}`),
+          id: newId('chap', `${book.slug}-${position}`),
           bookId,
           position,
           title: chapter.title,
@@ -397,7 +367,7 @@ export function syncCatalog(db: Db): SeedSummary {
     book.insights.forEach((insight, position) => {
       db.insert(schema.bookInsights)
         .values({
-          id: id('ins', `${book.slug}-${position}`),
+          id: newId('ins', `${book.slug}-${position}`),
           bookId,
           position,
           title: insight.title,
@@ -410,7 +380,7 @@ export function syncCatalog(db: Db): SeedSummary {
     book.quotes.forEach((quote, position) => {
       db.insert(schema.bookQuotes)
         .values({
-          id: id('quote', `${book.slug}-${position}`),
+          id: newId('quote', `${book.slug}-${position}`),
           bookId,
           position,
           chapterPosition: quote.chapterPosition,
@@ -420,57 +390,57 @@ export function syncCatalog(db: Db): SeedSummary {
         .run()
       quotes++
     })
-  })
+  }
 
   COLLECTIONS.forEach((collection, position) => {
-    const collectionId = id('col', collection.slug)
+    const payload = {
+      eyebrow: collection.eyebrow,
+      title: collection.title,
+      description: collection.description,
+      icon: collection.icon,
+      coverColor: collection.color,
+      position,
+    }
+
     db.insert(schema.collections)
       .values({
-        id: collectionId,
+        id: newId('col', collection.slug),
         slug: collection.slug,
-        eyebrow: collection.eyebrow,
-        title: collection.title,
-        description: collection.description,
-        icon: collection.icon,
-        coverColor: collection.color,
-        position,
+        ...payload,
       })
-      .onConflictDoUpdate({
-        target: schema.collections.id,
-        set: {
-          slug: collection.slug,
-          eyebrow: collection.eyebrow,
-          title: collection.title,
-          description: collection.description,
-          icon: collection.icon,
-          coverColor: collection.color,
-          position,
-        },
-      })
+      .onConflictDoUpdate({ target: schema.collections.slug, set: payload })
       .run()
+
+    const collectionId = db
+      .select({ id: schema.collections.id })
+      .from(schema.collections)
+      .where(eq(schema.collections.slug, collection.slug))
+      .get()!.id
 
     db.delete(schema.collectionBooks)
       .where(eq(schema.collectionBooks.collectionId, collectionId))
       .run()
 
     collection.books.forEach((bookSlug, index) => {
-      db.insert(schema.collectionBooks)
-        .values({ collectionId, bookId: id('book', bookSlug), position: index })
-        .run()
+      const bookId = bookIdBySlug.get(bookSlug)
+      if (bookId) {
+        db.insert(schema.collectionBooks)
+          .values({ collectionId, bookId, position: index })
+          .run()
+      }
     })
   })
 
   for (const plan of PLANS) {
     db.insert(schema.plans)
-      .values({ id: id('plan', plan.slug), ...plan })
-      .onConflictDoUpdate({
-        target: schema.plans.id,
-        set: { ...plan },
-      })
+      .values({ id: newId('plan', plan.slug), ...plan })
+      .onConflictDoUpdate({ target: schema.plans.slug, set: { ...plan } })
       .run()
   }
 
-  db.delete(books).where(notInArray(books.slug, bookSlugs)).run()
+  // Remove títulos/categorias/coleções que saíram do acervo (livros antes das
+  // categorias, para respeitar a chave estrangeira).
+  db.delete(schema.books).where(notInArray(schema.books.slug, bookSlugs)).run()
   db.delete(schema.categories)
     .where(notInArray(schema.categories.slug, categorySlugs))
     .run()
@@ -505,7 +475,7 @@ export function seedDatabase(db: Db): SeedSummary {
 export function isSeeded(db: Db): boolean {
   const result = db
     .select({ value: sql<number>`count(*)` })
-    .from(books)
+    .from(schema.books)
     .get()
   return (result?.value ?? 0) > 0
 }
