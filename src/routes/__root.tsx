@@ -5,6 +5,7 @@ import {
   createRootRoute,
 } from '@tanstack/react-router'
 
+import { PwaRegister } from '../components/pwa-register'
 import {
   OG_IMAGE,
   OG_IMAGE_ALT,
@@ -28,6 +29,11 @@ export const Route = createRootRoute({
       { title: SITE_TITLE },
       { name: 'description', content: SITE_DESCRIPTION },
       { name: 'theme-color', content: '#064e3b' },
+      { name: 'application-name', content: SITE_NAME },
+      { name: 'mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
+      { name: 'apple-mobile-web-app-title', content: SITE_NAME },
 
       { property: 'og:type', content: 'website' },
       { property: 'og:site_name', content: SITE_NAME },
@@ -49,7 +55,18 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-      { rel: 'apple-touch-icon', href: '/favicon.svg' },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '192x192',
+        href: '/icons/icon-192.png',
+      },
+      {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: '/apple-touch-icon.png',
+      },
+      { rel: 'manifest', href: '/manifest.webmanifest' },
       { rel: 'canonical', href: `${SITE_URL}/` },
       { rel: 'stylesheet', href: appCss },
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -87,6 +104,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <PwaRegister />
         <Scripts />
       </body>
     </html>

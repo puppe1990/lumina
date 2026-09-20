@@ -19,7 +19,7 @@
     "typecheck": "tsc --noEmit",
     "db:seed": "tsx scripts/seed.ts",
     "db:reset": "RESET=1 tsx scripts/seed.ts",
-    "og:generate": "npx --yes playwright screenshot --viewport-size=\"1200,630\" --wait-for-timeout=3500 \"file://$PWD/scripts/og.html\" public/og.png",
+    "assets:generate": "sh scripts/generate-assets.sh",
     "prepare": "husky",
     "ci": "npm run check && npm run lint && npm run typecheck && npm test && npm run build"
   },

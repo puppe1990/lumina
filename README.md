@@ -44,6 +44,7 @@ npm run lint        # ESLint
 npm run check       # Prettier --check
 npm run format      # Prettier --write + ESLint --fix
 npm run ci          # check + lint + typecheck + test + build
+npm run assets:generate # gera og.png e ícones da PWA
 ```
 
 ## Variáveis de ambiente
@@ -53,15 +54,33 @@ npm run ci          # check + lint + typecheck + test + build
 | `VITE_APP_URL`  | `http://localhost:3000` | URL pública usada nas meta tags Open Graph/Twitter (`og:image`). |
 | `DATABASE_FILE` | `data/lumina.db`        | Caminho do arquivo SQLite.                                       |
 
-## Open Graph
+## PWA
 
-O preview social (`public/og.png`, 1200×630) é gerado a partir de `scripts/og.html`:
+O app é instalável e funciona offline:
+
+- `public/manifest.webmanifest` — nome, ícones (`any` + `maskable`), `standalone`, `theme_color` e
+  atalhos para Explorar/Biblioteca.
+- `public/sw.js` — service worker com pré-cache do shell, **network-first** para navegação (com
+  fallback para `public/offline.html`) e **stale-while-revalidate** para assets estáticos.
+- `src/components/pwa-register.tsx` — registra o SW em produção e exibe o prompt de instalação
+  (`beforeinstallprompt`).
+
+O service worker é registrado apenas em builds de produção. Para testar:
 
 ```bash
-npm run og:generate   # requer Chromium do Playwright
+npm run build && npm run preview
 ```
 
-As meta tags (`og:*`, `twitter:*`) e o favicon (`public/favicon.svg`) são declaradas em
+## Assets (OG + ícones)
+
+Imagem de preview social (1200×630) e ícones da PWA são gerados a partir dos templates
+`scripts/og.html` e `scripts/icon.html`:
+
+```bash
+npm run assets:generate   # requer Chromium do Playwright
+```
+
+As meta tags (`og:*`, `twitter:*`, `manifest`, favicon e `apple-touch-icon`) são declaradas em
 `src/routes/__root.tsx`, usando `VITE_APP_URL` para montar URLs absolutas.
 
 ## Qualidade de código
