@@ -23,8 +23,8 @@ describe('seedDatabase', () => {
   it('creates a rich, interconnected catalog', () => {
     const summary = seedDatabase(db)
 
-    expect(summary.categories).toBeGreaterThanOrEqual(8)
-    expect(summary.books).toBeGreaterThanOrEqual(30)
+    expect(summary.categories).toBeGreaterThanOrEqual(9)
+    expect(summary.books).toBeGreaterThanOrEqual(26)
     expect(countBooks(db)).toBe(summary.books)
     expect(listCategories(db).length).toBe(summary.categories)
     expect(listPlans(db).length).toBeGreaterThanOrEqual(2)
@@ -35,9 +35,10 @@ describe('seedDatabase', () => {
 
     for (const book of listBooks(db)) {
       const detail = getBookDetail(db, book.id)
-      expect(detail.chapters.length).toBeGreaterThan(0)
-      expect(detail.insights.length).toBeGreaterThan(0)
-      expect(detail.quotes.length).toBeGreaterThan(0)
+      expect(detail.chapters).toHaveLength(4)
+      expect(detail.insights).toHaveLength(4)
+      expect(detail.quotes).toHaveLength(2)
+      expect(detail.description.length).toBeGreaterThan(80)
     }
 
     const allCollections = listCollections(db)

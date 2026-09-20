@@ -47,6 +47,13 @@ npm run ci          # check + lint + typecheck + test + build
 npm run assets:generate # gera og.png e ícones da PWA
 ```
 
+## Catálogo
+
+O catálogo (`src/db/catalog-data.ts`) é alinhado ao acervo local de ebooks em
+`~/Desktop/estudo/Ebooks`: 26 livros que existem de fato na biblioteca, cada um com resumo
+editorial real — 4 capítulos, 4 ideias-chave e 2 citações — distribuídos em 9 categorias e 8
+coleções temáticas. Títulos sem correspondência no acervo foram removidos.
+
 ## Variáveis de ambiente
 
 | Variável        | Padrão                  | Descrição                                                        |
