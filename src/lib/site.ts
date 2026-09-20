@@ -1,4 +1,9 @@
-const rawUrl = import.meta.env.VITE_APP_URL ?? 'http://localhost:3000'
+const PRODUCTION_URL = 'https://lumina.apps.gestaobem.com'
+const DEVELOPMENT_URL = 'http://localhost:3000'
+
+const rawUrl =
+  import.meta.env.VITE_APP_URL ??
+  (import.meta.env.PROD ? PRODUCTION_URL : DEVELOPMENT_URL)
 
 export const SITE_URL = String(rawUrl).replace(/\/$/, '')
 export const SITE_NAME = 'Lúmina'
