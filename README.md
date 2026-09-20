@@ -46,6 +46,24 @@ npm run format      # Prettier --write + ESLint --fix
 npm run ci          # check + lint + typecheck + test + build
 ```
 
+## Variáveis de ambiente
+
+| Variável        | Padrão                  | Descrição                                                        |
+| --------------- | ----------------------- | ---------------------------------------------------------------- |
+| `VITE_APP_URL`  | `http://localhost:3000` | URL pública usada nas meta tags Open Graph/Twitter (`og:image`). |
+| `DATABASE_FILE` | `data/lumina.db`        | Caminho do arquivo SQLite.                                       |
+
+## Open Graph
+
+O preview social (`public/og.png`, 1200×630) é gerado a partir de `scripts/og.html`:
+
+```bash
+npm run og:generate   # requer Chromium do Playwright
+```
+
+As meta tags (`og:*`, `twitter:*`) e o favicon (`public/favicon.svg`) são declaradas em
+`src/routes/__root.tsx`, usando `VITE_APP_URL` para montar URLs absolutas.
+
 ## Qualidade de código
 
 - **CI** (`.github/workflows/ci.yml`): roda em push/PR para `main` — Prettier, ESLint, typecheck,

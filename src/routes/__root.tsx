@@ -5,6 +5,14 @@ import {
   createRootRoute,
 } from '@tanstack/react-router'
 
+import {
+  OG_IMAGE,
+  OG_IMAGE_ALT,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+} from '../lib/site'
 import appCss from '../styles.css?url'
 import { getCurrentUser } from '../server/auth'
 
@@ -17,15 +25,32 @@ export const Route = createRootRoute({
         content:
           'width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover',
       },
-      { title: 'Lúmina — Resuma os maiores livros em 15 minutos' },
-      {
-        name: 'description',
-        content:
-          'Resumos em áudio e texto dos maiores livros de negócios, liderança e desenvolvimento pessoal. Sabedoria condensada em 15 minutos por dia.',
-      },
+      { title: SITE_TITLE },
+      { name: 'description', content: SITE_DESCRIPTION },
       { name: 'theme-color', content: '#064e3b' },
+
+      { property: 'og:type', content: 'website' },
+      { property: 'og:site_name', content: SITE_NAME },
+      { property: 'og:locale', content: 'pt_BR' },
+      { property: 'og:url', content: `${SITE_URL}/` },
+      { property: 'og:title', content: SITE_TITLE },
+      { property: 'og:description', content: SITE_DESCRIPTION },
+      { property: 'og:image', content: OG_IMAGE },
+      { property: 'og:image:type', content: 'image/png' },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
+      { property: 'og:image:alt', content: OG_IMAGE_ALT },
+
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: SITE_TITLE },
+      { name: 'twitter:description', content: SITE_DESCRIPTION },
+      { name: 'twitter:image', content: OG_IMAGE },
+      { name: 'twitter:image:alt', content: OG_IMAGE_ALT },
     ],
     links: [
+      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      { rel: 'apple-touch-icon', href: '/favicon.svg' },
+      { rel: 'canonical', href: `${SITE_URL}/` },
       { rel: 'stylesheet', href: appCss },
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
       {
