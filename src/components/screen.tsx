@@ -14,7 +14,11 @@ export function Screen({
 }) {
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-[430px] flex-col bg-surface shadow-[0_0_60px_rgba(15,23,42,0.08)]">
-      <main className={`flex flex-1 flex-col ${nav ? 'pb-20' : ''} ${className}`}>{children}</main>
+      <main
+        className={`flex flex-1 flex-col ${nav ? 'pb-20' : ''} ${className}`}
+      >
+        {children}
+      </main>
       {nav ? <BottomNav active={nav} /> : null}
     </div>
   )

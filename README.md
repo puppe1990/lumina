@@ -1,19 +1,21 @@
 # Lúmina
 
+[![CI](https://github.com/puppe1990/lumina/actions/workflows/ci.yml/badge.svg)](https://github.com/puppe1990/lumina/actions/workflows/ci.yml)
+
 App de assinatura de resumos de livros em áudio e texto. Reconstrução do design "Editorial
 Intellect" (arquivos Stitch) como uma aplicação full-stack com **TanStack Start**, **SQLite** e
 **TDD com Faker**.
 
 ## Stack
 
-| Camada    | Tecnologia                                          |
-| --------- | --------------------------------------------------- |
+| Camada    | Tecnologia                                            |
+| --------- | ----------------------------------------------------- |
 | Framework | TanStack Start (React 19 + Vite 8, file-based routes) |
-| Estilo    | Tailwind CSS v4 com design tokens do `DESIGN.md`     |
-| Banco     | SQLite (`better-sqlite3`) + Drizzle ORM              |
-| Testes    | Vitest + `@faker-js/faker` (factories de teste)      |
-| Validação | Zod (validators das server functions)                |
-| Auth      | Sessões com cookie httpOnly + hash scrypt            |
+| Estilo    | Tailwind CSS v4 com design tokens do `DESIGN.md`      |
+| Banco     | SQLite (`better-sqlite3`) + Drizzle ORM               |
+| Testes    | Vitest + `@faker-js/faker` (factories de teste)       |
+| Validação | Zod (validators das server functions)                 |
+| Auth      | Sessões com cookie httpOnly + hash scrypt             |
 
 ## Rodando
 
@@ -36,10 +38,20 @@ npm run dev         # servidor de desenvolvimento
 npm run build       # build de produção
 npm test            # Vitest (72 testes)
 npm run test:watch  # Vitest em watch
+npm run test:coverage # Vitest com cobertura
 npm run typecheck   # tsc --noEmit
 npm run lint        # ESLint
-npm run format      # Prettier + ESLint --fix
+npm run check       # Prettier --check
+npm run format      # Prettier --write + ESLint --fix
+npm run ci          # check + lint + typecheck + test + build
 ```
+
+## Qualidade de código
+
+- **CI** (`.github/workflows/ci.yml`): roda em push/PR para `main` — Prettier, ESLint, typecheck,
+  testes e build.
+- **Pre-commit** (`.husky/pre-commit`): roda `lint-staged` (Prettier + ESLint nos arquivos
+  alterados) e a suíte de testes antes de cada commit.
 
 ## Arquitetura
 

@@ -2,7 +2,12 @@ export function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <span className="flex items-center gap-2">
       <span className="grid h-8 w-8 place-items-center rounded-md bg-primary-container">
-        <svg viewBox="0 0 120 120" className="h-8 w-8" fill="none" aria-hidden="true">
+        <svg
+          viewBox="0 0 120 120"
+          className="h-8 w-8"
+          fill="none"
+          aria-hidden="true"
+        >
           <path
             d="M60 34v50M60 84c-7-4.5-19-5.4-28-2V39c9-3.4 21-2.5 28 2M60 84c7-4.5 19-5.4 28-2V39c-9-3.4-21-2.5-28 2"
             stroke="#F59E0B"

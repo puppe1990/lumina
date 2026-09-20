@@ -21,7 +21,8 @@ export const Route = createFileRoute('/reader/$bookId')({
       throw redirect({ to: '/login' })
     }
   },
-  loader: async ({ params }) => getBookDetailData({ data: { idOrSlug: params.bookId } }),
+  loader: async ({ params }) =>
+    getBookDetailData({ data: { idOrSlug: params.bookId } }),
   component: ReaderPage,
 })
 
@@ -49,7 +50,8 @@ function ReaderPage() {
 
   const lastPersisted = useRef(position)
 
-  const progressPercent = totalSeconds > 0 ? Math.min(100, (position / totalSeconds) * 100) : 0
+  const progressPercent =
+    totalSeconds > 0 ? Math.min(100, (position / totalSeconds) * 100) : 0
 
   useEffect(() => {
     if (!playing) {
@@ -123,7 +125,9 @@ function ReaderPage() {
       return
     }
     const quote = book.quotes[0]
-    const result = await addHighlightAction({ data: { bookId: book.id, text: quote.text } })
+    const result = await addHighlightAction({
+      data: { bookId: book.id, text: quote.text },
+    })
     if (!result.ok) {
       show(result.error.message)
       return
@@ -149,9 +153,13 @@ function ReaderPage() {
           <button
             type="button"
             onClick={toggleSaved}
-            aria-label={saved ? 'Remover da biblioteca' : 'Salvar na biblioteca'}
+            aria-label={
+              saved ? 'Remover da biblioteca' : 'Salvar na biblioteca'
+            }
             className={`grid h-10 w-10 place-items-center rounded-full transition-all active:scale-95 ${
-              saved ? 'bg-secondary-fixed text-secondary' : 'bg-surface-container text-on-surface-variant'
+              saved
+                ? 'bg-secondary-fixed text-secondary'
+                : 'bg-surface-container text-on-surface-variant'
             }`}
           >
             <Icon name="bookmark" filled={saved} className="text-[20px]" />
@@ -181,19 +189,25 @@ function ReaderPage() {
             </span>
             <span className="h-1 w-1 rounded-full bg-outline-variant" />
             <span className="flex items-center gap-1 text-[10px] font-bold text-secondary">
-              <Icon name="headphones" className="text-[14px]" /> {book.audioMinutes} min
+              <Icon name="headphones" className="text-[14px]" />{' '}
+              {book.audioMinutes} min
             </span>
             <span className="h-1 w-1 rounded-full bg-outline-variant" />
             <span className="flex items-center gap-1 text-[10px] text-on-surface-variant">
-              <Icon name="auto_stories" className="text-[14px]" /> {book.readingMinutes} min
+              <Icon name="auto_stories" className="text-[14px]" />{' '}
+              {book.readingMinutes} min
             </span>
           </div>
           <h1 className="font-serif mt-1 text-[26px] leading-tight font-semibold tracking-tight text-primary">
             {book.title}
           </h1>
-          <p className="max-w-sm text-[13px] text-on-surface-variant">{book.tagline}</p>
+          <p className="max-w-sm text-[13px] text-on-surface-variant">
+            {book.tagline}
+          </p>
           <div className="mt-1 flex items-center gap-2">
-            <span className="text-[12px] font-semibold text-on-surface">{book.author}</span>
+            <span className="text-[12px] font-semibold text-on-surface">
+              {book.author}
+            </span>
             <span className="h-1 w-1 rounded-full bg-outline-variant" />
             <span className="flex items-center text-secondary">
               <Icon name="star" filled className="text-[16px]" />
@@ -238,14 +252,18 @@ function ReaderPage() {
             />
             <div className="flex items-center justify-between text-[10px] text-on-surface-variant">
               <span>{formatDuration(position)}</span>
-              <span className="text-outline">{formatDuration(totalSeconds)}</span>
+              <span className="text-outline">
+                {formatDuration(totalSeconds)}
+              </span>
             </div>
           </div>
 
           <div className="flex items-center justify-between pt-1">
             <button
               type="button"
-              onClick={() => setSpeedIndex((index) => (index + 1) % SPEEDS.length)}
+              onClick={() =>
+                setSpeedIndex((index) => (index + 1) % SPEEDS.length)
+              }
               className="rounded-full bg-surface-container px-2.5 py-1 text-[12px] font-semibold text-on-surface active:scale-95"
             >
               {SPEEDS[speedIndex]}
@@ -265,12 +283,18 @@ function ReaderPage() {
                 onClick={() => setPlaying((value) => !value)}
                 className="grid h-14 w-14 place-items-center rounded-full bg-primary-container text-on-primary shadow-[0_8px_20px_rgba(6,78,59,0.3)] active:scale-95"
               >
-                <Icon name={playing ? 'pause' : 'play_arrow'} filled className="text-[32px] text-secondary-container" />
+                <Icon
+                  name={playing ? 'pause' : 'play_arrow'}
+                  filled
+                  className="text-[32px] text-secondary-container"
+                />
               </button>
               <button
                 type="button"
                 aria-label="Avançar 15 segundos"
-                onClick={() => setPosition((value) => Math.min(totalSeconds, value + 15))}
+                onClick={() =>
+                  setPosition((value) => Math.min(totalSeconds, value + 15))
+                }
                 className="grid h-10 w-10 place-items-center rounded-full text-on-surface-variant active:scale-90"
               >
                 <Icon name="forward_media" className="text-[24px]" />
@@ -294,7 +318,9 @@ function ReaderPage() {
             type="button"
             onClick={() => setTab('summary')}
             className={`flex-1 rounded-full px-3 py-2 text-center text-[12px] font-semibold transition-all ${
-              tab === 'summary' ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant'
+              tab === 'summary'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'text-on-surface-variant'
             }`}
           >
             Resumo Editorial
@@ -303,7 +329,9 @@ function ReaderPage() {
             type="button"
             onClick={() => setTab('insights')}
             className={`flex-1 rounded-full px-3 py-2 text-center text-[12px] font-semibold transition-all ${
-              tab === 'insights' ? 'bg-primary text-on-primary shadow-sm' : 'text-on-surface-variant'
+              tab === 'insights'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'text-on-surface-variant'
             }`}
           >
             Ideias-Chave ({book.insights.length})
@@ -355,10 +383,16 @@ function ReaderPage() {
                     {item.title}
                   </span>
                   {chapter === item.position ? (
-                    <Icon name="check_circle" filled className="text-[20px] text-primary" />
+                    <Icon
+                      name="check_circle"
+                      filled
+                      className="text-[20px] text-primary"
+                    />
                   ) : null}
                 </button>
-                <p className="text-[15px] leading-relaxed text-on-surface/90">{item.body}</p>
+                <p className="text-[15px] leading-relaxed text-on-surface/90">
+                  {item.body}
+                </p>
                 {(quotesByChapter.get(item.position) ?? []).map((quote) => (
                   <div
                     key={quote.id}
@@ -373,12 +407,16 @@ function ReaderPage() {
                     <div className="relative z-10 mt-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <span className="h-0.5 w-6 bg-secondary-container" />
-                        <span className="text-[12px] font-bold text-secondary">{quote.author}</span>
+                        <span className="text-[12px] font-bold text-secondary">
+                          {quote.author}
+                        </span>
                       </div>
                       <button
                         type="button"
                         onClick={() => {
-                          void navigator.clipboard.writeText(`“${quote.text}” — ${quote.author}`)
+                          void navigator.clipboard.writeText(
+                            `“${quote.text}” — ${quote.author}`,
+                          )
                           show('Citação copiada!')
                         }}
                         className="flex items-center gap-1 text-[10px] text-on-surface-variant transition-colors hover:text-primary"
@@ -402,16 +440,22 @@ function ReaderPage() {
             {completed ? 'Síntese concluída!' : 'Concluiu esta síntese?'}
           </h3>
           <p className="max-w-xs text-[13px] text-on-surface-variant">
-            Fixe o aprendizado marcando este resumo como lido ou salve uma citação nas suas ideias.
+            Fixe o aprendizado marcando este resumo como lido ou salve uma
+            citação nas suas ideias.
           </p>
           <button
             type="button"
             onClick={handleComplete}
             className={`flex w-full items-center justify-center gap-2 rounded-full py-3 text-[14px] font-semibold shadow-md transition-transform active:scale-95 ${
-              completed ? 'bg-secondary-container text-on-secondary-fixed' : 'bg-primary-container text-on-primary'
+              completed
+                ? 'bg-secondary-container text-on-secondary-fixed'
+                : 'bg-primary-container text-on-primary'
             }`}
           >
-            <Icon name={completed ? 'task_alt' : 'check_circle'} className="text-[20px]" />
+            <Icon
+              name={completed ? 'task_alt' : 'check_circle'}
+              className="text-[20px]"
+            />
             {completed ? 'Concluído com Sucesso!' : 'Marcar Concluído'}
           </button>
         </div>
@@ -420,7 +464,9 @@ function ReaderPage() {
       <div className="pointer-events-none fixed bottom-20 left-1/2 z-40 flex -translate-x-1/2 items-center gap-4 rounded-full bg-inverse-surface/90 px-4 py-2 text-inverse-on-surface shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-md">
         <button
           type="button"
-          onClick={() => setFontIndex((index) => (index + 1) % FONT_SCALES.length)}
+          onClick={() =>
+            setFontIndex((index) => (index + 1) % FONT_SCALES.length)
+          }
           className="pointer-events-auto flex items-center gap-1 text-[12px] font-semibold hover:text-secondary-fixed-dim"
         >
           <Icon name="format_size" className="text-[18px]" />

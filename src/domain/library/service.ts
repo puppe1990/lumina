@@ -1,7 +1,13 @@
 import { and, desc, eq, inArray, ne, notInArray, sql } from 'drizzle-orm'
 
 import type { Db } from '#/db/client'
-import { books, categories, libraryItems, userHighlights, userInterests } from '#/db/schema'
+import {
+  books,
+  categories,
+  libraryItems,
+  userHighlights,
+  userInterests,
+} from '#/db/schema'
 import { AppError } from '#/domain/errors'
 
 import type { Book, LibraryItem } from '#/test/factories'
@@ -54,19 +60,34 @@ function ensureBook(db: Db, bookId: string): Book {
   return book
 }
 
-function findItem(db: Db, userId: string, bookId: string): LibraryItem | undefined {
+function findItem(
+  db: Db,
+  userId: string,
+  bookId: string,
+): LibraryItem | undefined {
   return db
     .select()
     .from(libraryItems)
-    .where(and(eq(libraryItems.userId, userId), eq(libraryItems.bookId, bookId)))
+    .where(
+      and(eq(libraryItems.userId, userId), eq(libraryItems.bookId, bookId)),
+    )
     .get()
 }
 
-export function getLibraryItem(db: Db, userId: string, bookId: string): LibraryItem | null {
+export function getLibraryItem(
+  db: Db,
+  userId: string,
+  bookId: string,
+): LibraryItem | null {
   return findItem(db, userId, bookId) ?? null
 }
 
-export function saveBook(db: Db, userId: string, bookId: string, now = Date.now()): LibraryItem {
+export function saveBook(
+  db: Db,
+  userId: string,
+  bookId: string,
+  now = Date.now(),
+): LibraryItem {
   ensureBook(db, bookId)
 
   const existing = findItem(db, userId, bookId)
@@ -91,7 +112,9 @@ export function saveBook(db: Db, userId: string, bookId: string, now = Date.now(
 
 export function removeBook(db: Db, userId: string, bookId: string): void {
   db.delete(libraryItems)
-    .where(and(eq(libraryItems.userId, userId), eq(libraryItems.bookId, bookId)))
+    .where(
+      and(eq(libraryItems.userId, userId), eq(libraryItems.bookId, bookId)),
+    )
     .run()
 }
 
@@ -111,7 +134,8 @@ export function updateProgress(
   ensureBook(db, bookId)
 
   const progressPercent = clampProgress(input.progressPercent)
-  const status: LibraryStatus = progressPercent >= MAX_PROGRESS ? 'completed' : 'in_progress'
+  const status: LibraryStatus =
+    progressPercent >= MAX_PROGRESS ? 'completed' : 'in_progress'
   const existing = findItem(db, userId, bookId)
 
   if (!existing) {
@@ -131,14 +155,18 @@ export function updateProgress(
   }
 
   const completedAt =
-    status === 'completed' ? (existing.completedAt ?? now) : existing.completedAt
+    status === 'completed'
+      ? (existing.completedAt ?? now)
+      : existing.completedAt
 
   db.update(libraryItems)
     .set({
       status,
       progressPercent,
-      lastPositionSeconds: input.lastPositionSeconds ?? existing.lastPositionSeconds,
-      lastChapterPosition: input.lastChapterPosition ?? existing.lastChapterPosition,
+      lastPositionSeconds:
+        input.lastPositionSeconds ?? existing.lastPositionSeconds,
+      lastChapterPosition:
+        input.lastChapterPosition ?? existing.lastChapterPosition,
       completedAt,
       updatedAt: now,
     })
@@ -148,7 +176,12 @@ export function updateProgress(
   return findItem(db, userId, bookId)!
 }
 
-export function completeBook(db: Db, userId: string, bookId: string, now = Date.now()): LibraryItem {
+export function completeBook(
+  db: Db,
+  userId: string,
+  bookId: string,
+  now = Date.now(),
+): LibraryItem {
   const book = ensureBook(db, bookId)
   return updateProgress(
     db,
@@ -180,7 +213,11 @@ function libraryQuery(db: Db) {
     .innerJoin(categories, eq(categories.id, books.categoryId))
 }
 
-export function getLibrary(db: Db, userId: string, status?: LibraryStatus): LibraryEntry[] {
+export function getLibrary(
+  db: Db,
+  userId: string,
+  status?: LibraryStatus,
+): LibraryEntry[] {
   const rows = libraryQuery(db)
     .where(
       status
@@ -198,7 +235,11 @@ export function getLibrary(db: Db, userId: string, status?: LibraryStatus): Libr
   }))
 }
 
-export function getContinueListening(db: Db, userId: string, limit = 3): LibraryEntry[] {
+export function getContinueListening(
+  db: Db,
+  userId: string,
+  limit = 3,
+): LibraryEntry[] {
   const rows = libraryQuery(db)
     .where(
       and(
@@ -239,8 +280,10 @@ export function getLibraryStats(db: Db, userId: string): LibraryStats {
   )
 
   return {
-    completedCount: rows.filter((row) => row.item.status === 'completed').length,
-    inProgressCount: rows.filter((row) => row.item.status === 'in_progress').length,
+    completedCount: rows.filter((row) => row.item.status === 'completed')
+      .length,
+    inProgressCount: rows.filter((row) => row.item.status === 'in_progress')
+      .length,
     savedCount: rows.filter((row) => row.item.status === 'saved').length,
     audioMinutes: Math.round(audioMinutes),
     audioHours: Math.round((audioMinutes / 60) * 10) / 10,
@@ -277,7 +320,11 @@ export function addHighlight(
   }
 }
 
-export function listHighlights(db: Db, userId: string, limit = 20): HighlightEntry[] {
+export function listHighlights(
+  db: Db,
+  userId: string,
+  limit = 20,
+): HighlightEntry[] {
   return db
     .select({
       id: userHighlights.id,
@@ -295,13 +342,26 @@ export function listHighlights(db: Db, userId: string, limit = 20): HighlightEnt
     .all()
 }
 
-export function removeHighlight(db: Db, userId: string, highlightId: string): void {
+export function removeHighlight(
+  db: Db,
+  userId: string,
+  highlightId: string,
+): void {
   db.delete(userHighlights)
-    .where(and(eq(userHighlights.userId, userId), eq(userHighlights.id, highlightId)))
+    .where(
+      and(
+        eq(userHighlights.userId, userId),
+        eq(userHighlights.id, highlightId),
+      ),
+    )
     .run()
 }
 
-export function getRecommendations(db: Db, userId: string, limit = 4): RecommendedBook[] {
+export function getRecommendations(
+  db: Db,
+  userId: string,
+  limit = 4,
+): RecommendedBook[] {
   const interests = db
     .select({ categoryId: userInterests.categoryId })
     .from(userInterests)
@@ -311,7 +371,12 @@ export function getRecommendations(db: Db, userId: string, limit = 4): Recommend
   const completed = db
     .select({ bookId: libraryItems.bookId })
     .from(libraryItems)
-    .where(and(eq(libraryItems.userId, userId), eq(libraryItems.status, 'completed')))
+    .where(
+      and(
+        eq(libraryItems.userId, userId),
+        eq(libraryItems.status, 'completed'),
+      ),
+    )
     .all()
     .map((row) => row.bookId)
 
@@ -329,12 +394,20 @@ export function getRecommendations(db: Db, userId: string, limit = 4): Recommend
   }
 
   return db
-    .select({ book: books, categoryName: categories.name, categorySlug: categories.slug })
+    .select({
+      book: books,
+      categoryName: categories.name,
+      categorySlug: categories.slug,
+    })
     .from(books)
     .innerJoin(categories, eq(categories.id, books.categoryId))
     .where(conditions.length ? and(...conditions) : undefined)
     .orderBy(desc(books.rating))
     .limit(limit)
     .all()
-    .map((row) => ({ ...row.book, categoryName: row.categoryName, categorySlug: row.categorySlug }))
+    .map((row) => ({
+      ...row.book,
+      categoryName: row.categoryName,
+      categorySlug: row.categorySlug,
+    }))
 }

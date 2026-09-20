@@ -1,4 +1,9 @@
-import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router'
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRoute,
+} from '@tanstack/react-router'
 
 import appCss from '../styles.css?url'
 import { getCurrentUser } from '../server/auth'
@@ -9,7 +14,8 @@ export const Route = createRootRoute({
       { charSet: 'utf-8' },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover',
+        content:
+          'width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover',
       },
       { title: 'Lúmina — Resuma os maiores livros em 15 minutos' },
       {
@@ -22,7 +28,11 @@ export const Route = createRootRoute({
     links: [
       { rel: 'stylesheet', href: appCss },
       { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-      { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' },
+      {
+        rel: 'preconnect',
+        href: 'https://fonts.gstatic.com',
+        crossOrigin: 'anonymous',
+      },
       {
         rel: 'stylesheet',
         href: 'https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap',

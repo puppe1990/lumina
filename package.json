@@ -15,9 +15,21 @@
     "check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "db:seed": "tsx scripts/seed.ts",
-    "db:reset": "RESET=1 tsx scripts/seed.ts"
+    "db:reset": "RESET=1 tsx scripts/seed.ts",
+    "prepare": "husky",
+    "ci": "npm run check && npm run lint && npm run typecheck && npm test && npm run build"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,css,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.18",
@@ -45,6 +57,8 @@
     "@vitest/coverage-v8": "^5.0.1",
     "drizzle-kit": "^0.31.10",
     "eslint": "^9.20.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
     "prettier": "^3.8.1",
     "typescript": "^6.0.2",
     "vite": "^8.0.0",

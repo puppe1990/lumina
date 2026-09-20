@@ -8,7 +8,12 @@ const ITEMS: Array<{ key: NavKey; label: string; icon: string; to: string }> = [
   { key: 'explorar', label: 'Explorar', icon: 'explore', to: '/explore' },
   { key: 'leitor', label: 'Leitor', icon: 'menu_book', to: '/reader' },
   { key: 'planos', label: 'Planos', icon: 'workspace_premium', to: '/plans' },
-  { key: 'biblioteca', label: 'Biblioteca', icon: 'local_library', to: '/library' },
+  {
+    key: 'biblioteca',
+    label: 'Biblioteca',
+    icon: 'local_library',
+    to: '/library',
+  },
 ]
 
 export function BottomNav({ active }: { active: NavKey }) {
@@ -27,8 +32,14 @@ export function BottomNav({ active }: { active: NavKey }) {
                   : 'text-on-surface-variant hover:text-on-surface'
               }`}
             >
-              <Icon name={item.icon} filled={isActive} className="text-[24px]" />
-              <span className="text-[10px] font-semibold tracking-[0.05em]">{item.label}</span>
+              <Icon
+                name={item.icon}
+                filled={isActive}
+                className="text-[24px]"
+              />
+              <span className="text-[10px] font-semibold tracking-[0.05em]">
+                {item.label}
+              </span>
             </Link>
           )
         })}

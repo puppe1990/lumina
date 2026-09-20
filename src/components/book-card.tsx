@@ -15,7 +15,13 @@ export type BookCardData = {
   rating: number
 }
 
-export function BookCard({ book, width = 'w-44' }: { book: BookCardData; width?: string }) {
+export function BookCard({
+  book,
+  width = 'w-44',
+}: {
+  book: BookCardData
+  width?: string
+}) {
   return (
     <Link
       to="/reader/$bookId"
@@ -40,7 +46,9 @@ export function BookCard({ book, width = 'w-44' }: { book: BookCardData; width?:
       <h4 className="font-serif mt-0.5 truncate text-[16px] leading-snug font-semibold text-on-surface">
         {book.title}
       </h4>
-      <p className="truncate text-[13px] text-on-surface-variant">{book.author}</p>
+      <p className="truncate text-[13px] text-on-surface-variant">
+        {book.author}
+      </p>
       <div className="mt-3 flex items-center justify-between pt-1">
         <span className="flex items-center gap-0.5 text-[10px] font-bold text-secondary">
           <Icon name="star" filled className="text-[14px]" />

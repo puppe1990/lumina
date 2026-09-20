@@ -21,7 +21,11 @@ export function useToast() {
         message ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <Icon name="check_circle" filled className="text-[18px] text-secondary-container" />
+      <Icon
+        name="check_circle"
+        filled
+        className="text-[18px] text-secondary-container"
+      />
       <span className="whitespace-nowrap">{message}</span>
     </div>
   )

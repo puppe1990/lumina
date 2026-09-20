@@ -11,7 +11,11 @@ import {
 import { currentUser, toPublicUser } from './context'
 import { db } from './db'
 import { runAction } from './result'
-import { clearSessionCookie, readSessionToken, writeSessionCookie } from './session'
+import {
+  clearSessionCookie,
+  readSessionToken,
+  writeSessionCookie,
+} from './session'
 
 const credentialsSchema = z.object({
   email: z.string().min(1),
@@ -55,7 +59,9 @@ export const signOut = createServerFn({ method: 'POST' }).handler(async () => {
   return { ok: true as const }
 })
 
-export const getCurrentUser = createServerFn({ method: 'GET' }).handler(async () => {
-  const user = currentUser()
-  return user ? toPublicUser(user) : null
-})
+export const getCurrentUser = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const user = currentUser()
+    return user ? toPublicUser(user) : null
+  },
+)

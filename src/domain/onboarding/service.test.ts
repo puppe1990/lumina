@@ -11,7 +11,13 @@ import {
   replaceInterests,
   saveGoal,
 } from '#/domain/onboarding/service'
-import { createTestDb, faker, makeCategory, makeInterest, makeUser } from '#/test/factories'
+import {
+  createTestDb,
+  faker,
+  makeCategory,
+  makeInterest,
+  makeUser,
+} from '#/test/factories'
 
 let db: Db
 
@@ -67,7 +73,9 @@ describe('interests', () => {
   it('rejects unknown categories', () => {
     const user = makeUser(db)
 
-    expect(() => replaceInterests(db, user.id, ['categoria-fantasma'])).toThrowError()
+    expect(() =>
+      replaceInterests(db, user.id, ['categoria-fantasma']),
+    ).toThrowError()
   })
 
   it('returns interests joined with category data, sorted by name', () => {
@@ -77,7 +85,10 @@ describe('interests', () => {
     makeInterest(db, user.id, zebra.id)
     makeInterest(db, user.id, alfa.id)
 
-    expect(getUserInterests(db, user.id).map((c) => c.name)).toEqual(['Alfa', 'Zebra'])
+    expect(getUserInterests(db, user.id).map((c) => c.name)).toEqual([
+      'Alfa',
+      'Zebra',
+    ])
   })
 })
 

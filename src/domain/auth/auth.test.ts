@@ -56,7 +56,11 @@ describe('registerUser', () => {
     registerUser(db, { name: 'Carolina', email, password: 'senhaSegura1' })
 
     try {
-      registerUser(db, { name: 'Outra', email: email.toUpperCase(), password: 'senhaSegura1' })
+      registerUser(db, {
+        name: 'Outra',
+        email: email.toUpperCase(),
+        password: 'senhaSegura1',
+      })
       throw new Error('expected duplicate registration to fail')
     } catch (error) {
       expect(isAppError(error)).toBe(true)
@@ -67,9 +71,24 @@ describe('registerUser', () => {
   })
 
   it.each([
-    { name: 'A', email: 'valido@example.com', password: 'senhaSegura1', field: 'name' },
-    { name: 'Ana', email: 'email-invalido', password: 'senhaSegura1', field: 'email' },
-    { name: 'Ana', email: 'valido2@example.com', password: 'curta', field: 'password' },
+    {
+      name: 'A',
+      email: 'valido@example.com',
+      password: 'senhaSegura1',
+      field: 'name',
+    },
+    {
+      name: 'Ana',
+      email: 'email-invalido',
+      password: 'senhaSegura1',
+      field: 'email',
+    },
+    {
+      name: 'Ana',
+      email: 'valido2@example.com',
+      password: 'curta',
+      field: 'password',
+    },
   ])('rejects invalid $field', ({ name, email, password }) => {
     expect(() => registerUser(db, { name, email, password })).toThrowError()
   })
@@ -92,7 +111,11 @@ describe('authenticateUser', () => {
   })
 
   it('rejects a wrong password with a generic message', () => {
-    registerUser(db, { name: 'Ray Dalio', email: 'ray@lumina.app', password: 'principios1' })
+    registerUser(db, {
+      name: 'Ray Dalio',
+      email: 'ray@lumina.app',
+      password: 'principios1',
+    })
 
     expect(() =>
       authenticateUser(db, { email: 'ray@lumina.app', password: 'errada999' }),

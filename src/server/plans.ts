@@ -12,13 +12,15 @@ import { requireUser } from './context'
 import { db } from './db'
 import { runAction } from './result'
 
-export const getPlansData = createServerFn({ method: 'GET' }).handler(async () => {
-  const user = requireUser()
-  return {
-    plans: listPlans(db()),
-    subscription: getSubscription(db(), user.id),
-  }
-})
+export const getPlansData = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const user = requireUser()
+    return {
+      plans: listPlans(db()),
+      subscription: getSubscription(db(), user.id),
+    }
+  },
+)
 
 export const subscribeToPlan = createServerFn({ method: 'POST' })
   .validator(z.object({ planSlug: z.string().min(1) }))

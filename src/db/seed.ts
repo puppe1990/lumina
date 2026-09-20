@@ -90,7 +90,8 @@ const BOOKS: BookDef[] = [
     title: 'Hábitos Atômicos',
     author: 'James Clear',
     category: 'produtividade-foco',
-    tagline: 'Um método fácil e comprovado de criar bons hábitos e se livrar dos maus.',
+    tagline:
+      'Um método fácil e comprovado de criar bons hábitos e se livrar dos maus.',
     featured: true,
     color: '#064e3b',
   },
@@ -126,7 +127,8 @@ const BOOKS: BookDef[] = [
     title: 'Princípios',
     author: 'Ray Dalio',
     category: 'lideranca-negocios',
-    tagline: 'Vida e trabalho segundo os princípios de um dos maiores investidores.',
+    tagline:
+      'Vida e trabalho segundo os princípios de um dos maiores investidores.',
     featured: true,
     color: '#262e42',
   },
@@ -482,7 +484,13 @@ const COLLECTIONS = [
       'Domine sua atenção, elimine ruídos digitais e alcance hiperfoco em projetos complexos.',
     icon: 'psychology',
     color: '#064e3b',
-    books: ['deep-work', 'foco', 'essencialismo', 'rapido-e-devagar', 'habitos-atomicos'],
+    books: [
+      'deep-work',
+      'foco',
+      'essencialismo',
+      'rapido-e-devagar',
+      'habitos-atomicos',
+    ],
   },
   {
     slug: 'lideranca-alta-performance',
@@ -492,16 +500,27 @@ const COLLECTIONS = [
       'Estratégias de comunicação, decisão sob risco e cultura de confiança mútua.',
     icon: 'diversity_3',
     color: '#262e42',
-    books: ['principios', 'comece-pelo-porque', 'good-to-great', 'os-7-habitos-das-pessoas-altamente-eficazes'],
+    books: [
+      'principios',
+      'comece-pelo-porque',
+      'good-to-great',
+      'os-7-habitos-das-pessoas-altamente-eficazes',
+    ],
   },
   {
     slug: 'liberdade-financeira',
     eyebrow: '5 Obras Essenciais',
     title: 'Liberdade Financeira',
-    description: 'Construa patrimônio com comportamento, paciência e decisões conscientes.',
+    description:
+      'Construa patrimônio com comportamento, paciência e decisões conscientes.',
     icon: 'payments',
     color: '#904d00',
-    books: ['psicologia-financeira', 'o-investidor-inteligente', 'pai-rico-pai-pobre', 'o-homem-mais-rico-da-babilonia'],
+    books: [
+      'psicologia-financeira',
+      'o-investidor-inteligente',
+      'pai-rico-pai-pobre',
+      'o-homem-mais-rico-da-babilonia',
+    ],
   },
 ]
 
@@ -579,7 +598,9 @@ export function seedDatabase(db: Db): SeedSummary {
   const categoryIdBySlug = new Map<string, string>()
   for (const category of CATEGORIES) {
     const id = randomUUID()
-    db.insert(schema.categories).values({ id, ...category }).run()
+    db.insert(schema.categories)
+      .values({ id, ...category })
+      .run()
     categoryIdBySlug.set(category.slug, id)
   }
 
@@ -633,14 +654,27 @@ export function seedDatabase(db: Db): SeedSummary {
 
     pick(INSIGHT_POOL, index, 4).forEach((insight, position) => {
       db.insert(schema.bookInsights)
-        .values({ id: randomUUID(), bookId: id, position, title: insight.title, body: insight.body })
+        .values({
+          id: randomUUID(),
+          bookId: id,
+          position,
+          title: insight.title,
+          body: insight.body,
+        })
         .run()
       insights++
     })
 
     pick(QUOTE_POOL, index, 2).forEach((text, position) => {
       db.insert(schema.bookQuotes)
-        .values({ id: randomUUID(), bookId: id, position, chapterPosition: position + 1, text, author: book.author })
+        .values({
+          id: randomUUID(),
+          bookId: id,
+          position,
+          chapterPosition: position + 1,
+          text,
+          author: book.author,
+        })
         .run()
       quotes++
     })
@@ -672,7 +706,9 @@ export function seedDatabase(db: Db): SeedSummary {
   })
 
   for (const plan of PLANS) {
-    db.insert(schema.plans).values({ id: randomUUID(), ...plan }).run()
+    db.insert(schema.plans)
+      .values({ id: randomUUID(), ...plan })
+      .run()
   }
 
   return {
@@ -687,7 +723,10 @@ export function seedDatabase(db: Db): SeedSummary {
 }
 
 export function isSeeded(db: Db): boolean {
-  const result = db.select({ value: sql<number>`count(*)` }).from(books).get()
+  const result = db
+    .select({ value: sql<number>`count(*)` })
+    .from(books)
+    .get()
   return (result?.value ?? 0) > 0
 }
 

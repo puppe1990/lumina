@@ -20,20 +20,22 @@ import { requireUser, toPublicUser } from './context'
 import { db } from './db'
 import { runAction } from './result'
 
-export const getLibraryData = createServerFn({ method: 'GET' }).handler(async () => {
-  const user = requireUser()
-  const database = db()
+export const getLibraryData = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const user = requireUser()
+    const database = db()
 
-  return {
-    user: toPublicUser(user),
-    stats: getLibraryStats(database, user.id),
-    continueListening: getContinueListening(database, user.id, 3),
-    items: getLibrary(database, user.id),
-    highlights: listHighlights(database, user.id, 20),
-    recommendations: getRecommendations(database, user.id, 4),
-    subscription: getSubscription(database, user.id),
-  }
-})
+    return {
+      user: toPublicUser(user),
+      stats: getLibraryStats(database, user.id),
+      continueListening: getContinueListening(database, user.id, 3),
+      items: getLibrary(database, user.id),
+      highlights: listHighlights(database, user.id, 20),
+      recommendations: getRecommendations(database, user.id, 4),
+      subscription: getSubscription(database, user.id),
+    }
+  },
+)
 
 export const saveBookAction = createServerFn({ method: 'POST' })
   .validator(z.object({ bookId: z.string().min(1) }))

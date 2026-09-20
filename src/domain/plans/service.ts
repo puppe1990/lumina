@@ -33,7 +33,12 @@ export function getPlanBySlug(db: Db, slug: string): Plan {
   return plan
 }
 
-export function subscribe(db: Db, userId: string, planSlug: string, now = Date.now()): Subscription {
+export function subscribe(
+  db: Db,
+  userId: string,
+  planSlug: string,
+  now = Date.now(),
+): Subscription {
   const plan = getPlanBySlug(db, planSlug)
   const isTrialing = plan.trialDays > 0
   const periodMs = isTrialing
@@ -56,7 +61,11 @@ export function subscribe(db: Db, userId: string, planSlug: string, now = Date.n
   return subscription
 }
 
-export function getSubscription(db: Db, userId: string, now = Date.now()): SubscriptionView | null {
+export function getSubscription(
+  db: Db,
+  userId: string,
+  now = Date.now(),
+): SubscriptionView | null {
   const subscription = db
     .select()
     .from(subscriptions)
@@ -68,14 +77,20 @@ export function getSubscription(db: Db, userId: string, now = Date.now()): Subsc
     return null
   }
 
-  const plan = db.select().from(plans).where(eq(plans.id, subscription.planId)).get()
+  const plan = db
+    .select()
+    .from(plans)
+    .where(eq(plans.id, subscription.planId))
+    .get()
   if (!plan) {
     return null
   }
 
   const msLeft = subscription.currentPeriodEnd - now
   const trialDaysLeft =
-    subscription.status === 'trialing' ? Math.max(0, Math.ceil(msLeft / DAY_MS)) : 0
+    subscription.status === 'trialing'
+      ? Math.max(0, Math.ceil(msLeft / DAY_MS))
+      : 0
 
   return {
     subscription,
@@ -85,7 +100,10 @@ export function getSubscription(db: Db, userId: string, now = Date.now()): Subsc
   }
 }
 
-export function cancelSubscription(db: Db, userId: string): Subscription | null {
+export function cancelSubscription(
+  db: Db,
+  userId: string,
+): Subscription | null {
   const current = db
     .select()
     .from(subscriptions)
@@ -102,7 +120,11 @@ export function cancelSubscription(db: Db, userId: string): Subscription | null 
     .where(eq(subscriptions.id, current.id))
     .run()
 
-  return db.select().from(subscriptions).where(eq(subscriptions.id, current.id)).get()!
+  return db
+    .select()
+    .from(subscriptions)
+    .where(eq(subscriptions.id, current.id))
+    .get()!
 }
 
 export function isPremium(db: Db, userId: string, now = Date.now()): boolean {
@@ -111,7 +133,8 @@ export function isPremium(db: Db, userId: string, now = Date.now()): boolean {
     return false
   }
   return (
-    (view.subscription.status === 'trialing' || view.subscription.status === 'active') &&
+    (view.subscription.status === 'trialing' ||
+      view.subscription.status === 'active') &&
     view.subscription.currentPeriodEnd > now
   )
 }

@@ -1,4 +1,9 @@
-import { randomBytes, randomUUID, scryptSync, timingSafeEqual } from 'node:crypto'
+import {
+  randomBytes,
+  randomUUID,
+  scryptSync,
+  timingSafeEqual,
+} from 'node:crypto'
 
 import { and, eq, gt } from 'drizzle-orm'
 
@@ -43,7 +48,11 @@ export function verifyPassword(password: string, stored: string): boolean {
   return timingSafeEqual(candidate, expected)
 }
 
-export function registerUser(db: Db, input: RegisterInput, now = Date.now()): User {
+export function registerUser(
+  db: Db,
+  input: RegisterInput,
+  now = Date.now(),
+): User {
   const name = input.name.trim()
   const email = input.email.trim().toLowerCase()
 
@@ -95,11 +104,17 @@ export function createSession(
 ): { token: string; expiresAt: number } {
   const token = randomBytes(32).toString('hex')
   const expiresAt = now + SESSION_TTL_MS
-  db.insert(sessions).values({ id: token, userId, expiresAt, createdAt: now }).run()
+  db.insert(sessions)
+    .values({ id: token, userId, expiresAt, createdAt: now })
+    .run()
   return { token, expiresAt }
 }
 
-export function getUserBySession(db: Db, token: string | undefined, now = Date.now()): User | null {
+export function getUserBySession(
+  db: Db,
+  token: string | undefined,
+  now = Date.now(),
+): User | null {
   if (!token) {
     return null
   }

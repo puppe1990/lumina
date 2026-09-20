@@ -1,4 +1,8 @@
-import { deleteCookie, getCookie, setCookie } from '@tanstack/react-start/server'
+import {
+  deleteCookie,
+  getCookie,
+  setCookie,
+} from '@tanstack/react-start/server'
 
 import { SESSION_COOKIE } from '#/domain/auth/service'
 
@@ -14,7 +18,9 @@ export function writeSessionCookie(token: string, expiresAt: number): void {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
-    maxAge: Math.max(0, Math.floor((expiresAt - Date.now()) / 1000)) || ONE_YEAR_SECONDS,
+    maxAge:
+      Math.max(0, Math.floor((expiresAt - Date.now()) / 1000)) ||
+      ONE_YEAR_SECONDS,
   })
 }
 

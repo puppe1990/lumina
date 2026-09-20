@@ -27,7 +27,11 @@ export type OnboardingState = {
 
 const TIME_PATTERN = /^([01]\d|2[0-3]):[0-5]\d$/
 
-export function getPreferences(db: Db, userId: string, now = Date.now()): Preferences {
+export function getPreferences(
+  db: Db,
+  userId: string,
+  now = Date.now(),
+): Preferences {
   const existing = db
     .select()
     .from(userPreferences)
@@ -57,16 +61,30 @@ export function getUserInterests(db: Db, userId: string): Category[] {
     .map((row) => row.category)
 }
 
-export function replaceInterests(db: Db, userId: string, categoryIds: string[]): Category[] {
+export function replaceInterests(
+  db: Db,
+  userId: string,
+  categoryIds: string[],
+): Category[] {
   const uniqueIds = [...new Set(categoryIds.filter(Boolean))]
 
   if (uniqueIds.length === 0) {
-    throw new AppError('VALIDATION', 'Selecione ao menos um interesse para continuar.')
+    throw new AppError(
+      'VALIDATION',
+      'Selecione ao menos um interesse para continuar.',
+    )
   }
 
-  const found = db.select().from(categories).where(inArray(categories.id, uniqueIds)).all()
+  const found = db
+    .select()
+    .from(categories)
+    .where(inArray(categories.id, uniqueIds))
+    .all()
   if (found.length !== uniqueIds.length) {
-    throw new AppError('NOT_FOUND', 'Uma das categorias selecionadas não existe.')
+    throw new AppError(
+      'NOT_FOUND',
+      'Uma das categorias selecionadas não existe.',
+    )
   }
 
   db.delete(userInterests).where(eq(userInterests.userId, userId)).run()
@@ -77,15 +95,29 @@ export function replaceInterests(db: Db, userId: string, categoryIds: string[]):
   return getUserInterests(db, userId)
 }
 
-export function saveGoal(db: Db, userId: string, input: GoalInput, now = Date.now()): Preferences {
+export function saveGoal(
+  db: Db,
+  userId: string,
+  input: GoalInput,
+  now = Date.now(),
+): Preferences {
   if (!DAILY_GOALS.includes(input.dailyGoalMinutes as DailyGoalMinutes)) {
-    throw new AppError('VALIDATION', 'Escolha uma meta diária de 10, 15 ou 30 minutos.')
+    throw new AppError(
+      'VALIDATION',
+      'Escolha uma meta diária de 10, 15 ou 30 minutos.',
+    )
   }
   if (!LEARNING_FORMATS.includes(input.preferredFormat as LearningFormat)) {
-    throw new AppError('VALIDATION', 'Escolha um formato de aprendizado válido.')
+    throw new AppError(
+      'VALIDATION',
+      'Escolha um formato de aprendizado válido.',
+    )
   }
   if (input.reminderEnabled && !TIME_PATTERN.test(input.reminderTime)) {
-    throw new AppError('VALIDATION', 'Informe um horário de lembrete válido (HH:MM).')
+    throw new AppError(
+      'VALIDATION',
+      'Informe um horário de lembrete válido (HH:MM).',
+    )
   }
 
   getPreferences(db, userId, now)
@@ -104,7 +136,11 @@ export function saveGoal(db: Db, userId: string, input: GoalInput, now = Date.no
   return getPreferences(db, userId, now)
 }
 
-export function completeOnboarding(db: Db, userId: string, now = Date.now()): Preferences {
+export function completeOnboarding(
+  db: Db,
+  userId: string,
+  now = Date.now(),
+): Preferences {
   getPreferences(db, userId, now)
   db.update(userPreferences)
     .set({ onboardingCompleted: true, updatedAt: now })

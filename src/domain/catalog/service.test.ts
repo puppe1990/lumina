@@ -38,7 +38,11 @@ describe('listCategories', () => {
     makeCategory(db, { name: 'Carreira' })
     makeCategory(db, { name: 'Negócios' })
 
-    expect(listCategories(db).map((c) => c.name)).toEqual(['Carreira', 'Finanças', 'Negócios'])
+    expect(listCategories(db).map((c) => c.name)).toEqual([
+      'Carreira',
+      'Finanças',
+      'Negócios',
+    ])
   })
 })
 
@@ -47,9 +51,15 @@ describe('listBooks', () => {
     const focus = makeCategory(db, { slug: 'foco', name: 'Foco' })
     const money = makeCategory(db, { slug: 'financas', name: 'Finanças' })
     makeBook(db, { categoryId: focus.id, title: 'Deep Work', rating: 4.9 })
-    makeBook(db, { categoryId: money.id, title: 'Psicologia Financeira', rating: 5 })
+    makeBook(db, {
+      categoryId: money.id,
+      title: 'Psicologia Financeira',
+      rating: 5,
+    })
 
-    expect(listBooks(db, { categorySlug: 'foco' }).map((b) => b.title)).toEqual(['Deep Work'])
+    expect(listBooks(db, { categorySlug: 'foco' }).map((b) => b.title)).toEqual(
+      ['Deep Work'],
+    )
     expect(listBooks(db, { categorySlug: 'todos' })).toHaveLength(2)
   })
 
@@ -67,7 +77,12 @@ describe('getFeaturedBook', () => {
   it('prefers the featured book', () => {
     const category = makeCategory(db)
     makeBook(db, { categoryId: category.id, title: 'Comum', rating: 5 })
-    makeBook(db, { categoryId: category.id, title: 'Destaque', isFeatured: true, rating: 4.2 })
+    makeBook(db, {
+      categoryId: category.id,
+      title: 'Destaque',
+      isFeatured: true,
+      rating: 4.2,
+    })
 
     expect(getFeaturedBook(db)?.title).toBe('Destaque')
   })
@@ -89,7 +104,11 @@ describe('listTrendingBooks', () => {
   it('orders by ratings count', () => {
     const category = makeCategory(db)
     makeBook(db, { categoryId: category.id, title: 'Pouco', ratingsCount: 10 })
-    makeBook(db, { categoryId: category.id, title: 'Muito', ratingsCount: 9000 })
+    makeBook(db, {
+      categoryId: category.id,
+      title: 'Muito',
+      ratingsCount: 9000,
+    })
 
     expect(listTrendingBooks(db, 1).map((b) => b.title)).toEqual(['Muito'])
   })
@@ -104,7 +123,11 @@ describe('searchBooks', () => {
       author: 'James Clear',
       tagline: 'Pequenas mudanças, resultados enormes',
     })
-    makeBook(db, { categoryId: category.id, title: 'Outro Livro', author: 'Zé Ninguém' })
+    makeBook(db, {
+      categoryId: category.id,
+      title: 'Outro Livro',
+      author: 'Zé Ninguém',
+    })
 
     expect(searchBooks(db, { query: 'atómicos' }).map((b) => b.title)).toEqual([
       'Hábitos Atômicos',
@@ -120,7 +143,10 @@ describe('searchBooks', () => {
     makeBook(db, { categoryId: habits.id, title: 'Hábitos Atômicos' })
     makeBook(db, { categoryId: money.id, title: 'Hábitos de Riqueza' })
 
-    const results = searchBooks(db, { query: 'hábitos', categorySlug: 'dinheiro' })
+    const results = searchBooks(db, {
+      query: 'hábitos',
+      categorySlug: 'dinheiro',
+    })
     expect(results.map((b) => b.title)).toEqual(['Hábitos de Riqueza'])
   })
 })
@@ -130,7 +156,10 @@ describe('collections', () => {
     const category = makeCategory(db)
     const first = makeBook(db, { categoryId: category.id, title: 'Primeiro' })
     const second = makeBook(db, { categoryId: category.id, title: 'Segundo' })
-    const collection = makeCollection(db, { title: 'Foco Profundo', position: 1 })
+    const collection = makeCollection(db, {
+      title: 'Foco Profundo',
+      position: 1,
+    })
     const earlier = makeCollection(db, { title: 'Liderança', position: 0 })
 
     db.insert(schema.collectionBooks)
@@ -159,7 +188,10 @@ describe('collections', () => {
 describe('getBookDetail', () => {
   it('hydrates chapters, insights and quotes in order', () => {
     const category = makeCategory(db)
-    const book = makeBook(db, { categoryId: category.id, title: 'Hábitos Atômicos' })
+    const book = makeBook(db, {
+      categoryId: category.id,
+      title: 'Hábitos Atômicos',
+    })
     makeChapter(db, { bookId: book.id, position: 2, title: 'Capítulo 2' })
     makeChapter(db, { bookId: book.id, position: 1, title: 'Capítulo 1' })
     makeInsight(db, { bookId: book.id, position: 2, title: 'Segunda ideia' })
@@ -170,8 +202,14 @@ describe('getBookDetail', () => {
 
     expect(detail.title).toBe('Hábitos Atômicos')
     expect(detail.category.name).toBe(category.name)
-    expect(detail.chapters.map((c) => c.title)).toEqual(['Capítulo 1', 'Capítulo 2'])
-    expect(detail.insights.map((i) => i.title)).toEqual(['Primeira ideia', 'Segunda ideia'])
+    expect(detail.chapters.map((c) => c.title)).toEqual([
+      'Capítulo 1',
+      'Capítulo 2',
+    ])
+    expect(detail.insights.map((i) => i.title)).toEqual([
+      'Primeira ideia',
+      'Segunda ideia',
+    ])
     expect(detail.quotes[0].text).toBe('Citação marcante')
   })
 

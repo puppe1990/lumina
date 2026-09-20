@@ -24,7 +24,9 @@ function InterestsPage() {
   const router = useRouter()
   const { show, toast } = useToast()
   const { categories, interests } = Route.useLoaderData()
-  const [selected, setSelected] = useState<string[]>(interests.map((category) => category.id))
+  const [selected, setSelected] = useState<string[]>(
+    interests.map((category) => category.id),
+  )
   const [submitting, setSubmitting] = useState(false)
 
   const ready = selected.length >= 3
@@ -87,15 +89,22 @@ function InterestsPage() {
       <div className="flex-1 px-5 pt-4 pb-32">
         <div className="mb-5">
           <span className="mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-primary-fixed bg-primary-fixed/30 px-2.5 py-1 text-[11px] font-semibold text-on-primary-fixed-variant">
-            <Icon name="auto_awesome" filled className="text-[14px] text-secondary" />
+            <Icon
+              name="auto_awesome"
+              filled
+              className="text-[14px] text-secondary"
+            />
             Curadoria Inteligente
           </span>
           <h1 className="font-serif text-[28px] leading-[1.18] font-bold tracking-tight text-primary">
             O que você deseja dominar ou aprimorar?
           </h1>
           <p className="mt-2 text-[13px] leading-relaxed text-on-surface-variant">
-            Selecione <strong className="font-semibold text-primary">3 ou mais tópicos</strong> para
-            refinarmos seus resumos diários em áudio e texto de 15 minutos.
+            Selecione{' '}
+            <strong className="font-semibold text-primary">
+              3 ou mais tópicos
+            </strong>{' '}
+            para refinarmos seus resumos diários em áudio e texto de 15 minutos.
           </p>
         </div>
 
@@ -105,8 +114,12 @@ function InterestsPage() {
               <Icon name="timer" filled className="text-[22px]" />
             </span>
             <div>
-              <p className="text-[12px] font-semibold text-on-surface">Sua meta diária de síntese</p>
-              <p className="text-[11px] text-on-surface-variant">1 resumo/dia (apenas 15 min)</p>
+              <p className="text-[12px] font-semibold text-on-surface">
+                Sua meta diária de síntese
+              </p>
+              <p className="text-[11px] text-on-surface-variant">
+                1 resumo/dia (apenas 15 min)
+              </p>
             </div>
           </div>
           <span className="rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-800">
@@ -140,25 +153,34 @@ function InterestsPage() {
                 <div className="mb-2 flex items-start justify-between">
                   <span
                     className={`grid h-8 w-8 place-items-center rounded-xl ${
-                      isSelected ? 'bg-primary text-amber-300' : 'bg-stone-100 text-stone-600'
+                      isSelected
+                        ? 'bg-primary text-amber-300'
+                        : 'bg-stone-100 text-stone-600'
                     }`}
                   >
                     <Icon name={category.icon} className="text-[18px]" />
                   </span>
                   <span
                     className={`grid h-5 w-5 place-items-center rounded-full ${
-                      isSelected ? 'bg-primary text-white' : 'border border-stone-300 bg-white'
+                      isSelected
+                        ? 'bg-primary text-white'
+                        : 'border border-stone-300 bg-white'
                     }`}
                   >
-                    {isSelected ? <Icon name="check" className="text-[14px]" /> : null}
+                    {isSelected ? (
+                      <Icon name="check" className="text-[14px]" />
+                    ) : null}
                   </span>
                 </div>
                 <span className="text-[14px] leading-tight font-bold text-primary">
                   {category.name}
                 </span>
-                <span className="mt-0.5 text-[11px] text-stone-600">{category.description}</span>
+                <span className="mt-0.5 text-[11px] text-stone-600">
+                  {category.description}
+                </span>
                 <span className="mt-1.5 flex items-center gap-1 text-[10px] font-medium text-primary/80">
-                  <span className="h-1 w-1 rounded-full bg-secondary-container" /> +{category.bookCount} resumos
+                  <span className="h-1 w-1 rounded-full bg-secondary-container" />{' '}
+                  +{category.bookCount} resumos
                 </span>
               </button>
             )
@@ -170,7 +192,9 @@ function InterestsPage() {
             <Icon name="recommend" filled className="text-[20px]" />
           </span>
           <div className="text-[12px] leading-snug">
-            <p className="font-semibold text-secondary-fixed">Recomendação inicial pronta:</p>
+            <p className="font-semibold text-secondary-fixed">
+              Recomendação inicial pronta:
+            </p>
             <p className="text-stone-300">
               “Hábitos Atômicos” e “Princípios” combinam com suas escolhas.
             </p>
@@ -191,7 +215,8 @@ function InterestsPage() {
           <Icon name="arrow_forward" className="text-[18px]" />
         </button>
         <p className="mt-2 text-center text-[11px] text-stone-500">
-          Você poderá alterar seus interesses e metas a qualquer momento no seu perfil.
+          Você poderá alterar seus interesses e metas a qualquer momento no seu
+          perfil.
         </p>
       </footer>
       {toast}

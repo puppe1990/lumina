@@ -37,7 +37,11 @@ describe('getPlanBySlug', () => {
 describe('subscribe', () => {
   it('starts a trial for plans with trial days', () => {
     const user = makeUser(db)
-    const plan = makePlan(db, { slug: 'anual', interval: 'yearly', trialDays: 7 })
+    const plan = makePlan(db, {
+      slug: 'anual',
+      interval: 'yearly',
+      trialDays: 7,
+    })
 
     const subscription = subscribe(db, user.id, plan.slug, 1_000)
 
@@ -47,7 +51,11 @@ describe('subscribe', () => {
 
   it('activates immediately when there is no trial', () => {
     const user = makeUser(db)
-    const plan = makePlan(db, { slug: 'mensal', interval: 'monthly', trialDays: 0 })
+    const plan = makePlan(db, {
+      slug: 'mensal',
+      interval: 'monthly',
+      trialDays: 0,
+    })
 
     const subscription = subscribe(db, user.id, plan.slug, 1_000)
 
@@ -57,8 +65,16 @@ describe('subscribe', () => {
 
   it('replaces a previous subscription instead of stacking', () => {
     const user = makeUser(db)
-    const monthly = makePlan(db, { slug: 'mensal', interval: 'monthly', trialDays: 0 })
-    const yearly = makePlan(db, { slug: 'anual', interval: 'yearly', trialDays: 7 })
+    const monthly = makePlan(db, {
+      slug: 'mensal',
+      interval: 'monthly',
+      trialDays: 0,
+    })
+    const yearly = makePlan(db, {
+      slug: 'anual',
+      interval: 'yearly',
+      trialDays: 7,
+    })
 
     subscribe(db, user.id, monthly.slug, 1_000)
     subscribe(db, user.id, yearly.slug, 2_000)

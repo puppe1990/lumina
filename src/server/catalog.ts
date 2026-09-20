@@ -27,7 +27,8 @@ export const getExploreData = createServerFn({ method: 'GET' })
     const database = db()
     const hasQuery = Boolean(data?.query?.trim())
     const categorySlug = data?.categorySlug
-    const isFiltered = hasQuery || Boolean(categorySlug && categorySlug !== 'todos')
+    const isFiltered =
+      hasQuery || Boolean(categorySlug && categorySlug !== 'todos')
 
     return {
       categories: listCategories(database),
@@ -52,13 +53,15 @@ export const getBookDetailData = createServerFn({ method: 'GET' })
     }
   })
 
-export const getReaderIndex = createServerFn({ method: 'GET' }).handler(async () => {
-  const database = db()
-  const user = requireUser()
-  const inProgress = getContinueListening(database, user.id, 1)
-  if (inProgress.length > 0) {
-    return { bookId: inProgress[0].book.id }
-  }
-  const trending = listTrendingBooks(database, 1)
-  return { bookId: trending.length > 0 ? trending[0].id : null }
-})
+export const getReaderIndex = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const database = db()
+    const user = requireUser()
+    const inProgress = getContinueListening(database, user.id, 1)
+    if (inProgress.length > 0) {
+      return { bookId: inProgress[0].book.id }
+    }
+    const trending = listTrendingBooks(database, 1)
+    return { bookId: trending.length > 0 ? trending[0].id : null }
+  },
+)

@@ -20,7 +20,13 @@ function scorePassword(value: string): number {
   return score
 }
 
-const STRENGTH_LABELS = ['Força da senha', 'Senha fraca', 'Senha razoável', 'Senha boa', 'Senha excelente e segura!']
+const STRENGTH_LABELS = [
+  'Força da senha',
+  'Senha fraca',
+  'Senha razoável',
+  'Senha boa',
+  'Senha excelente e segura!',
+]
 const BAR_COLORS = [
   'bg-surface-container-highest',
   'bg-error',
@@ -82,16 +88,21 @@ function SignUpPage() {
             Comece seu ritual diário de leitura
           </h1>
           <p className="mx-auto mt-2 max-w-xs text-[15px] text-on-surface-variant">
-            Junte-se a mais de 28 mil mentes curiosas e acesse sínteses essenciais em áudio e
-            texto.
+            Junte-se a mais de 28 mil mentes curiosas e acesse sínteses
+            essenciais em áudio e texto.
           </p>
         </header>
 
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <label className="flex flex-col gap-1.5">
-            <span className="text-[12px] font-semibold text-on-surface">Nome Completo</span>
+            <span className="text-[12px] font-semibold text-on-surface">
+              Nome Completo
+            </span>
             <span className="relative flex items-center">
-              <Icon name="person" className="pointer-events-none absolute left-3.5 text-[20px] text-on-surface-variant" />
+              <Icon
+                name="person"
+                className="pointer-events-none absolute left-3.5 text-[20px] text-on-surface-variant"
+              />
               <input
                 required
                 value={name}
@@ -103,9 +114,14 @@ function SignUpPage() {
           </label>
 
           <label className="flex flex-col gap-1.5">
-            <span className="text-[12px] font-semibold text-on-surface">E-mail</span>
+            <span className="text-[12px] font-semibold text-on-surface">
+              E-mail
+            </span>
             <span className="relative flex items-center">
-              <Icon name="mail" className="pointer-events-none absolute left-3.5 text-[20px] text-on-surface-variant" />
+              <Icon
+                name="mail"
+                className="pointer-events-none absolute left-3.5 text-[20px] text-on-surface-variant"
+              />
               <input
                 type="email"
                 required
@@ -119,11 +135,18 @@ function SignUpPage() {
 
           <label className="flex flex-col gap-1.5">
             <span className="flex items-center justify-between">
-              <span className="text-[12px] font-semibold text-on-surface">Senha Secreta</span>
-              <span className="text-[11px] text-on-surface-variant">Mínimo 8 caracteres</span>
+              <span className="text-[12px] font-semibold text-on-surface">
+                Senha Secreta
+              </span>
+              <span className="text-[11px] text-on-surface-variant">
+                Mínimo 8 caracteres
+              </span>
             </span>
             <span className="relative flex items-center">
-              <Icon name="lock" className="pointer-events-none absolute left-3.5 text-[20px] text-on-surface-variant" />
+              <Icon
+                name="lock"
+                className="pointer-events-none absolute left-3.5 text-[20px] text-on-surface-variant"
+              />
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
@@ -138,7 +161,10 @@ function SignUpPage() {
                 onClick={() => setShowPassword((value) => !value)}
                 className="absolute right-3 flex h-8 w-8 items-center justify-center rounded-full text-on-surface-variant active:scale-95"
               >
-                <Icon name={showPassword ? 'visibility_off' : 'visibility'} className="text-[20px]" />
+                <Icon
+                  name={showPassword ? 'visibility_off' : 'visibility'}
+                  className="text-[20px]"
+                />
               </button>
             </span>
             <span className="grid grid-cols-4 gap-1.5 pt-1">
@@ -152,7 +178,13 @@ function SignUpPage() {
               ))}
             </span>
             <span className="flex items-center justify-between text-[11px]">
-              <span className={strength >= 3 ? 'font-semibold text-primary' : 'text-on-surface-variant'}>
+              <span
+                className={
+                  strength >= 3
+                    ? 'font-semibold text-primary'
+                    : 'text-on-surface-variant'
+                }
+              >
                 {STRENGTH_LABELS[strength]}
               </span>
               <span className="flex items-center gap-0.5 text-secondary">
@@ -169,7 +201,10 @@ function SignUpPage() {
           >
             {submitting ? (
               <>
-                <Icon name="progress_activity" className="animate-spin text-[18px]" />
+                <Icon
+                  name="progress_activity"
+                  className="animate-spin text-[18px]"
+                />
                 Criando sua estante...
               </>
             ) : (
@@ -183,21 +218,51 @@ function SignUpPage() {
 
         <div className="mt-6 rounded-xl bg-surface-container-lowest p-4 shadow-sm">
           <div className="mb-2.5 flex items-center gap-2">
-            <Icon name="verified" filled className="text-[16px] text-secondary" />
-            <span className="text-[12px] font-semibold text-primary">O que você ganha ao entrar:</span>
+            <Icon
+              name="verified"
+              filled
+              className="text-[16px] text-secondary"
+            />
+            <span className="text-[12px] font-semibold text-primary">
+              O que você ganha ao entrar:
+            </span>
           </div>
           <ul className="flex flex-col gap-2 text-[13px] text-on-surface-variant">
             <li className="flex items-start gap-2.5">
-              <Icon name="check_circle" className="mt-0.5 text-[16px] text-secondary" />
-              <span><strong className="font-semibold text-on-surface">1 livro-resumo gratuito</strong> selecionado por especialistas todo dia</span>
+              <Icon
+                name="check_circle"
+                className="mt-0.5 text-[16px] text-secondary"
+              />
+              <span>
+                <strong className="font-semibold text-on-surface">
+                  1 livro-resumo gratuito
+                </strong>{' '}
+                selecionado por especialistas todo dia
+              </span>
             </li>
             <li className="flex items-start gap-2.5">
-              <Icon name="check_circle" className="mt-0.5 text-[16px] text-secondary" />
-              <span><strong className="font-semibold text-on-surface">Áudios narrados</strong> com sínteses conceituais em 15 minutos</span>
+              <Icon
+                name="check_circle"
+                className="mt-0.5 text-[16px] text-secondary"
+              />
+              <span>
+                <strong className="font-semibold text-on-surface">
+                  Áudios narrados
+                </strong>{' '}
+                com sínteses conceituais em 15 minutos
+              </span>
             </li>
             <li className="flex items-start gap-2.5">
-              <Icon name="check_circle" className="mt-0.5 text-[16px] text-secondary" />
-              <span><strong className="font-semibold text-on-surface">Sem cobrança automática</strong> ou surpresas após o cadastro</span>
+              <Icon
+                name="check_circle"
+                className="mt-0.5 text-[16px] text-secondary"
+              />
+              <span>
+                <strong className="font-semibold text-on-surface">
+                  Sem cobrança automática
+                </strong>{' '}
+                ou surpresas após o cadastro
+              </span>
             </li>
           </ul>
         </div>

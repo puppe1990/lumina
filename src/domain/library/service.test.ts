@@ -102,15 +102,25 @@ describe('getLibrary', () => {
     const done = makeBook(db, { categoryId: category.id, title: 'Concluído' })
 
     saveBook(db, user.id, saved.id)
-    makeLibraryItem(db, { userId: user.id, bookId: reading.id, status: 'in_progress' })
-    makeLibraryItem(db, { userId: user.id, bookId: done.id, status: 'completed' })
+    makeLibraryItem(db, {
+      userId: user.id,
+      bookId: reading.id,
+      status: 'in_progress',
+    })
+    makeLibraryItem(db, {
+      userId: user.id,
+      bookId: done.id,
+      status: 'completed',
+    })
 
-    expect(getLibrary(db, user.id).map((e) => e.book.title).sort()).toEqual([
-      'Concluído',
-      'Lendo',
-      'Salvo',
-    ])
-    expect(getLibrary(db, user.id, 'in_progress').map((e) => e.book.title)).toEqual(['Lendo'])
+    expect(
+      getLibrary(db, user.id)
+        .map((e) => e.book.title)
+        .sort(),
+    ).toEqual(['Concluído', 'Lendo', 'Salvo'])
+    expect(
+      getLibrary(db, user.id, 'in_progress').map((e) => e.book.title),
+    ).toEqual(['Lendo'])
     expect(getLibrary(db, user.id, 'completed')).toHaveLength(1)
   })
 
@@ -148,7 +158,12 @@ describe('getContinueListening', () => {
       progressPercent: 65,
       updatedAt: 200,
     })
-    makeLibraryItem(db, { userId: user.id, bookId: done.id, status: 'completed', progressPercent: 100 })
+    makeLibraryItem(db, {
+      userId: user.id,
+      bookId: done.id,
+      status: 'completed',
+      progressPercent: 100,
+    })
 
     expect(getContinueListening(db, user.id).map((e) => e.book.title)).toEqual([
       'Recente',
@@ -165,9 +180,24 @@ describe('getLibraryStats', () => {
     const b = makeBook(db, { categoryId: category.id, audioMinutes: 30 })
     const c = makeBook(db, { categoryId: category.id })
 
-    makeLibraryItem(db, { userId: user.id, bookId: a.id, status: 'completed', progressPercent: 100 })
-    makeLibraryItem(db, { userId: user.id, bookId: b.id, status: 'in_progress', progressPercent: 50 })
-    makeLibraryItem(db, { userId: user.id, bookId: c.id, status: 'saved', progressPercent: 0 })
+    makeLibraryItem(db, {
+      userId: user.id,
+      bookId: a.id,
+      status: 'completed',
+      progressPercent: 100,
+    })
+    makeLibraryItem(db, {
+      userId: user.id,
+      bookId: b.id,
+      status: 'in_progress',
+      progressPercent: 50,
+    })
+    makeLibraryItem(db, {
+      userId: user.id,
+      bookId: c.id,
+      status: 'saved',
+      progressPercent: 0,
+    })
     addHighlight(db, user.id, a.id, 'Grande ideia')
 
     const stats = getLibraryStats(db, user.id)
@@ -197,7 +227,11 @@ describe('highlights', () => {
   it('adds and lists highlights with book metadata', () => {
     const user = makeUser(db)
     const category = makeCategory(db)
-    const book = makeBook(db, { categoryId: category.id, title: 'Essencialismo', author: 'Greg McKeown' })
+    const book = makeBook(db, {
+      categoryId: category.id,
+      title: 'Essencialismo',
+      author: 'Greg McKeown',
+    })
 
     addHighlight(db, user.id, book.id, '  Menos é mais.  ', 123)
 
@@ -214,7 +248,9 @@ describe('highlights', () => {
     const book = makeBook(db, { categoryId: category.id })
 
     expect(() => addHighlight(db, user.id, book.id, '   ')).toThrowError()
-    expect(() => addHighlight(db, user.id, 'nao-existe', 'texto')).toThrowError()
+    expect(() =>
+      addHighlight(db, user.id, 'nao-existe', 'texto'),
+    ).toThrowError()
   })
 
   it('removes only the own highlight', () => {
@@ -238,10 +274,16 @@ describe('getRecommendations', () => {
     const focus = makeCategory(db, { slug: 'foco' })
     const money = makeCategory(db, { slug: 'financas' })
     makeInterest(db, user.id, focus.id)
-    const focusBook = makeBook(db, { categoryId: focus.id, title: 'Deep Work', rating: 4.2 })
+    const focusBook = makeBook(db, {
+      categoryId: focus.id,
+      title: 'Deep Work',
+      rating: 4.2,
+    })
     makeBook(db, { categoryId: money.id, title: 'Riqueza', rating: 5 })
 
-    expect(getRecommendations(db, user.id).map((b) => b.title)).toEqual(['Deep Work'])
+    expect(getRecommendations(db, user.id).map((b) => b.title)).toEqual([
+      'Deep Work',
+    ])
     expect(getRecommendations(db, user.id)[0].categorySlug).toBe('foco')
     expect(focusBook).toBeTruthy()
   })
@@ -250,11 +292,22 @@ describe('getRecommendations', () => {
     const user = makeUser(db)
     const category = makeCategory(db)
     makeInterest(db, user.id, category.id)
-    const done = makeBook(db, { categoryId: category.id, title: 'Já Li', rating: 5 })
+    const done = makeBook(db, {
+      categoryId: category.id,
+      title: 'Já Li',
+      rating: 5,
+    })
     makeBook(db, { categoryId: category.id, title: 'Próximo', rating: 4.5 })
-    makeLibraryItem(db, { userId: user.id, bookId: done.id, status: 'completed', progressPercent: 100 })
+    makeLibraryItem(db, {
+      userId: user.id,
+      bookId: done.id,
+      status: 'completed',
+      progressPercent: 100,
+    })
 
-    expect(getRecommendations(db, user.id).map((b) => b.title)).toEqual(['Próximo'])
+    expect(getRecommendations(db, user.id).map((b) => b.title)).toEqual([
+      'Próximo',
+    ])
   })
 
   it('falls back to top rated books without interests', () => {
@@ -263,6 +316,8 @@ describe('getRecommendations', () => {
     makeBook(db, { categoryId: category.id, title: 'Top', rating: 5 })
     makeBook(db, { categoryId: category.id, title: 'Meia', rating: 4 })
 
-    expect(getRecommendations(db, user.id, 1).map((b) => b.title)).toEqual(['Top'])
+    expect(getRecommendations(db, user.id, 1).map((b) => b.title)).toEqual([
+      'Top',
+    ])
   })
 })

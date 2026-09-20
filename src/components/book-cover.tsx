@@ -42,8 +42,12 @@ export function BookCover({
 
       <div className="relative">
         <div className="mb-1.5 h-px w-6 bg-secondary-container/80" />
-        <p className="font-serif text-[13px] leading-tight font-semibold">{title}</p>
-        <p className="mt-1 truncate text-[9px] tracking-wide text-white/70 uppercase">{author}</p>
+        <p className="font-serif text-[13px] leading-tight font-semibold">
+          {title}
+        </p>
+        <p className="mt-1 truncate text-[9px] tracking-wide text-white/70 uppercase">
+          {author}
+        </p>
       </div>
     </div>
   )

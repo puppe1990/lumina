@@ -21,9 +21,27 @@ export const Route = createFileRoute('/onboarding/goal')({
 })
 
 const GOALS = [
-  { minutes: 10, title: '10 min/dia', tag: 'Ritmo Leve', detail: '1 resumo express diário • ~24 livros/ano', icon: 'timer' },
-  { minutes: 15, title: '15 min/dia', tag: 'Ritmo Ideal', detail: '1 resumo completo aprofundado • ~36 livros/ano', icon: 'auto_awesome' },
-  { minutes: 30, title: '30 min/dia', tag: 'Ritmo Imersivo', detail: '2 resumos diários com anotações • ~72 livros/ano', icon: 'local_fire_department' },
+  {
+    minutes: 10,
+    title: '10 min/dia',
+    tag: 'Ritmo Leve',
+    detail: '1 resumo express diário • ~24 livros/ano',
+    icon: 'timer',
+  },
+  {
+    minutes: 15,
+    title: '15 min/dia',
+    tag: 'Ritmo Ideal',
+    detail: '1 resumo completo aprofundado • ~36 livros/ano',
+    icon: 'auto_awesome',
+  },
+  {
+    minutes: 30,
+    title: '30 min/dia',
+    tag: 'Ritmo Imersivo',
+    detail: '2 resumos diários com anotações • ~72 livros/ano',
+    icon: 'local_fire_department',
+  },
 ]
 
 const FORMATS = [
@@ -105,7 +123,8 @@ function GoalPage() {
             Quanto tempo você quer dedicar por dia?
           </h1>
           <p className="mt-2 text-[15px] text-on-surface-variant">
-            Apenas 15 minutos diários equivalem a mais de 30 livros absorvidos ao longo de um ano.
+            Apenas 15 minutos diários equivalem a mais de 30 livros absorvidos
+            ao longo de um ano.
           </p>
         </div>
 
@@ -121,41 +140,60 @@ function GoalPage() {
                 type="button"
                 onClick={() => setGoal(option.minutes)}
                 className={`flex items-center justify-between rounded-xl p-3.5 text-left shadow-sm transition-all ${
-                  active ? 'bg-primary-container text-on-primary shadow-md' : 'bg-surface-container-lowest hover:shadow-md'
+                  active
+                    ? 'bg-primary-container text-on-primary shadow-md'
+                    : 'bg-surface-container-lowest hover:shadow-md'
                 }`}
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <span
                     className={`grid h-12 w-12 shrink-0 place-items-center rounded-full ${
-                      active ? 'bg-white/15 text-secondary-fixed' : 'bg-surface-container text-on-surface-variant'
+                      active
+                        ? 'bg-white/15 text-secondary-fixed'
+                        : 'bg-surface-container text-on-surface-variant'
                     }`}
                   >
-                    <Icon name={option.icon} filled={active} className="text-[24px]" />
+                    <Icon
+                      name={option.icon}
+                      filled={active}
+                      className="text-[24px]"
+                    />
                   </span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className={`text-[16px] font-semibold ${active ? 'text-white' : 'text-on-surface'}`}>
+                      <span
+                        className={`text-[16px] font-semibold ${active ? 'text-white' : 'text-on-surface'}`}
+                      >
                         {option.title}
                       </span>
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                          active ? 'bg-secondary-container text-on-secondary-fixed' : 'bg-surface-container-high text-on-surface-variant'
+                          active
+                            ? 'bg-secondary-container text-on-secondary-fixed'
+                            : 'bg-surface-container-high text-on-surface-variant'
                         }`}
                       >
                         {option.tag}
                       </span>
                     </div>
-                    <span className={`text-[13px] ${active ? 'text-on-primary-container' : 'text-on-surface-variant'}`}>
+                    <span
+                      className={`text-[13px] ${active ? 'text-on-primary-container' : 'text-on-surface-variant'}`}
+                    >
                       {option.detail}
                     </span>
                   </div>
                 </div>
                 <span
                   className={`grid h-6 w-6 shrink-0 place-items-center rounded-full ${
-                    active ? 'bg-secondary-container text-on-secondary-container' : 'bg-surface-container'
+                    active
+                      ? 'bg-secondary-container text-on-secondary-container'
+                      : 'bg-surface-container'
                   }`}
                 >
-                  <Icon name="check" className={`text-[16px] ${active ? '' : 'opacity-0'}`} />
+                  <Icon
+                    name="check"
+                    className={`text-[16px] ${active ? '' : 'opacity-0'}`}
+                  />
                 </span>
               </button>
             )
@@ -175,11 +213,18 @@ function GoalPage() {
                   type="button"
                   onClick={() => setFormat(option.value)}
                   className={`flex flex-col items-center justify-center gap-2 rounded-xl px-2 py-3 text-center transition-all ${
-                    active ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-lowest text-on-surface hover:bg-surface-container-high'
+                    active
+                      ? 'bg-primary text-on-primary shadow-sm'
+                      : 'bg-surface-container-lowest text-on-surface hover:bg-surface-container-high'
                   }`}
                 >
-                  <Icon name={option.icon} className={`text-[24px] ${active ? 'text-secondary-fixed' : 'text-on-surface-variant'}`} />
-                  <span className="text-[12px] font-semibold">{option.label}</span>
+                  <Icon
+                    name={option.icon}
+                    className={`text-[24px] ${active ? 'text-secondary-fixed' : 'text-on-surface-variant'}`}
+                  />
+                  <span className="text-[12px] font-semibold">
+                    {option.label}
+                  </span>
                 </button>
               )
             })}
@@ -190,10 +235,16 @@ function GoalPage() {
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-secondary-fixed text-on-secondary-fixed">
-                <Icon name="notifications_active" filled className="text-[20px]" />
+                <Icon
+                  name="notifications_active"
+                  filled
+                  className="text-[20px]"
+                />
               </span>
               <div>
-                <span className="block text-[16px] font-semibold text-on-surface">Lembrete Diário</span>
+                <span className="block text-[16px] font-semibold text-on-surface">
+                  Lembrete Diário
+                </span>
                 <span className="block text-[13px] text-on-surface-variant">
                   Construa o hábito no seu melhor horário
                 </span>
@@ -206,11 +257,15 @@ function GoalPage() {
               onClick={() => setReminder((value) => !value)}
               className={`relative mt-1 h-6 w-11 shrink-0 rounded-full transition-colors ${reminder ? 'bg-primary' : 'bg-surface-container-highest'}`}
             >
-              <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${reminder ? 'left-[22px]' : 'left-0.5'}`} />
+              <span
+                className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${reminder ? 'left-[22px]' : 'left-0.5'}`}
+              />
             </button>
           </div>
 
-          <div className={`transition-opacity ${reminder ? 'opacity-100' : 'pointer-events-none opacity-40'}`}>
+          <div
+            className={`transition-opacity ${reminder ? 'opacity-100' : 'pointer-events-none opacity-40'}`}
+          >
             <span className="text-[10px] font-bold tracking-wider text-on-surface-variant uppercase">
               Horário sugerido
             </span>
@@ -223,13 +278,22 @@ function GoalPage() {
                     type="button"
                     onClick={() => setTime(option.value)}
                     className={`flex items-center gap-2 rounded-lg p-2.5 text-left transition-all ${
-                      active ? 'bg-primary-container text-on-primary' : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
+                      active
+                        ? 'bg-primary-container text-on-primary'
+                        : 'bg-surface-container text-on-surface hover:bg-surface-container-high'
                     }`}
                   >
-                    <Icon name={option.icon} className={`text-[18px] ${active ? 'text-secondary-container' : 'text-on-surface-variant'}`} />
+                    <Icon
+                      name={option.icon}
+                      className={`text-[18px] ${active ? 'text-secondary-container' : 'text-on-surface-variant'}`}
+                    />
                     <span className="min-w-0">
-                      <span className="block text-[14px] font-bold">{option.value}</span>
-                      <span className={`block truncate text-[10px] ${active ? 'opacity-90' : 'text-on-surface-variant'}`}>
+                      <span className="block text-[14px] font-bold">
+                        {option.value}
+                      </span>
+                      <span
+                        className={`block truncate text-[10px] ${active ? 'opacity-90' : 'text-on-surface-variant'}`}
+                      >
                         {option.detail}
                       </span>
                     </span>
@@ -253,7 +317,8 @@ function GoalPage() {
               Projeção anual estimada
             </span>
             <p className="font-serif mt-0.5 text-[18px] leading-snug font-medium text-primary">
-              {annualBooks} grandes livros dominados às {time} sem sobrecarregar sua rotina.
+              {annualBooks} grandes livros dominados às {time} sem sobrecarregar
+              sua rotina.
             </p>
           </div>
         </div>
@@ -269,7 +334,8 @@ function GoalPage() {
             <Icon name="arrow_forward" className="text-[18px]" />
           </button>
           <p className="px-4 text-center text-[13px] text-on-surface-variant">
-            Você pode ajustar sua meta, formato e horários a qualquer momento no seu perfil.
+            Você pode ajustar sua meta, formato e horários a qualquer momento no
+            seu perfil.
           </p>
         </div>
       </div>

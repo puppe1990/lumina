@@ -1,4 +1,9 @@
-import { createFileRoute, Link, redirect, useRouter } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useRouter,
+} from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { BookCover } from '#/components/book-cover'
@@ -43,7 +48,9 @@ function LibraryPage() {
   const { show, toast } = useToast()
   const [tab, setTab] = useState<TabKey>('in_progress')
   const [reminders, setReminders] = useState(true)
-  const [loadingRecommendation, setLoadingRecommendation] = useState<string | null>(null)
+  const [loadingRecommendation, setLoadingRecommendation] = useState<
+    string | null
+  >(null)
 
   const counts: Record<TabKey, number> = {
     in_progress: data.stats.inProgressCount,
@@ -102,9 +109,14 @@ function LibraryPage() {
                   {data.user.name}
                 </h1>
                 <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-secondary-fixed/50 px-2 py-0.5">
-                  <Icon name="star" filled className="text-[12px] text-secondary" />
+                  <Icon
+                    name="star"
+                    filled
+                    className="text-[12px] text-secondary"
+                  />
                   <span className="text-[10px] font-semibold text-on-secondary-fixed">
-                    {data.subscription && data.subscription.subscription.status !== 'canceled'
+                    {data.subscription &&
+                    data.subscription.subscription.status !== 'canceled'
                       ? 'Membro Premium'
                       : 'Plano Gratuito'}
                   </span>
@@ -112,12 +124,21 @@ function LibraryPage() {
               </div>
             </div>
             <div className="flex items-center gap-1.5 rounded-full bg-surface-container-low px-2.5 py-1.5 shadow-sm">
-              <Icon name="local_fire_department" filled className="text-[18px] text-secondary-container" />
+              <Icon
+                name="local_fire_department"
+                filled
+                className="text-[18px] text-secondary-container"
+              />
               <div className="flex flex-col leading-none">
                 <span className="text-[16px] font-bold text-on-surface">
-                  {Math.max(1, data.stats.completedCount + data.stats.inProgressCount)}
+                  {Math.max(
+                    1,
+                    data.stats.completedCount + data.stats.inProgressCount,
+                  )}
                 </span>
-                <span className="text-[9px] tracking-wider text-outline uppercase">Ritmo</span>
+                <span className="text-[9px] tracking-wider text-outline uppercase">
+                  Ritmo
+                </span>
               </div>
             </div>
           </div>
@@ -136,7 +157,9 @@ function LibraryPage() {
             <div className="flex h-2 w-full overflow-hidden rounded-full bg-surface-container-highest">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-primary-container to-secondary-container"
-                style={{ width: `${Math.min(100, data.stats.completedCount * 20)}%` }}
+                style={{
+                  width: `${Math.min(100, data.stats.completedCount * 20)}%`,
+                }}
               />
             </div>
           </div>
@@ -198,7 +221,8 @@ function LibraryPage() {
         <section className="px-5 pt-4">
           {data.highlights.length === 0 ? (
             <p className="py-8 text-center text-[14px] text-on-surface-variant">
-              Você ainda não salvou citações. Toque em “Grifar” durante um resumo.
+              Você ainda não salvou citações. Toque em “Grifar” durante um
+              resumo.
             </p>
           ) : (
             <div className="flex flex-col gap-3">
@@ -220,14 +244,19 @@ function LibraryPage() {
                         <p className="text-[12px] font-semibold text-on-surface">
                           {highlight.bookAuthor}
                         </p>
-                        <p className="text-[11px] text-outline">{highlight.bookTitle}</p>
+                        <p className="text-[11px] text-outline">
+                          {highlight.bookTitle}
+                        </p>
                       </div>
                       <button
                         type="button"
                         onClick={() => show('Citação compartilhada!')}
                         className="inline-flex items-center gap-1.5 rounded-full bg-surface-container-low px-3 py-1.5 text-[10px] font-semibold text-on-surface active:scale-95"
                       >
-                        <Icon name="share" className="text-[16px] text-secondary" />
+                        <Icon
+                          name="share"
+                          className="text-[16px] text-secondary"
+                        />
                         Compartilhar
                       </button>
                     </div>
@@ -248,7 +277,8 @@ function LibraryPage() {
                   : 'Concluídos'}
             </h2>
             <span className="text-[10px] font-semibold tracking-wider text-secondary uppercase">
-              {visibleItems.length} {visibleItems.length === 1 ? 'título' : 'títulos'}
+              {visibleItems.length}{' '}
+              {visibleItems.length === 1 ? 'título' : 'títulos'}
             </span>
           </div>
 
@@ -279,7 +309,9 @@ function LibraryPage() {
                     <h3 className="truncate text-[15px] leading-snug font-semibold text-on-surface">
                       {item.book.title}
                     </h3>
-                    <p className="truncate text-[12px] text-outline">{item.book.author}</p>
+                    <p className="truncate text-[12px] text-outline">
+                      {item.book.author}
+                    </p>
                     <div className="mt-2 flex h-1.5 w-full items-center rounded-full bg-surface-container-highest">
                       <div
                         className="h-full rounded-full bg-secondary-container"
@@ -316,7 +348,10 @@ function LibraryPage() {
         </h2>
         <div className="flex flex-col gap-3">
           {data.recommendations.map((book) => (
-            <div key={book.id} className="flex items-center gap-3 rounded-xl bg-surface-container-lowest p-3 shadow-sm">
+            <div
+              key={book.id}
+              className="flex items-center gap-3 rounded-xl bg-surface-container-lowest p-3 shadow-sm"
+            >
               <BookCover
                 title={book.title}
                 author={book.author}
@@ -327,8 +362,12 @@ function LibraryPage() {
                 <span className="text-[10px] font-semibold tracking-wide text-secondary uppercase">
                   {book.categoryName}
                 </span>
-                <h3 className="truncate text-[15px] font-semibold text-on-surface">{book.title}</h3>
-                <p className="truncate text-[12px] text-outline">{book.author}</p>
+                <h3 className="truncate text-[15px] font-semibold text-on-surface">
+                  {book.title}
+                </h3>
+                <p className="truncate text-[12px] text-outline">
+                  {book.author}
+                </p>
               </div>
               <button
                 type="button"
@@ -358,7 +397,9 @@ function LibraryPage() {
                 <Icon name="workspace_premium" className="text-[18px]" />
               </span>
               <div>
-                <div className="text-[14px] font-semibold text-on-surface">Gerenciar Assinatura</div>
+                <div className="text-[14px] font-semibold text-on-surface">
+                  Gerenciar Assinatura
+                </div>
                 <div className="text-[13px] text-outline">
                   {data.subscription
                     ? `${data.subscription.plan.name} • ${data.subscription.isTrialing ? `${data.subscription.trialDaysLeft} dias restantes` : 'Ativo'}`
@@ -366,7 +407,10 @@ function LibraryPage() {
                 </div>
               </div>
             </div>
-            <Icon name="chevron_right" className="text-[20px] text-outline-variant" />
+            <Icon
+              name="chevron_right"
+              className="text-[20px] text-outline-variant"
+            />
           </Link>
 
           <button
@@ -379,11 +423,18 @@ function LibraryPage() {
                 <Icon name="download_done" className="text-[18px]" />
               </span>
               <div>
-                <div className="text-[14px] font-semibold text-on-surface">Downloads Offline</div>
-                <div className="text-[13px] text-outline">Ouvir sem internet</div>
+                <div className="text-[14px] font-semibold text-on-surface">
+                  Downloads Offline
+                </div>
+                <div className="text-[13px] text-outline">
+                  Ouvir sem internet
+                </div>
               </div>
             </div>
-            <Icon name="chevron_right" className="text-[20px] text-outline-variant" />
+            <Icon
+              name="chevron_right"
+              className="text-[20px] text-outline-variant"
+            />
           </button>
 
           <div className="flex items-center justify-between px-4 py-3.5">
@@ -392,8 +443,12 @@ function LibraryPage() {
                 <Icon name="notifications_active" className="text-[18px]" />
               </span>
               <div>
-                <div className="text-[14px] font-semibold text-on-surface">Lembretes Diários</div>
-                <div className="text-[13px] text-outline">Notificar ritual às 07:30</div>
+                <div className="text-[14px] font-semibold text-on-surface">
+                  Lembretes Diários
+                </div>
+                <div className="text-[13px] text-outline">
+                  Notificar ritual às 07:30
+                </div>
               </div>
             </div>
             <button
@@ -403,7 +458,9 @@ function LibraryPage() {
               onClick={() => setReminders((value) => !value)}
               className={`relative h-6 w-11 rounded-full transition-colors ${reminders ? 'bg-primary' : 'bg-surface-container-highest'}`}
             >
-              <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${reminders ? 'left-[22px]' : 'left-0.5'}`} />
+              <span
+                className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${reminders ? 'left-[22px]' : 'left-0.5'}`}
+              />
             </button>
           </div>
         </div>

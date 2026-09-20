@@ -1,5 +1,11 @@
 import { relations } from 'drizzle-orm'
-import { integer, primaryKey, real, sqliteTable, text } from 'drizzle-orm/sqlite-core'
+import {
+  integer,
+  primaryKey,
+  real,
+  sqliteTable,
+  text,
+} from 'drizzle-orm/sqlite-core'
 
 export const users = sqliteTable('users', {
   id: text('id').primaryKey(),
@@ -43,7 +49,9 @@ export const books = sqliteTable('books', {
   readingMinutes: integer('reading_minutes').notNull(),
   rating: real('rating').notNull(),
   ratingsCount: integer('ratings_count').notNull(),
-  isFeatured: integer('is_featured', { mode: 'boolean' }).notNull().default(false),
+  isFeatured: integer('is_featured', { mode: 'boolean' })
+    .notNull()
+    .default(false),
   publishedAt: integer('published_at').notNull(),
   searchIndex: text('search_index').notNull().default(''),
 })
@@ -110,7 +118,9 @@ export const userPreferences = sqliteTable('user_preferences', {
     .references(() => users.id, { onDelete: 'cascade' }),
   dailyGoalMinutes: integer('daily_goal_minutes').notNull().default(15),
   preferredFormat: text('preferred_format').notNull().default('audio'),
-  reminderEnabled: integer('reminder_enabled', { mode: 'boolean' }).notNull().default(true),
+  reminderEnabled: integer('reminder_enabled', { mode: 'boolean' })
+    .notNull()
+    .default(true),
   reminderTime: text('reminder_time').notNull().default('07:30'),
   onboardingCompleted: integer('onboarding_completed', { mode: 'boolean' })
     .notNull()
@@ -173,7 +183,9 @@ export const plans = sqliteTable('plans', {
   trialDays: integer('trial_days').notNull().default(0),
   badge: text('badge'),
   description: text('description').notNull(),
-  isFeatured: integer('is_featured', { mode: 'boolean' }).notNull().default(false),
+  isFeatured: integer('is_featured', { mode: 'boolean' })
+    .notNull()
+    .default(false),
   position: integer('position').notNull().default(0),
 })
 

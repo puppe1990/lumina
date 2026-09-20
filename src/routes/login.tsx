@@ -61,7 +61,8 @@ function LoginPage() {
             Que bom ter você de volta.
           </h1>
           <p className="mt-2 text-[15px] leading-relaxed text-on-surface-variant">
-            Retome seus 15 minutos diários de aprendizado e acesse seus resumos e citações salvas.
+            Retome seus 15 minutos diários de aprendizado e acesse seus resumos
+            e citações salvas.
           </p>
         </div>
 
@@ -69,7 +70,9 @@ function LoginPage() {
           <label className="flex flex-col gap-1.5">
             <span className="flex items-center justify-between text-[12px] font-semibold text-on-surface">
               E-mail
-              <span className="font-normal text-on-surface-variant">Corporativo ou pessoal</span>
+              <span className="font-normal text-on-surface-variant">
+                Corporativo ou pessoal
+              </span>
             </span>
             <span className="relative flex items-center">
               <Icon
@@ -94,7 +97,9 @@ function LoginPage() {
               <button
                 type="button"
                 className="text-[12px] text-primary hover:underline"
-                onClick={() => show('Link de redefinição enviado para seu e-mail')}
+                onClick={() =>
+                  show('Link de redefinição enviado para seu e-mail')
+                }
               >
                 Esqueceu a senha?
               </button>
@@ -119,7 +124,10 @@ function LoginPage() {
                 onClick={() => setShowPassword((value) => !value)}
                 className="absolute right-3.5 flex h-8 w-8 items-center justify-center rounded-full text-outline transition-colors hover:text-on-surface"
               >
-                <Icon name={showPassword ? 'visibility_off' : 'visibility'} className="text-[20px]" />
+                <Icon
+                  name={showPassword ? 'visibility_off' : 'visibility'}
+                  className="text-[20px]"
+                />
               </button>
             </span>
           </label>
@@ -131,7 +139,10 @@ function LoginPage() {
           >
             {submitting ? (
               <>
-                <Icon name="progress_activity" className="animate-spin text-[18px]" />
+                <Icon
+                  name="progress_activity"
+                  className="animate-spin text-[18px]"
+                />
                 Acessando sua estante...
               </>
             ) : (
@@ -152,11 +163,15 @@ function LoginPage() {
               </span>
             </div>
             <p className="font-serif text-[17px] leading-snug text-on-surface italic">
-              “O conhecimento não é aquilo que você absorve, mas sim o que você pratica com
-              consistência.”
+              “O conhecimento não é aquilo que você absorve, mas sim o que você
+              pratica com consistência.”
             </p>
             <p className="mt-1.5 text-[13px] font-medium text-on-surface-variant">
-              — De <span className="font-semibold text-primary">Hábitos Atômicos</span> no Lúmina
+              — De{' '}
+              <span className="font-semibold text-primary">
+                Hábitos Atômicos
+              </span>{' '}
+              no Lúmina
             </p>
           </div>
         </div>

@@ -42,11 +42,15 @@ export function makeUser(db: Db, overrides: Partial<User> = {}): User {
   return user
 }
 
-export function makeCategory(db: Db, overrides: Partial<Category> = {}): Category {
+export function makeCategory(
+  db: Db,
+  overrides: Partial<Category> = {},
+): Category {
   const name = overrides.name ?? faker.commerce.department()
   const category: Category = {
     id: randomUUID(),
-    slug: faker.helpers.slugify(name).toLowerCase() || faker.string.alphanumeric(8),
+    slug:
+      faker.helpers.slugify(name).toLowerCase() || faker.string.alphanumeric(8),
     name,
     description: faker.lorem.sentence(),
     icon: faker.helpers.arrayElement(ICONS),
@@ -138,8 +142,13 @@ export function makeCollection(
   const title = overrides.title ?? faker.commerce.productName()
   const collection: Collection = {
     id: randomUUID(),
-    slug: faker.helpers.slugify(title).toLowerCase() || faker.string.alphanumeric(8),
-    eyebrow: faker.helpers.arrayElement(['6 Obras Fundamentais', '8 Obras Selecionadas']),
+    slug:
+      faker.helpers.slugify(title).toLowerCase() ||
+      faker.string.alphanumeric(8),
+    eyebrow: faker.helpers.arrayElement([
+      '6 Obras Fundamentais',
+      '8 Obras Selecionadas',
+    ]),
     title,
     description: faker.lorem.sentence(),
     icon: faker.helpers.arrayElement(ICONS),

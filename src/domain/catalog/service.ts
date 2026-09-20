@@ -13,7 +13,14 @@ import {
 import { AppError } from '#/domain/errors'
 import { normalizeForSearch } from '#/lib/text'
 
-import type { Book, Category, Chapter, Collection, Insight, Quote } from '#/test/factories'
+import type {
+  Book,
+  Category,
+  Chapter,
+  Collection,
+  Insight,
+  Quote,
+} from '#/test/factories'
 
 export type BookCard = Book & {
   categoryName: string
@@ -38,7 +45,11 @@ type BookRow = {
 }
 
 function mapCard(row: BookRow): BookCard {
-  return { ...row.book, categoryName: row.categoryName, categorySlug: row.categorySlug }
+  return {
+    ...row.book,
+    categoryName: row.categoryName,
+    categorySlug: row.categorySlug,
+  }
 }
 
 function bookCardQuery(db: Db) {
@@ -150,7 +161,11 @@ function listCollectionBooks(db: Db, collectionId: string): BookCard[] {
 }
 
 export function getCollection(db: Db, slug: string): CollectionWithBooks {
-  const collection = db.select().from(collections).where(eq(collections.slug, slug)).get()
+  const collection = db
+    .select()
+    .from(collections)
+    .where(eq(collections.slug, slug))
+    .get()
   if (!collection) {
     throw new AppError('NOT_FOUND', 'Coleção não encontrada.')
   }
@@ -204,6 +219,9 @@ export function getBookDetail(db: Db, idOrSlug: string): BookDetail {
 }
 
 export function countBooks(db: Db): number {
-  const result = db.select({ value: sql<number>`count(*)` }).from(books).get()
+  const result = db
+    .select({ value: sql<number>`count(*)` })
+    .from(books)
+    .get()
   return result?.value ?? 0
 }

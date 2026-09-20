@@ -1,4 +1,9 @@
-import { createFileRoute, Link, redirect, useNavigate } from '@tanstack/react-router'
+import {
+  createFileRoute,
+  Link,
+  redirect,
+  useNavigate,
+} from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { BookCard } from '#/components/book-card'
@@ -37,7 +42,10 @@ function ExplorePage() {
   const { show, toast } = useToast()
   const [query, setQuery] = useState(search.q ?? '')
 
-  const categories = [{ id: 'todos', slug: 'todos', name: 'Todos', icon: 'auto_awesome' }, ...data.categories]
+  const categories = [
+    { id: 'todos', slug: 'todos', name: 'Todos', icon: 'auto_awesome' },
+    ...data.categories,
+  ]
   const isFiltered = Boolean(data.results)
 
   function submitSearch(event: React.FormEvent) {
@@ -53,8 +61,16 @@ function ExplorePage() {
       <header className="pt-safe sticky top-0 z-40 bg-surface/85 px-5 py-3 backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <Logo />
-          <Link to="/library" aria-label="Perfil" className="grid h-8 w-8 place-items-center rounded-full bg-primary">
-            <Icon name="person" filled className="text-[18px] text-on-primary" />
+          <Link
+            to="/library"
+            aria-label="Perfil"
+            className="grid h-8 w-8 place-items-center rounded-full bg-primary"
+          >
+            <Icon
+              name="person"
+              filled
+              className="text-[18px] text-on-primary"
+            />
           </Link>
         </div>
       </header>
@@ -100,12 +116,19 @@ function ExplorePage() {
             <Link
               key={category.id}
               to="/explore"
-              search={{ category: category.slug === 'todos' ? undefined : category.slug, q: search.q }}
+              search={{
+                category: category.slug === 'todos' ? undefined : category.slug,
+                q: search.q,
+              }}
               className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-semibold whitespace-nowrap transition-all active:scale-95 ${
-                isActive ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+                isActive
+                  ? 'bg-primary text-on-primary shadow-sm'
+                  : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
               }`}
             >
-              {category.slug === 'todos' ? <Icon name="auto_awesome" className="text-[15px]" /> : null}
+              {category.slug === 'todos' ? (
+                <Icon name="auto_awesome" className="text-[15px]" />
+              ) : null}
               {category.name}
             </Link>
           )
@@ -118,7 +141,11 @@ function ExplorePage() {
             <h3 className="font-serif text-[18px] font-semibold text-on-surface">
               {data.results?.length ?? 0} resultados
             </h3>
-            <Link to="/explore" search={{}} className="text-[12px] font-semibold text-primary">
+            <Link
+              to="/explore"
+              search={{}}
+              className="text-[12px] font-semibold text-primary"
+            >
               Limpar
             </Link>
           </div>
@@ -145,7 +172,9 @@ function ExplorePage() {
                     Destaque Editorial
                   </span>
                 </div>
-                <span className="text-[10px] text-on-surface-variant">Edição #142</span>
+                <span className="text-[10px] text-on-surface-variant">
+                  Edição #142
+                </span>
               </div>
 
               <div className="relative flex flex-col overflow-hidden rounded-xl bg-primary p-5 text-on-primary shadow-lg">
@@ -157,7 +186,8 @@ function ExplorePage() {
                   </span>
                   <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-secondary-fixed">
                     <Icon name="star" filled className="text-[14px]" />
-                    {data.featured.rating.toFixed(1)} ({(data.featured.ratingsCount / 1000).toFixed(1)}k)
+                    {data.featured.rating.toFixed(1)} (
+                    {(data.featured.ratingsCount / 1000).toFixed(1)}k)
                   </span>
                 </div>
 
@@ -279,7 +309,11 @@ function ExplorePage() {
             <div className="relative flex flex-col overflow-hidden rounded-xl bg-gradient-to-br from-primary-container via-primary to-primary p-5 text-on-primary shadow-lg">
               <div className="pointer-events-none absolute right-0 bottom-0 h-36 w-36 rounded-full bg-secondary-container/20 blur-2xl" />
               <div className="mb-2 flex items-center gap-2">
-                <Icon name="workspace_premium" filled className="text-[22px] text-secondary-fixed" />
+                <Icon
+                  name="workspace_premium"
+                  filled
+                  className="text-[22px] text-secondary-fixed"
+                />
                 <span className="text-[10px] font-bold tracking-wider text-secondary-fixed uppercase">
                   Acesso Ilimitado
                 </span>
@@ -288,7 +322,8 @@ function ExplorePage() {
                 Desbloqueie mais de 2.500 resumos com o Lúmina Pro
               </h3>
               <p className="mt-1.5 text-[13px] leading-relaxed text-on-primary-container">
-                Áudios narrados por especialistas, mapas conceituais e sincronização offline contínua.
+                Áudios narrados por especialistas, mapas conceituais e
+                sincronização offline contínua.
               </p>
               <div className="mt-4 flex items-center gap-3">
                 <Link

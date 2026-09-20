@@ -16,18 +16,37 @@ export const Route = createFileRoute('/onboarding/offer')({
     }
   },
   loader: async () => {
-    const [plans, onboarding] = await Promise.all([getPlansData(), getOnboardingData()])
+    const [plans, onboarding] = await Promise.all([
+      getPlansData(),
+      getOnboardingData(),
+    ])
     const plan = plans.plans.find((item) => item.isFeatured) ?? plans.plans[0]
-    return { plan, interests: onboarding.interests, preferences: onboarding.preferences }
+    return {
+      plan,
+      interests: onboarding.interests,
+      preferences: onboarding.preferences,
+    }
   },
   component: OfferPage,
 })
 
 const FEATURES = [
-  { title: '+2.500 resumos de alta fidelidade', detail: 'em áudio imersivo e texto editorial.' },
-  { title: 'Modo Offline Instantâneo', detail: 'para ouvir e estudar durante deslocamentos.' },
-  { title: 'Sincronização com Kindle', detail: 'e exportação de mapas mentais em PDF e Notion.' },
-  { title: 'Curadoria diária guiada por IA', detail: 'calibrada com suas metas de carreira.' },
+  {
+    title: '+2.500 resumos de alta fidelidade',
+    detail: 'em áudio imersivo e texto editorial.',
+  },
+  {
+    title: 'Modo Offline Instantâneo',
+    detail: 'para ouvir e estudar durante deslocamentos.',
+  },
+  {
+    title: 'Sincronização com Kindle',
+    detail: 'e exportação de mapas mentais em PDF e Notion.',
+  },
+  {
+    title: 'Curadoria diária guiada por IA',
+    detail: 'calibrada com suas metas de carreira.',
+  },
 ]
 
 function formatCountdown(totalSeconds: number): string {
@@ -46,7 +65,10 @@ function OfferPage() {
   const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    const timer = setInterval(() => setSecondsLeft((value) => (value > 0 ? value - 1 : 0)), 1000)
+    const timer = setInterval(
+      () => setSecondsLeft((value) => (value > 0 ? value - 1 : 0)),
+      1000,
+    )
     return () => clearInterval(timer)
   }, [])
 
@@ -90,7 +112,11 @@ function OfferPage() {
               Passo 4 de 4
             </span>
           </div>
-          <button type="button" onClick={handleSkip} className="px-2 py-1 text-[12px] font-semibold text-on-surface-variant">
+          <button
+            type="button"
+            onClick={handleSkip}
+            className="px-2 py-1 text-[12px] font-semibold text-on-surface-variant"
+          >
             Pular
           </button>
         </div>
@@ -103,7 +129,9 @@ function OfferPage() {
               <span className="h-1.5 w-1.5 animate-ping rounded-full bg-secondary" />
               Jornada Definida
             </span>
-            <span className="text-[12px] font-medium text-on-surface-variant">100% concluído</span>
+            <span className="text-[12px] font-medium text-on-surface-variant">
+              100% concluído
+            </span>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container-high">
             <div className="h-full w-full rounded-full bg-primary-container" />
@@ -111,14 +139,22 @@ function OfferPage() {
         </div>
 
         <span className="mb-2 inline-flex items-center gap-1.5 self-start rounded-full bg-secondary-fixed px-4 py-1.5 text-on-secondary-fixed-variant shadow-sm">
-          <Icon name="celebration" filled className="text-[18px] text-secondary" />
-          <span className="text-[12px] font-semibold">Seu plano diário está pronto!</span>
+          <Icon
+            name="celebration"
+            filled
+            className="text-[18px] text-secondary"
+          />
+          <span className="text-[12px] font-semibold">
+            Seu plano diário está pronto!
+          </span>
         </span>
 
         <h1 className="font-serif text-[30px] leading-[1.15] font-semibold tracking-tight text-primary">
           Bem-vindo(a) ao Lúmina.
           <br />
-          <span className="font-normal text-on-surface italic">Sua jornada começa hoje.</span>
+          <span className="font-normal text-on-surface italic">
+            Sua jornada começa hoje.
+          </span>
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-on-surface-variant">
           Sintetizamos sua biblioteca personalizada com foco em{' '}
@@ -126,13 +162,18 @@ function OfferPage() {
             {interestNames.join(', ') || 'seus interesses'}
           </strong>
           , no ritmo ideal de{' '}
-          <span className="font-semibold text-primary">{goal} minutos ao dia</span>.
+          <span className="font-semibold text-primary">
+            {goal} minutos ao dia
+          </span>
+          .
         </p>
 
         <div className="mt-5 rounded-xl bg-surface-container-lowest p-4 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
             <Icon name="verified" filled className="text-[20px] text-primary" />
-            <span className="text-[16px] font-semibold text-primary">Sua Trilha Sob Medida</span>
+            <span className="text-[16px] font-semibold text-primary">
+              Sua Trilha Sob Medida
+            </span>
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-surface-container-low p-2.5">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-primary-container text-secondary-fixed">
@@ -142,20 +183,28 @@ function OfferPage() {
               <p className="text-[10px] font-semibold tracking-wider text-secondary uppercase">
                 1º título reservado
               </p>
-              <p className="truncate text-[15px] font-semibold text-on-surface">Hábitos Atômicos</p>
+              <p className="truncate text-[15px] font-semibold text-on-surface">
+                Hábitos Atômicos
+              </p>
               <p className="truncate text-[12px] text-on-surface-variant">
                 James Clear • Áudio imersivo ({goal} min)
               </p>
             </div>
             <Icon name="alarm" className="text-[18px] text-primary" />
-            <strong className="text-[12px] text-on-surface">{preferences?.reminderTime ?? '07:30'}</strong>
+            <strong className="text-[12px] text-on-surface">
+              {preferences?.reminderTime ?? '07:30'}
+            </strong>
           </div>
         </div>
 
         <div className="mt-5 overflow-hidden rounded-xl shadow-md">
           <div className="flex items-center justify-between bg-tertiary px-4 py-2 text-on-tertiary">
             <div className="flex items-center gap-1.5">
-              <Icon name="bolt" filled className="animate-pulse text-[18px] text-secondary-container" />
+              <Icon
+                name="bolt"
+                filled
+                className="animate-pulse text-[18px] text-secondary-container"
+              />
               <span className="text-[10px] font-bold tracking-wider text-secondary-fixed uppercase">
                 Oferta de entrada limitada
               </span>
@@ -170,9 +219,12 @@ function OfferPage() {
             <span className="inline-flex rounded bg-secondary-fixed px-2 py-1 text-[10px] font-bold tracking-wide text-on-secondary-fixed-variant">
               7 DIAS GRÁTIS + 60% OFF NO PRIMEIRO ANO
             </span>
-            <h3 className="font-serif mt-2 text-[24px] font-semibold text-primary">Lúmina Ilimitado</h3>
+            <h3 className="font-serif mt-2 text-[24px] font-semibold text-primary">
+              Lúmina Ilimitado
+            </h3>
             <p className="text-[13px] text-on-surface-variant">
-              Toda a biblioteca de sínteses mundiais desbloqueada na ponta dos seus dedos.
+              Toda a biblioteca de sínteses mundiais desbloqueada na ponta dos
+              seus dedos.
             </p>
 
             <div className="mt-3 flex items-baseline justify-between rounded-lg bg-surface-container-low p-4">
@@ -183,9 +235,13 @@ function OfferPage() {
                 <div className="mt-0.5 flex items-baseline gap-1">
                   <span className="text-[12px] font-bold text-primary">R$</span>
                   <span className="text-[34px] leading-none font-bold text-primary">
-                    {(plan.monthlyEquivalentCents / 100).toFixed(2).replace('.', ',')}
+                    {(plan.monthlyEquivalentCents / 100)
+                      .toFixed(2)
+                      .replace('.', ',')}
                   </span>
-                  <span className="text-[13px] font-medium text-on-surface-variant">/mês</span>
+                  <span className="text-[13px] font-medium text-on-surface-variant">
+                    /mês
+                  </span>
                 </div>
               </div>
               <div className="text-right">
@@ -201,9 +257,15 @@ function OfferPage() {
             <ul className="mt-3 mb-3 flex flex-col gap-2">
               {FEATURES.map((feature) => (
                 <li key={feature.title} className="flex items-start gap-2">
-                  <Icon name="check_circle" filled className="mt-0.5 shrink-0 text-[20px] text-secondary" />
+                  <Icon
+                    name="check_circle"
+                    filled
+                    className="mt-0.5 shrink-0 text-[20px] text-secondary"
+                  />
                   <span className="text-[15px] leading-snug text-on-surface">
-                    <strong className="font-semibold text-primary">{feature.title}</strong>{' '}
+                    <strong className="font-semibold text-primary">
+                      {feature.title}
+                    </strong>{' '}
                     {feature.detail}
                   </span>
                 </li>
@@ -211,7 +273,10 @@ function OfferPage() {
             </ul>
 
             <div className="flex items-center gap-2 rounded bg-surface-container-high p-3 text-[12px] text-on-surface-variant">
-              <Icon name="shield" className="shrink-0 text-[18px] text-primary" />
+              <Icon
+                name="shield"
+                className="shrink-0 text-[18px] text-primary"
+              />
               Sem cobrança hoje. Cancele com 1 clique até o 7º dia.
             </div>
           </div>

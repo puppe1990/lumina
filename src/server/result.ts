@@ -5,9 +5,12 @@ export type ActionError = {
   message: string
 }
 
-export type ActionResult<T> = { ok: true; data: T } | { ok: false; error: ActionError }
+export type ActionResult<T> =
+  { ok: true; data: T } | { ok: false; error: ActionError }
 
-export async function runAction<T>(fn: () => T | Promise<T>): Promise<ActionResult<T>> {
+export async function runAction<T>(
+  fn: () => T | Promise<T>,
+): Promise<ActionResult<T>> {
   try {
     const data = await fn()
     return { ok: true, data }
@@ -18,7 +21,10 @@ export async function runAction<T>(fn: () => T | Promise<T>): Promise<ActionResu
     console.error('[action] unexpected error', error)
     return {
       ok: false,
-      error: { code: 'INTERNAL', message: 'Algo deu errado. Tente novamente em instantes.' },
+      error: {
+        code: 'INTERNAL',
+        message: 'Algo deu errado. Tente novamente em instantes.',
+      },
     }
   }
 }
