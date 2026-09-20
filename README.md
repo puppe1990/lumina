@@ -83,6 +83,18 @@ npm run assets:generate   # requer Chromium do Playwright
 As meta tags (`og:*`, `twitter:*`, `manifest`, favicon e `apple-touch-icon`) são declaradas em
 `src/routes/__root.tsx`, usando `VITE_APP_URL` para montar URLs absolutas.
 
+## Deploy (Cleat)
+
+O app é publicado como servidor Node via [Nitro](https://nitro.build) no painel Cleat.
+
+- `npm run build` gera `.output/` (preset `node-server`); `npm start` roda `node .output/server/index.mjs`.
+- `.cleat_deploy/deploy.json` define runtime Node 22, comando de start e memória.
+- Persistência: aponte `DATABASE_FILE` para o data dir do app (ex.: `/opt/lumina/data/lumina.db`).
+
+```bash
+cleat deploy lumina --watch
+```
+
 ## Qualidade de código
 
 - **CI** (`.github/workflows/ci.yml`): roda em push/PR para `main` — Prettier, ESLint, typecheck,
