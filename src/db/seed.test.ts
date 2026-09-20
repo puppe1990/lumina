@@ -9,8 +9,14 @@ import {
   listCollections,
 } from '#/domain/catalog/service'
 import { listPlans } from '#/domain/plans/service'
-import { ensureSeeded, isSeeded, resetDatabase, seedDatabase } from '#/db/seed'
-import { createTestDb, faker } from '#/test/factories'
+import {
+  ensureSeeded,
+  isSeeded,
+  resetDatabase,
+  seedDatabase,
+  syncCatalog,
+} from '#/db/seed'
+import { createTestDb, faker, makeBook, makeCategory } from '#/test/factories'
 
 let db: Db
 
@@ -55,6 +61,38 @@ describe('seedDatabase', () => {
     expect(detail.chapters.length).toBeGreaterThan(0)
     expect(detail.insights.length).toBeGreaterThan(0)
     expect(detail.quotes.length).toBeGreaterThan(0)
+  })
+
+  it('is idempotent and keeps deterministic book ids across syncs', () => {
+    seedDatabase(db)
+    const first = getBookDetail(db, 'habitos-atomicos')
+    seedDatabase(db)
+    const second = getBookDetail(db, 'habitos-atomicos')
+
+    expect(second.id).toBe(first.id)
+    expect(second.chapters[0].id).toBe(first.chapters[0].id)
+    expect(countBooks(db)).toBe(26)
+  })
+
+  it('migrates legacy rows that reuse a slug with a different id', () => {
+    const legacyCategory = makeCategory(db, {
+      slug: 'produtividade-foco',
+      name: 'Produtividade & Foco',
+    })
+    const legacyBook = makeBook(db, {
+      categoryId: legacyCategory.id,
+      slug: 'habitos-atomicos',
+      title: 'Hábitos Atômicos',
+    })
+
+    const summary = syncCatalog(db)
+
+    expect(summary.books).toBe(26)
+    const detail = getBookDetail(db, 'habitos-atomicos')
+    expect(detail.id).not.toBe(legacyBook.id)
+    expect(detail.id).toBe('book_habitos-atomicos')
+    expect(detail.category.id).toBe('cat_produtividade-foco')
+    expect(countBooks(db)).toBe(26)
   })
 
   it('resets the catalog safely', () => {

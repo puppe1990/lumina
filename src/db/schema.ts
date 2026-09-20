@@ -203,6 +203,11 @@ export const subscriptions = sqliteTable('subscriptions', {
   createdAt: integer('created_at').notNull(),
 })
 
+export const appMeta = sqliteTable('app_meta', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+})
+
 export const booksRelations = relations(books, ({ one, many }) => ({
   category: one(categories, {
     fields: [books.categoryId],
