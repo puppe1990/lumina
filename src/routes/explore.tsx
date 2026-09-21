@@ -36,6 +36,7 @@ type ExploreSearch = {
   time?: BookTime
   sort?: BookSort
   view?: 'all'
+  page?: number
 }
 
 export const Route = createFileRoute('/explore')({
@@ -58,6 +59,8 @@ export const Route = createFileRoute('/explore')({
         ? (search.sort as BookSort)
         : undefined,
       view: search.view === 'all' ? 'all' : undefined,
+      page:
+        Number(search.page) > 1 ? Math.trunc(Number(search.page)) : undefined,
     }
   },
   loaderDeps: ({ search }) => ({
@@ -67,6 +70,7 @@ export const Route = createFileRoute('/explore')({
     time: search.time,
     sort: search.sort,
     view: search.view,
+    page: search.page,
   }),
   loader: async ({ deps }) => {
     const range = timeRange(deps.time)
@@ -79,6 +83,7 @@ export const Route = createFileRoute('/explore')({
         maxMinutes: range.max,
         sort: deps.sort,
         view: deps.view,
+        page: deps.page,
       },
     })
   },
@@ -98,6 +103,8 @@ function ExplorePage() {
     ...data.categories,
   ]
   const isFiltered = Boolean(data.results)
+  const total = data.pagination?.total ?? data.results?.length ?? 0
+  const currentPage = data.pagination?.page ?? 1
 
   const baseSearch = {
     category: search.category,
@@ -159,6 +166,17 @@ function ExplorePage() {
         rating: undefined,
         time: undefined,
         sort: undefined,
+      },
+    })
+  }
+
+  function goToPage(next: number) {
+    navigate({
+      to: '/explore',
+      search: {
+        ...baseSearch,
+        view: search.view,
+        page: next > 1 ? next : undefined,
       },
     })
   }
@@ -238,6 +256,7 @@ function ExplorePage() {
               search={{
                 ...baseSearch,
                 category: category.slug === 'todos' ? undefined : category.slug,
+                view: category.slug === 'todos' ? 'all' : undefined,
               }}
               className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-semibold whitespace-nowrap transition-all active:scale-95 ${
                 isActive
@@ -261,11 +280,11 @@ function ExplorePage() {
               <h3 className="font-serif text-[18px] font-semibold text-on-surface">
                 {search.view === 'all'
                   ? 'Todos os resumos'
-                  : `${data.results?.length ?? 0} resultados`}
+                  : `${total} resultados`}
               </h3>
               {search.view === 'all' ? (
                 <p className="text-[13px] text-on-surface-variant">
-                  {data.results?.length ?? 0} títulos no acervo
+                  {total} títulos no acervo
                 </p>
               ) : null}
             </div>
@@ -307,6 +326,31 @@ function ExplorePage() {
               Nenhum resumo encontrado. Tente outra busca.
             </p>
           )}
+          {data.pagination && data.pagination.totalPages > 1 ? (
+            <div className="mt-3 flex items-center justify-between">
+              <button
+                type="button"
+                disabled={currentPage <= 1}
+                onClick={() => goToPage(currentPage - 1)}
+                className="flex items-center gap-1 rounded-full bg-surface-container px-4 py-2 text-[12px] font-semibold text-on-surface-variant disabled:opacity-40"
+              >
+                <Icon name="chevron_left" className="text-[18px]" />
+                Anterior
+              </button>
+              <span className="text-[12px] font-semibold text-on-surface-variant">
+                Página {currentPage} de {data.pagination.totalPages}
+              </span>
+              <button
+                type="button"
+                disabled={currentPage >= data.pagination.totalPages}
+                onClick={() => goToPage(currentPage + 1)}
+                className="flex items-center gap-1 rounded-full bg-surface-container px-4 py-2 text-[12px] font-semibold text-on-surface-variant disabled:opacity-40"
+              >
+                Próxima
+                <Icon name="chevron_right" className="text-[18px]" />
+              </button>
+            </div>
+          ) : null}
         </section>
       ) : (
         <>
@@ -401,13 +445,6 @@ function ExplorePage() {
                   Leituras essenciais que lideram as conversas
                 </p>
               </div>
-              <Link
-                to="/explore"
-                search={{ view: 'all' }}
-                className="shrink-0 text-[12px] font-semibold text-primary"
-              >
-                Ver todos
-              </Link>
             </div>
             <DragScroll className="no-scrollbar flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-2">
               {data.trending.map((book) => (

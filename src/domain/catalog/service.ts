@@ -135,6 +135,7 @@ export type SearchBooksOptions = {
   maxMinutes?: number
   sort?: BookSort
   limit?: number
+  offset?: number
 }
 
 function orderFor(sort: BookSort = DEFAULT_SORT): SQL[] {
@@ -151,10 +152,7 @@ function orderFor(sort: BookSort = DEFAULT_SORT): SQL[] {
   }
 }
 
-export function searchBooks(
-  db: Db,
-  options: SearchBooksOptions = {},
-): BookCard[] {
+function searchConditions(options: SearchBooksOptions) {
   const conditions = []
   const term = options.query?.trim()
 
@@ -179,12 +177,43 @@ export function searchBooks(
     conditions.push(lte(books.readingMinutes, options.maxMinutes))
   }
 
+  return conditions
+}
+
+export function searchBooks(
+  db: Db,
+  options: SearchBooksOptions = {},
+): BookCard[] {
+  const conditions = searchConditions(options)
+
   const query = bookCardQuery(db)
     .where(conditions.length ? and(...conditions) : undefined)
     .orderBy(...orderFor(options.sort))
 
-  const rows = options.limit ? query.limit(options.limit).all() : query.all()
-  return rows.map(mapCard)
+  if (options.limit) {
+    query.limit(options.limit)
+  }
+  if (options.offset) {
+    query.offset(options.offset)
+  }
+
+  return query.all().map(mapCard)
+}
+
+export function countBooksMatching(
+  db: Db,
+  options: SearchBooksOptions = {},
+): number {
+  const conditions = searchConditions(options)
+
+  const row = db
+    .select({ value: sql<number>`count(*)` })
+    .from(books)
+    .innerJoin(categories, eq(categories.id, books.categoryId))
+    .where(conditions.length ? and(...conditions) : undefined)
+    .get()
+
+  return row?.value ?? 0
 }
 
 export function listCollections(db: Db): CollectionWithBooks[] {
