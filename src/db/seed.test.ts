@@ -49,11 +49,19 @@ describe('seedDatabase', () => {
 
     for (const book of listBooks(db)) {
       const detail = getBookDetail(db, book.id)
-      expect(detail.chapters).toHaveLength(4)
-      expect(detail.insights).toHaveLength(4)
-      expect(detail.quotes).toHaveLength(2)
-      expect(detail.description.length).toBeGreaterThan(80)
+      expect(detail.chapters).toHaveLength(8)
+      expect(detail.insights).toHaveLength(8)
+      expect(detail.quotes).toHaveLength(4)
+      expect(detail.takeaways).toHaveLength(5)
+      expect(detail.description.length).toBeGreaterThan(120)
+      expect(detail.forWho?.length).toBeGreaterThan(60)
       expect(detail.coverUrl).toBe(`/covers/${book.slug}.jpg`)
+
+      const chapterWords = detail.chapters.reduce(
+        (total, chapter) => total + chapter.body.split(/\s+/).length,
+        0,
+      )
+      expect(chapterWords).toBeGreaterThan(1400)
     }
 
     const allCollections = listCollections(db)

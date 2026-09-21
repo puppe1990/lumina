@@ -43,10 +43,19 @@ CREATE TABLE IF NOT EXISTS books (
   is_featured INTEGER NOT NULL DEFAULT 0,
   published_at INTEGER NOT NULL,
   search_index TEXT NOT NULL DEFAULT '',
-  cover_url TEXT
+  cover_url TEXT,
+  for_who TEXT
 );
 CREATE INDEX IF NOT EXISTS books_category_id_idx ON books(category_id);
 CREATE INDEX IF NOT EXISTS books_search_index_idx ON books(search_index);
+
+CREATE TABLE IF NOT EXISTS book_takeaways (
+  id TEXT PRIMARY KEY,
+  book_id TEXT NOT NULL REFERENCES books(id) ON DELETE CASCADE,
+  position INTEGER NOT NULL,
+  body TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS book_takeaways_book_id_idx ON book_takeaways(book_id);
 
 CREATE TABLE IF NOT EXISTS book_chapters (
   id TEXT PRIMARY KEY,

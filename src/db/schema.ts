@@ -55,6 +55,16 @@ export const books = sqliteTable('books', {
   publishedAt: integer('published_at').notNull(),
   searchIndex: text('search_index').notNull().default(''),
   coverUrl: text('cover_url'),
+  forWho: text('for_who'),
+})
+
+export const bookTakeaways = sqliteTable('book_takeaways', {
+  id: text('id').primaryKey(),
+  bookId: text('book_id')
+    .notNull()
+    .references(() => books.id, { onDelete: 'cascade' }),
+  position: integer('position').notNull(),
+  body: text('body').notNull(),
 })
 
 export const bookChapters = sqliteTable('book_chapters', {

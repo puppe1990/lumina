@@ -25,7 +25,10 @@ export function createDatabase(fileName = ':memory:'): Db {
 // Colunas adicionadas depois do schema inicial (bancos já existentes).
 const ADDED_COLUMNS: Array<
   [table: string, column: string, definition: string]
-> = [['books', 'cover_url', 'TEXT']]
+> = [
+  ['books', 'cover_url', 'TEXT'],
+  ['books', 'for_who', 'TEXT'],
+]
 
 function applyMigrations(sqlite: Database.Database): void {
   for (const [table, column, definition] of ADDED_COLUMNS) {

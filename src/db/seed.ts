@@ -216,12 +216,13 @@ export type SeedSummary = {
   chapters: number
   insights: number
   quotes: number
+  takeaways: number
   collections: number
   plans: number
 }
 
 // Bump quando a lógica/estrutura do seed mudar (força o re-sync em produção).
-const SEED_VERSION = '2'
+const SEED_VERSION = '3'
 
 export const CATALOG_VERSION = createHash('sha1')
   .update(
@@ -247,6 +248,7 @@ export function resetDatabase(db: Db): void {
     'book_quotes',
     'book_insights',
     'book_chapters',
+    'book_takeaways',
     'books',
     'collections',
     'categories',
@@ -308,6 +310,7 @@ export function syncCatalog(db: Db): SeedSummary {
         `${book.title} ${book.author} ${book.tagline}`,
       ),
       coverUrl: `/covers/${book.slug}.jpg`,
+      forWho: book.forWho,
     }
 
     db.insert(schema.books)
@@ -336,6 +339,7 @@ export function syncCatalog(db: Db): SeedSummary {
   let chapters = 0
   let insights = 0
   let quotes = 0
+  let takeaways = 0
 
   for (const book of CATALOG_BOOKS) {
     const bookId = bookIdBySlug.get(book.slug)!
@@ -348,6 +352,9 @@ export function syncCatalog(db: Db): SeedSummary {
       .run()
     db.delete(schema.bookQuotes)
       .where(eq(schema.bookQuotes.bookId, bookId))
+      .run()
+    db.delete(schema.bookTakeaways)
+      .where(eq(schema.bookTakeaways.bookId, bookId))
       .run()
 
     book.chapters.forEach((chapter, position) => {
@@ -388,6 +395,18 @@ export function syncCatalog(db: Db): SeedSummary {
         })
         .run()
       quotes++
+    })
+
+    book.takeaways.forEach((body, position) => {
+      db.insert(schema.bookTakeaways)
+        .values({
+          id: newId('take', `${book.slug}-${position}`),
+          bookId,
+          position,
+          body,
+        })
+        .run()
+      takeaways++
     })
   }
 
@@ -461,6 +480,7 @@ export function syncCatalog(db: Db): SeedSummary {
     chapters,
     insights,
     quotes,
+    takeaways,
     collections: COLLECTIONS.length,
     plans: PLANS.length,
   }

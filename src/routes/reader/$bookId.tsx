@@ -43,7 +43,7 @@ function ReaderPage() {
   const [position, setPosition] = useState(entry?.lastPositionSeconds ?? 0)
   const [playing, setPlaying] = useState(false)
   const [speedIndex, setSpeedIndex] = useState(1)
-  const [tab, setTab] = useState<'summary' | 'insights'>('summary')
+  const [tab, setTab] = useState<'summary' | 'insights' | 'action'>('summary')
   const [fontIndex, setFontIndex] = useState(0)
   const [saved, setSaved] = useState(Boolean(entry))
   const [completed, setCompleted] = useState(entry?.status === 'completed')
@@ -231,6 +231,24 @@ function ReaderPage() {
         </div>
       </div>
 
+      {book.forWho ? (
+        <div className="mb-4 px-5">
+          <div className="flex items-start gap-3 rounded-2xl bg-surface-container-low p-4">
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary-fixed text-on-primary-fixed-variant">
+              <Icon name="groups" filled className="text-[20px]" />
+            </span>
+            <div className="min-w-0">
+              <span className="text-[10px] font-bold tracking-wider text-primary uppercase">
+                Para quem é
+              </span>
+              <p className="mt-0.5 text-[13px] leading-relaxed text-on-surface-variant">
+                {book.forWho}
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {FEATURES.audioPlayer ? (
         <div className="mb-4 px-5">
           <div className="flex flex-col gap-4 rounded-2xl bg-surface-container-lowest p-4 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.06)]">
@@ -336,7 +354,7 @@ function ReaderPage() {
                 : 'text-on-surface-variant'
             }`}
           >
-            Resumo Editorial
+            Resumo
           </button>
           <button
             type="button"
@@ -347,7 +365,18 @@ function ReaderPage() {
                 : 'text-on-surface-variant'
             }`}
           >
-            Ideias-Chave ({book.insights.length})
+            Ideias ({book.insights.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab('action')}
+            className={`flex-1 rounded-full px-3 py-2 text-center text-[12px] font-semibold transition-all ${
+              tab === 'action'
+                ? 'bg-primary text-on-primary shadow-sm'
+                : 'text-on-surface-variant'
+            }`}
+          >
+            Ação ({book.takeaways.length})
           </button>
         </div>
       </div>
@@ -379,6 +408,33 @@ function ReaderPage() {
                 </div>
               ))}
             </div>
+          </div>
+        ) : tab === 'action' ? (
+          <div className="relative overflow-hidden rounded-2xl bg-primary-container p-5 text-on-primary shadow-sm">
+            <div className="mb-3 flex items-center gap-2">
+              <Icon
+                name="checklist"
+                className="text-[20px] text-secondary-container"
+              />
+              <span className="text-[10px] font-bold tracking-wider uppercase">
+                Plano de Ação
+              </span>
+            </div>
+            <p className="mb-4 text-[13px] leading-relaxed text-on-primary-container">
+              Coloque o livro em prática hoje. Cinco passos concretos:
+            </p>
+            <ol className="flex flex-col gap-3">
+              {book.takeaways.map((takeaway, index) => (
+                <li key={takeaway.id} className="flex items-start gap-3">
+                  <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-secondary-container text-[11px] font-bold text-on-secondary-container">
+                    {index + 1}
+                  </span>
+                  <span className="text-[14px] leading-relaxed">
+                    {takeaway.body}
+                  </span>
+                </li>
+              ))}
+            </ol>
           </div>
         ) : (
           <article

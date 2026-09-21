@@ -5,6 +5,7 @@ import {
   bookChapters,
   bookInsights,
   bookQuotes,
+  bookTakeaways,
   books,
   categories,
   collectionBooks,
@@ -27,11 +28,14 @@ export type BookCard = Book & {
   categorySlug: string
 }
 
+export type Takeaway = typeof bookTakeaways.$inferSelect
+
 export type BookDetail = Book & {
   category: Category
   chapters: Chapter[]
   insights: Insight[]
   quotes: Quote[]
+  takeaways: Takeaway[]
 }
 
 export type CollectionWithBooks = Collection & {
@@ -222,12 +226,20 @@ export function getBookDetail(db: Db, idOrSlug: string): BookDetail {
     .orderBy(asc(bookQuotes.position))
     .all()
 
+  const takeaways = db
+    .select()
+    .from(bookTakeaways)
+    .where(eq(bookTakeaways.bookId, row.book.id))
+    .orderBy(asc(bookTakeaways.position))
+    .all()
+
   return {
     ...mapCard(row),
     category,
     chapters,
     insights,
     quotes,
+    takeaways,
   }
 }
 
