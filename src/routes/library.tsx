@@ -370,24 +370,30 @@ function LibraryPage() {
               key={book.id}
               className="flex items-center gap-3 rounded-xl bg-surface-container-lowest p-3 shadow-sm"
             >
-              <BookCover
-                title={book.title}
-                author={book.author}
-                color={book.coverColor}
-                coverUrl={book.coverUrl}
-                className="h-20 w-14 shrink-0 rounded-md shadow-sm"
-              />
-              <div className="min-w-0 flex-1">
-                <span className="text-[10px] font-semibold tracking-wide text-secondary uppercase">
-                  {book.categoryName}
-                </span>
-                <h3 className="truncate text-[15px] font-semibold text-on-surface">
-                  {book.title}
-                </h3>
-                <p className="truncate text-[12px] text-outline">
-                  {book.author}
-                </p>
-              </div>
+              <Link
+                to="/reader/$bookId"
+                params={{ bookId: book.id }}
+                className="flex min-w-0 flex-1 items-center gap-3 active:scale-[0.99]"
+              >
+                <BookCover
+                  title={book.title}
+                  author={book.author}
+                  color={book.coverColor}
+                  coverUrl={book.coverUrl}
+                  className="h-20 w-14 shrink-0 rounded-md shadow-sm"
+                />
+                <div className="min-w-0 flex-1">
+                  <span className="text-[10px] font-semibold tracking-wide text-secondary uppercase">
+                    {book.categoryName}
+                  </span>
+                  <h3 className="truncate text-[15px] font-semibold text-on-surface">
+                    {book.title}
+                  </h3>
+                  <p className="truncate text-[12px] text-outline">
+                    {book.author}
+                  </p>
+                </div>
+              </Link>
               <button
                 type="button"
                 disabled={loadingRecommendation === book.id}
