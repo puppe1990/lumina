@@ -5,6 +5,7 @@ import {
   createRootRoute,
 } from '@tanstack/react-router'
 
+import { NavigationProgress } from '../components/navigation-progress'
 import { PwaRegister } from '../components/pwa-register'
 import {
   OG_IMAGE,
@@ -93,7 +94,12 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
-  return <Outlet />
+  return (
+    <>
+      <NavigationProgress />
+      <Outlet />
+    </>
+  )
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
