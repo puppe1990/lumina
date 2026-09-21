@@ -181,6 +181,29 @@ const COLLECTIONS: CollectionDef[] = [
     color: '#262e42',
     books: ['sapiens', 'homo-deus'],
   },
+  {
+    slug: 'indicados-vida-real',
+    eyebrow: '12 Obras do Acervo',
+    title: 'Indicados para a Vida Real',
+    description:
+      'Mente, luto, autismo e renda: a seleção do acervo para quando o problema é concreto e a resposta precisa virar ação.',
+    icon: 'psychology',
+    color: '#0f766e',
+    books: [
+      'how-to-adhd',
+      'your-brains-not-broken',
+      'you-are-not-your-brain',
+      'the-organized-mind',
+      'unfuck-your-brain',
+      'dopamine-detox',
+      'the-grieving-brain',
+      'the-autistic-brain',
+      'aba-em-casa',
+      'decision-sprint',
+      'how-to-fail-at-almost-everything',
+      'the-four-workarounds',
+    ],
+  },
 ]
 
 const PLANS = [
