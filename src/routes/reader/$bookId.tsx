@@ -381,7 +381,10 @@ function ReaderPage() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 px-5">
+      <div
+        className="flex flex-col gap-5 px-5"
+        style={{ fontSize: activeFont.size }}
+      >
         {tab === 'insights' ? (
           <div className="relative overflow-hidden rounded-2xl bg-surface-container-low p-4 shadow-sm">
             <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-secondary-container" />
@@ -402,7 +405,7 @@ function ReaderPage() {
                   <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-surface-container-highest text-[10px] font-bold text-primary">
                     {index + 1}
                   </span>
-                  <p className="text-[13px] text-on-surface">
+                  <p className="text-[0.85em] text-on-surface">
                     <strong>{insight.title}:</strong> {insight.body}
                   </p>
                 </div>
@@ -420,7 +423,7 @@ function ReaderPage() {
                 Plano de Ação
               </span>
             </div>
-            <p className="mb-4 text-[13px] leading-relaxed text-on-primary-container">
+            <p className="mb-4 text-[0.85em] leading-relaxed text-on-primary-container">
               Coloque o livro em prática hoje. Cinco passos concretos:
             </p>
             <ol className="flex flex-col gap-3">
@@ -429,7 +432,7 @@ function ReaderPage() {
                   <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-secondary-container text-[11px] font-bold text-on-secondary-container">
                     {index + 1}
                   </span>
-                  <span className="text-[14px] leading-relaxed">
+                  <span className="text-[0.9em] leading-relaxed">
                     {takeaway.body}
                   </span>
                 </li>
@@ -437,10 +440,7 @@ function ReaderPage() {
             </ol>
           </div>
         ) : (
-          <article
-            className="flex flex-col gap-4 text-on-surface"
-            style={{ fontSize: activeFont.size }}
-          >
+          <article className="flex flex-col gap-4 text-on-surface">
             {book.chapters.map((item) => (
               <section key={item.id} className="flex flex-col gap-3">
                 <button
@@ -448,7 +448,7 @@ function ReaderPage() {
                   onClick={() => setChapter(item.position)}
                   className="flex items-center justify-between text-left"
                 >
-                  <span className="font-serif text-[20px] font-medium tracking-tight text-primary">
+                  <span className="font-serif text-[1.25em] font-medium tracking-tight text-primary">
                     {item.title}
                   </span>
                   {chapter === item.position ? (
@@ -459,7 +459,7 @@ function ReaderPage() {
                     />
                   ) : null}
                 </button>
-                <p className="text-[15px] leading-relaxed text-on-surface/90">
+                <p className="leading-relaxed text-on-surface/90">
                   {item.body}
                 </p>
                 {(quotesByChapter.get(item.position) ?? []).map((quote) => (
@@ -470,7 +470,7 @@ function ReaderPage() {
                     <span className="pointer-events-none absolute top-2 right-4 font-serif text-[64px] leading-none text-surface-container-high opacity-40 select-none">
                       “
                     </span>
-                    <p className="font-serif relative z-10 text-[20px] leading-snug font-medium text-primary italic">
+                    <p className="font-serif relative z-10 text-[1.25em] leading-snug font-medium text-primary italic">
                       “{quote.text}”
                     </p>
                     <div className="relative z-10 mt-3 flex items-center justify-between">
