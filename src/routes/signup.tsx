@@ -5,6 +5,7 @@ import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
+import { FEATURES } from '#/lib/features'
 import { signUp } from '#/server/auth'
 
 export const Route = createFileRoute('/signup')({
@@ -247,7 +248,9 @@ function SignUpPage() {
               />
               <span>
                 <strong className="font-semibold text-on-surface">
-                  Áudios narrados
+                  {FEATURES.audioPlayer
+                    ? 'Áudios narrados'
+                    : 'Resumos editoriais'}
                 </strong>{' '}
                 com sínteses conceituais em 15 minutos
               </span>

@@ -4,6 +4,7 @@ import { BookCover } from '#/components/book-cover'
 import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
+import { FEATURES } from '#/lib/features'
 import { getExploreData } from '#/server/catalog'
 
 export const Route = createFileRoute('/onboarding/welcome')({
@@ -14,29 +15,39 @@ export const Route = createFileRoute('/onboarding/welcome')({
   component: WelcomePage,
 })
 
-const PILLARS = [
-  {
-    icon: 'headphones',
-    tone: 'bg-primary-fixed text-on-primary-fixed-variant',
-    title: 'Áudio & Texto Imersivo',
-    body: 'Narração com voz humana em cadência ideal para seus trajetos matinais, treinos ou pausas de café.',
-  },
-  {
-    icon: 'bolt',
-    tone: 'bg-secondary-fixed text-on-secondary-fixed-variant',
-    title: 'Ideias-Chave em 1 Minuto',
-    body: 'Vá direto ao ponto essencial através de sínteses executivas, citações marcantes e resumos aplicáveis.',
-  },
-  {
-    icon: 'track_changes',
-    tone: 'bg-tertiary-fixed text-on-tertiary-fixed',
-    title: 'Jornada Personalizada',
-    body: 'Trilhas calibradas com suas metas profissionais e rotina real de tempo disponível.',
-  },
-]
+function buildPillars(audioPlayer: boolean) {
+  return [
+    audioPlayer
+      ? {
+          icon: 'headphones',
+          tone: 'bg-primary-fixed text-on-primary-fixed-variant',
+          title: 'Áudio & Texto Imersivo',
+          body: 'Narração com voz humana em cadência ideal para seus trajetos matinais, treinos ou pausas de café.',
+        }
+      : {
+          icon: 'menu_book',
+          tone: 'bg-primary-fixed text-on-primary-fixed-variant',
+          title: 'Leitura Editorial Imersiva',
+          body: 'Resumos diagramados com tipografia pensada para leitura rápida e focada no seu ritmo.',
+        },
+    {
+      icon: 'bolt',
+      tone: 'bg-secondary-fixed text-on-secondary-fixed-variant',
+      title: 'Ideias-Chave em 1 Minuto',
+      body: 'Vá direto ao ponto essencial através de sínteses executivas, citações marcantes e resumos aplicáveis.',
+    },
+    {
+      icon: 'track_changes',
+      tone: 'bg-tertiary-fixed text-on-tertiary-fixed',
+      title: 'Jornada Personalizada',
+      body: 'Trilhas calibradas com suas metas profissionais e rotina real de tempo disponível.',
+    },
+  ]
+}
 
 function WelcomePage() {
   const { trending, totalBooks } = Route.useLoaderData()
+  const pillars = buildPillars(FEATURES.audioPlayer)
 
   return (
     <Screen>
@@ -104,8 +115,10 @@ function WelcomePage() {
         </h1>
         <p className="mt-2 text-[15px] leading-relaxed text-on-surface-variant">
           Aprenda ideias práticas de negócios, liderança, psicologia e
-          desenvolvimento pessoal com resumos em áudio imersivo e texto
-          diagramado.
+          desenvolvimento pessoal com{' '}
+          {FEATURES.audioPlayer
+            ? 'resumos em áudio imersivo e texto diagramado.'
+            : 'resumos editoriais diagramados para leitura focada.'}
         </p>
 
         <div className="mt-4 flex flex-col gap-2 rounded-xl bg-surface-container-lowest p-4 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.05)]">
@@ -117,7 +130,7 @@ function WelcomePage() {
               </span>
             </div>
             <span className="rounded-full bg-surface-container px-2 py-0.5 text-[10px] font-semibold text-on-surface-variant">
-              Áudio & Texto
+              {FEATURES.audioPlayer ? 'Áudio & Texto' : 'Texto editorial'}
             </span>
           </div>
           <div className="grid grid-cols-3 gap-2">
@@ -132,15 +145,18 @@ function WelcomePage() {
                   color={book.coverColor}
                   coverUrl={book.coverUrl}
                   label={book.categoryName}
-                  showAudioBadge
+                  showAudioBadge={FEATURES.audioPlayer}
                   className="aspect-[2/3] w-full"
                 />
                 <span className="mt-1 flex items-center gap-0.5 text-[9px] text-on-surface-variant">
                   <Icon
-                    name="schedule"
+                    name={FEATURES.audioPlayer ? 'headphones' : 'schedule'}
                     className="text-[11px] text-secondary"
                   />
-                  {book.audioMinutes} min
+                  {FEATURES.audioPlayer
+                    ? book.audioMinutes
+                    : book.readingMinutes}{' '}
+                  min
                 </span>
               </div>
             ))}
@@ -164,7 +180,7 @@ function WelcomePage() {
             Ritmo diário
           </span>
         </div>
-        {PILLARS.map((pillar) => (
+        {pillars.map((pillar) => (
           <div
             key={pillar.title}
             className="flex items-start gap-3 rounded-xl bg-surface-container-lowest p-3 shadow-sm"

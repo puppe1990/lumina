@@ -5,6 +5,7 @@ import { BookCover } from '#/components/book-cover'
 import { Icon } from '#/components/icon'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
+import { FEATURES } from '#/lib/features'
 import { formatDuration } from '#/lib/text'
 import {
   addHighlightAction,
@@ -54,7 +55,7 @@ function ReaderPage() {
     totalSeconds > 0 ? Math.min(100, (position / totalSeconds) * 100) : 0
 
   useEffect(() => {
-    if (!playing) {
+    if (!FEATURES.audioPlayer || !playing) {
       return
     }
     const timer = setInterval(() => {
@@ -71,6 +72,9 @@ function ReaderPage() {
   }, [playing, totalSeconds])
 
   useEffect(() => {
+    if (!FEATURES.audioPlayer) {
+      return
+    }
     if (Math.abs(position - lastPersisted.current) < 15 && position !== 0) {
       return
     }
@@ -189,11 +193,15 @@ function ReaderPage() {
               {book.category.name}
             </span>
             <span className="h-1 w-1 rounded-full bg-outline-variant" />
-            <span className="flex items-center gap-1 text-[10px] font-bold text-secondary">
-              <Icon name="headphones" className="text-[14px]" />{' '}
-              {book.audioMinutes} min
-            </span>
-            <span className="h-1 w-1 rounded-full bg-outline-variant" />
+            {FEATURES.audioPlayer ? (
+              <>
+                <span className="flex items-center gap-1 text-[10px] font-bold text-secondary">
+                  <Icon name="headphones" className="text-[14px]" />{' '}
+                  {book.audioMinutes} min
+                </span>
+                <span className="h-1 w-1 rounded-full bg-outline-variant" />
+              </>
+            ) : null}
             <span className="flex items-center gap-1 text-[10px] text-on-surface-variant">
               <Icon name="auto_stories" className="text-[14px]" />{' '}
               {book.readingMinutes} min
@@ -223,95 +231,99 @@ function ReaderPage() {
         </div>
       </div>
 
-      <div className="mb-4 px-5">
-        <div className="flex flex-col gap-4 rounded-2xl bg-surface-container-lowest p-4 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.06)]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2.5 w-2.5 animate-pulse rounded-full bg-secondary-container" />
-              <span className="text-[10px] font-bold tracking-wider text-primary uppercase">
-                Narração Curada
-              </span>
+      {FEATURES.audioPlayer ? (
+        <div className="mb-4 px-5">
+          <div className="flex flex-col gap-4 rounded-2xl bg-surface-container-lowest p-4 shadow-[0_4px_24px_-2px_rgba(15,23,42,0.06)]">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="flex h-2.5 w-2.5 animate-pulse rounded-full bg-secondary-container" />
+                <span className="text-[10px] font-bold tracking-wider text-primary uppercase">
+                  Narração Curada
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 text-on-surface-variant">
+                <Icon name="graphic_eq" className="text-[18px]" />
+                <span className="text-[10px]">Voz Humana HD</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5 text-on-surface-variant">
-              <Icon name="graphic_eq" className="text-[18px]" />
-              <span className="text-[10px]">Voz Humana HD</span>
-            </div>
-          </div>
 
-          <div className="flex flex-col gap-1.5">
-            <input
-              type="range"
-              min={0}
-              max={totalSeconds}
-              value={position}
-              onChange={(event) => setPosition(Number(event.target.value))}
-              aria-label="Progresso do áudio"
-              className="h-1.5 w-full cursor-pointer appearance-none rounded-full accent-secondary-container"
-              style={{
-                background: `linear-gradient(to right, var(--color-secondary-container) ${progressPercent}%, var(--color-surface-container-high) ${progressPercent}%)`,
-              }}
-            />
-            <div className="flex items-center justify-between text-[10px] text-on-surface-variant">
-              <span>{formatDuration(position)}</span>
-              <span className="text-outline">
-                {formatDuration(totalSeconds)}
-              </span>
+            <div className="flex flex-col gap-1.5">
+              <input
+                type="range"
+                min={0}
+                max={totalSeconds}
+                value={position}
+                onChange={(event) => setPosition(Number(event.target.value))}
+                aria-label="Progresso do áudio"
+                className="h-1.5 w-full cursor-pointer appearance-none rounded-full accent-secondary-container"
+                style={{
+                  background: `linear-gradient(to right, var(--color-secondary-container) ${progressPercent}%, var(--color-surface-container-high) ${progressPercent}%)`,
+                }}
+              />
+              <div className="flex items-center justify-between text-[10px] text-on-surface-variant">
+                <span>{formatDuration(position)}</span>
+                <span className="text-outline">
+                  {formatDuration(totalSeconds)}
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div className="flex items-center justify-between pt-1">
-            <button
-              type="button"
-              onClick={() =>
-                setSpeedIndex((index) => (index + 1) % SPEEDS.length)
-              }
-              className="rounded-full bg-surface-container px-2.5 py-1 text-[12px] font-semibold text-on-surface active:scale-95"
-            >
-              {SPEEDS[speedIndex]}
-            </button>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between pt-1">
               <button
                 type="button"
-                aria-label="Voltar 15 segundos"
-                onClick={() => setPosition((value) => Math.max(0, value - 15))}
-                className="grid h-10 w-10 place-items-center rounded-full text-on-surface-variant active:scale-90"
-              >
-                <Icon name="replay" className="text-[24px]" />
-              </button>
-              <button
-                type="button"
-                aria-label={playing ? 'Pausar áudio' : 'Reproduzir áudio'}
-                onClick={() => setPlaying((value) => !value)}
-                className="grid h-14 w-14 place-items-center rounded-full bg-primary-container text-on-primary shadow-[0_8px_20px_rgba(6,78,59,0.3)] active:scale-95"
-              >
-                <Icon
-                  name={playing ? 'pause' : 'play_arrow'}
-                  filled
-                  className="text-[32px] text-secondary-container"
-                />
-              </button>
-              <button
-                type="button"
-                aria-label="Avançar 15 segundos"
                 onClick={() =>
-                  setPosition((value) => Math.min(totalSeconds, value + 15))
+                  setSpeedIndex((index) => (index + 1) % SPEEDS.length)
                 }
-                className="grid h-10 w-10 place-items-center rounded-full text-on-surface-variant active:scale-90"
+                className="rounded-full bg-surface-container px-2.5 py-1 text-[12px] font-semibold text-on-surface active:scale-95"
               >
-                <Icon name="forward_media" className="text-[24px]" />
+                {SPEEDS[speedIndex]}
+              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  aria-label="Voltar 15 segundos"
+                  onClick={() =>
+                    setPosition((value) => Math.max(0, value - 15))
+                  }
+                  className="grid h-10 w-10 place-items-center rounded-full text-on-surface-variant active:scale-90"
+                >
+                  <Icon name="replay" className="text-[24px]" />
+                </button>
+                <button
+                  type="button"
+                  aria-label={playing ? 'Pausar áudio' : 'Reproduzir áudio'}
+                  onClick={() => setPlaying((value) => !value)}
+                  className="grid h-14 w-14 place-items-center rounded-full bg-primary-container text-on-primary shadow-[0_8px_20px_rgba(6,78,59,0.3)] active:scale-95"
+                >
+                  <Icon
+                    name={playing ? 'pause' : 'play_arrow'}
+                    filled
+                    className="text-[32px] text-secondary-container"
+                  />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Avançar 15 segundos"
+                  onClick={() =>
+                    setPosition((value) => Math.min(totalSeconds, value + 15))
+                  }
+                  className="grid h-10 w-10 place-items-center rounded-full text-on-surface-variant active:scale-90"
+                >
+                  <Icon name="forward_media" className="text-[24px]" />
+                </button>
+              </div>
+              <button
+                type="button"
+                aria-label="Marcar momento"
+                onClick={() => show('Momento marcado neste resumo')}
+                className="grid h-9 w-9 place-items-center rounded-full bg-surface-container text-on-surface-variant active:scale-95"
+              >
+                <Icon name="add_circle_outline" className="text-[20px]" />
               </button>
             </div>
-            <button
-              type="button"
-              aria-label="Marcar momento"
-              onClick={() => show('Momento marcado neste resumo')}
-              className="grid h-9 w-9 place-items-center rounded-full bg-surface-container text-on-surface-variant active:scale-95"
-            >
-              <Icon name="add_circle_outline" className="text-[20px]" />
-            </button>
           </div>
         </div>
-      </div>
+      ) : null}
 
       <div className="mb-3 px-5">
         <div className="flex gap-1 rounded-full bg-surface-container p-1">

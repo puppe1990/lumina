@@ -12,6 +12,7 @@ import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
+import { FEATURES } from '#/lib/features'
 import { getExploreData } from '#/server/catalog'
 
 type ExploreSearch = {
@@ -217,16 +218,27 @@ function ExplorePage() {
 
                 <div className="z-10 mt-5 flex items-center justify-between border-t border-white/10 pt-3">
                   <span className="flex items-center gap-2 text-[10px] text-on-primary-container">
-                    <Icon name="headphones" className="text-[16px]" />
-                    Áudio de {data.featured.audioMinutes} min + Texto
+                    <Icon
+                      name={
+                        FEATURES.audioPlayer ? 'headphones' : 'auto_stories'
+                      }
+                      className="text-[16px]"
+                    />
+                    {FEATURES.audioPlayer
+                      ? `Áudio de ${data.featured.audioMinutes} min + Texto`
+                      : `Leitura de ${data.featured.readingMinutes} min`}
                   </span>
                   <Link
                     to="/reader/$bookId"
                     params={{ bookId: data.featured.id }}
                     className="flex items-center gap-2 rounded-full bg-secondary-container px-4 py-2.5 text-[12px] font-semibold text-on-secondary-fixed shadow-md active:scale-95"
                   >
-                    <Icon name="play_arrow" filled className="text-[18px]" />
-                    Ouvir Resumo
+                    <Icon
+                      name={FEATURES.audioPlayer ? 'play_arrow' : 'menu_book'}
+                      filled
+                      className="text-[18px]"
+                    />
+                    {FEATURES.audioPlayer ? 'Ouvir Resumo' : 'Ler Resumo'}
                   </Link>
                 </div>
               </div>
@@ -324,8 +336,9 @@ function ExplorePage() {
                 Desbloqueie os {data.totalBooks} resumos com o Lúmina Pro
               </h3>
               <p className="mt-1.5 text-[13px] leading-relaxed text-on-primary-container">
-                Áudios narrados por especialistas, mapas conceituais e
-                sincronização offline contínua.
+                {FEATURES.audioPlayer
+                  ? 'Áudios narrados por especialistas, mapas conceituais e sincronização offline contínua.'
+                  : 'Resumos editoriais por especialistas, mapas conceituais e sincronização offline contínua.'}
               </p>
               <div className="mt-4 flex items-center gap-3">
                 <Link

@@ -5,6 +5,7 @@ import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
+import { FEATURES } from '#/lib/features'
 import { formatCurrencyBRL, formatDateBRL } from '#/lib/text'
 import { cancelPlan, getPlansData, subscribeToPlan } from '#/server/plans'
 
@@ -18,33 +19,44 @@ export const Route = createFileRoute('/plans')({
   component: PlansPage,
 })
 
-const BENEFITS = [
-  {
-    icon: 'headphones',
-    title: 'Narração profissional e curada',
-    detail: 'Vozes humanas dinâmicas em velocidade até 2x',
-  },
-  {
-    icon: 'download_for_offline',
-    title: 'Modo offline completo',
-    detail: 'Baixe audiobooks e leia sem depender de internet',
-  },
-  {
-    icon: 'send_to_mobile',
-    title: 'Sincronização com Kindle e PDF',
-    detail: 'Envie resumos estruturados com um simples toque',
-  },
-  {
-    icon: 'auto_stories',
-    title: 'Lançamentos globais semanais',
-    detail: 'Best-sellers mundiais traduzidos e dissecados',
-  },
-]
+function buildBenefits(audioPlayer: boolean) {
+  return [
+    audioPlayer
+      ? {
+          icon: 'headphones',
+          title: 'Narração profissional e curada',
+          detail: 'Vozes humanas dinâmicas em velocidade até 2x',
+        }
+      : {
+          icon: 'auto_stories',
+          title: 'Resumos editoriais curados',
+          detail: 'Textos diagramados por especialistas, no seu ritmo',
+        },
+    {
+      icon: 'download_for_offline',
+      title: 'Modo offline completo',
+      detail: audioPlayer
+        ? 'Baixe audiobooks e leia sem depender de internet'
+        : 'Leia seus resumos sem depender de internet',
+    },
+    {
+      icon: 'send_to_mobile',
+      title: 'Sincronização com Kindle e PDF',
+      detail: 'Envie resumos estruturados com um simples toque',
+    },
+    {
+      icon: 'auto_stories',
+      title: 'Lançamentos globais semanais',
+      detail: 'Best-sellers mundiais traduzidos e dissecados',
+    },
+  ]
+}
 
 function PlansPage() {
   const data = Route.useLoaderData()
   const router = useRouter()
   const { show, toast } = useToast()
+  const benefits = buildBenefits(FEATURES.audioPlayer)
   const [selected, setSelected] = useState(
     data.plans.find((plan) => plan.isFeatured)?.slug ?? data.plans[0]?.slug,
   )
@@ -121,7 +133,7 @@ function PlansPage() {
         </div>
 
         <div className="mb-8 flex flex-col gap-2.5">
-          {BENEFITS.map((benefit) => (
+          {benefits.map((benefit) => (
             <div
               key={benefit.title}
               className="flex items-center gap-3 rounded-xl bg-surface-container-lowest p-3.5 shadow-sm"

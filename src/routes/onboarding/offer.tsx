@@ -5,6 +5,7 @@ import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
+import { FEATURES } from '#/lib/features'
 import { formatCurrencyBRL } from '#/lib/text'
 import { finishOnboarding, getOnboardingData } from '#/server/onboarding'
 import { getPlansData, subscribeToPlan } from '#/server/plans'
@@ -31,11 +32,13 @@ export const Route = createFileRoute('/onboarding/offer')({
   component: OfferPage,
 })
 
-function buildFeatures(totalBooks: number) {
+function buildFeatures(totalBooks: number, audioPlayer: boolean) {
   return [
     {
       title: `${totalBooks} resumos de alta fidelidade`,
-      detail: 'em áudio imersivo e texto editorial.',
+      detail: audioPlayer
+        ? 'em áudio imersivo e texto editorial.'
+        : 'em texto editorial diagramado.',
     },
     {
       title: 'Modo Offline Instantâneo',
@@ -64,7 +67,7 @@ function OfferPage() {
   const router = useRouter()
   const { show, toast } = useToast()
   const { plan, totalBooks, interests, preferences } = Route.useLoaderData()
-  const features = buildFeatures(totalBooks)
+  const features = buildFeatures(totalBooks, FEATURES.audioPlayer)
   const [secondsLeft, setSecondsLeft] = useState(23 * 3600 + 59 * 60 + 42)
   const [submitting, setSubmitting] = useState(false)
 
@@ -181,7 +184,11 @@ function OfferPage() {
           </div>
           <div className="flex items-center gap-2 rounded-lg bg-surface-container-low p-2.5">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-primary-container text-secondary-fixed">
-              <Icon name="headphones" filled className="text-[20px]" />
+              <Icon
+                name={FEATURES.audioPlayer ? 'headphones' : 'menu_book'}
+                filled
+                className="text-[20px]"
+              />
             </span>
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-semibold tracking-wider text-secondary uppercase">
@@ -191,7 +198,10 @@ function OfferPage() {
                 Hábitos Atômicos
               </p>
               <p className="truncate text-[12px] text-on-surface-variant">
-                James Clear • Áudio imersivo ({goal} min)
+                James Clear •{' '}
+                {FEATURES.audioPlayer
+                  ? `Áudio imersivo (${goal} min)`
+                  : `Leitura (${goal} min)`}
               </p>
             </div>
             <Icon name="alarm" className="text-[18px] text-primary" />

@@ -5,6 +5,7 @@ import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
+import { FEATURES } from '#/lib/features'
 import { getOnboardingData, saveGoal } from '#/server/onboarding'
 
 export const Route = createFileRoute('/onboarding/goal')({
@@ -50,6 +51,10 @@ const FORMATS = [
   { value: 'hybrid', label: 'Híbrido', icon: 'bolt' },
 ]
 
+const AVAILABLE_FORMATS = FEATURES.audioPlayer
+  ? FORMATS
+  : FORMATS.filter((item) => item.value !== 'audio')
+
 const TIMES = [
   { value: '07:30', detail: 'No café da manhã', icon: 'wb_twilight' },
   { value: '12:30', detail: 'Pausa do almoço', icon: 'lunch_dining' },
@@ -62,7 +67,13 @@ function GoalPage() {
   const { show, toast } = useToast()
   const { preferences } = Route.useLoaderData()
   const [goal, setGoal] = useState(preferences?.dailyGoalMinutes ?? 15)
-  const [format, setFormat] = useState(preferences?.preferredFormat ?? 'audio')
+  const [format, setFormat] = useState(() => {
+    const stored = preferences?.preferredFormat
+    if (stored && (FEATURES.audioPlayer || stored !== 'audio')) {
+      return stored
+    }
+    return FEATURES.audioPlayer ? 'audio' : 'text'
+  })
   const [reminder, setReminder] = useState(preferences?.reminderEnabled ?? true)
   const [time, setTime] = useState(preferences?.reminderTime ?? '07:30')
   const [submitting, setSubmitting] = useState(false)
@@ -205,7 +216,7 @@ function GoalPage() {
             Como você prefere aprender?
           </span>
           <div className="mt-2 grid grid-cols-3 gap-2">
-            {FORMATS.map((option) => {
+            {AVAILABLE_FORMATS.map((option) => {
               const active = format === option.value
               return (
                 <button

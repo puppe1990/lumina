@@ -40,6 +40,8 @@ export type LibraryStats = {
   savedCount: number
   audioMinutes: number
   audioHours: number
+  readingMinutes: number
+  readingHours: number
   highlightsCount: number
 }
 
@@ -262,7 +264,11 @@ export function getContinueListening(
 
 export function getLibraryStats(db: Db, userId: string): LibraryStats {
   const rows = db
-    .select({ item: libraryItems, audioMinutes: books.audioMinutes })
+    .select({
+      item: libraryItems,
+      audioMinutes: books.audioMinutes,
+      readingMinutes: books.readingMinutes,
+    })
     .from(libraryItems)
     .innerJoin(books, eq(books.id, libraryItems.bookId))
     .where(eq(libraryItems.userId, userId))
@@ -278,6 +284,11 @@ export function getLibraryStats(db: Db, userId: string): LibraryStats {
     (total, row) => total + (row.item.progressPercent / 100) * row.audioMinutes,
     0,
   )
+  const readingMinutes = rows.reduce(
+    (total, row) =>
+      total + (row.item.progressPercent / 100) * row.readingMinutes,
+    0,
+  )
 
   return {
     completedCount: rows.filter((row) => row.item.status === 'completed')
@@ -287,6 +298,8 @@ export function getLibraryStats(db: Db, userId: string): LibraryStats {
     savedCount: rows.filter((row) => row.item.status === 'saved').length,
     audioMinutes: Math.round(audioMinutes),
     audioHours: Math.round((audioMinutes / 60) * 10) / 10,
+    readingMinutes: Math.round(readingMinutes),
+    readingHours: Math.round((readingMinutes / 60) * 10) / 10,
     highlightsCount: highlights?.value ?? 0,
   }
 }

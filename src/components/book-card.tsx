@@ -1,5 +1,7 @@
 import { Link } from '@tanstack/react-router'
 
+import { FEATURES } from '#/lib/features'
+
 import { BookCover } from './book-cover'
 import { Icon } from './icon'
 
@@ -38,8 +40,11 @@ export function BookCard({
           className="aspect-[3/4.4] w-full"
         />
         <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-surface-container-lowest/90 px-2 py-0.5 text-[10px] font-semibold text-on-surface backdrop-blur-sm">
-          <Icon name="schedule" className="text-[13px] text-secondary" />
-          {book.audioMinutes} min
+          <Icon
+            name={FEATURES.audioPlayer ? 'headphones' : 'schedule'}
+            className="text-[13px] text-secondary"
+          />
+          {FEATURES.audioPlayer ? book.audioMinutes : book.readingMinutes} min
         </span>
       </div>
       <span className="truncate text-[10px] font-semibold tracking-wide text-secondary uppercase">

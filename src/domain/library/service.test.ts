@@ -173,12 +173,20 @@ describe('getContinueListening', () => {
 })
 
 describe('getLibraryStats', () => {
-  it('aggregates counts and audio hours', () => {
+  it('aggregates counts, audio hours and reading hours', () => {
     const user = makeUser(db)
     const category = makeCategory(db)
-    const a = makeBook(db, { categoryId: category.id, audioMinutes: 20 })
-    const b = makeBook(db, { categoryId: category.id, audioMinutes: 30 })
-    const c = makeBook(db, { categoryId: category.id })
+    const a = makeBook(db, {
+      categoryId: category.id,
+      audioMinutes: 20,
+      readingMinutes: 10,
+    })
+    const b = makeBook(db, {
+      categoryId: category.id,
+      audioMinutes: 30,
+      readingMinutes: 20,
+    })
+    const c = makeBook(db, { categoryId: category.id, readingMinutes: 5 })
 
     makeLibraryItem(db, {
       userId: user.id,
@@ -206,6 +214,8 @@ describe('getLibraryStats', () => {
     expect(stats.savedCount).toBe(1)
     expect(stats.audioMinutes).toBe(35)
     expect(stats.audioHours).toBe(0.6)
+    expect(stats.readingMinutes).toBe(20)
+    expect(stats.readingHours).toBe(0.3)
     expect(stats.highlightsCount).toBe(1)
   })
 })

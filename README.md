@@ -65,10 +65,21 @@ marca) como fallback.
 
 ## Variáveis de ambiente
 
-| Variável        | Padrão                  | Descrição                                                        |
-| --------------- | ----------------------- | ---------------------------------------------------------------- |
-| `VITE_APP_URL`  | `http://localhost:3000` | URL pública usada nas meta tags Open Graph/Twitter (`og:image`). |
-| `DATABASE_FILE` | `data/lumina.db`        | Caminho do arquivo SQLite.                                       |
+| Variável                    | Padrão                  | Descrição                                                        |
+| --------------------------- | ----------------------- | ---------------------------------------------------------------- |
+| `VITE_APP_URL`              | `http://localhost:3000` | URL pública usada nas meta tags Open Graph/Twitter (`og:image`). |
+| `DATABASE_FILE`             | `data/lumina.db`        | Caminho do arquivo SQLite.                                       |
+| `VITE_FEATURE_AUDIO_PLAYER` | `(desligado)`           | Liga o player de áudio do leitor. Ausente/vazio = desativado.    |
+
+## Feature flags
+
+Flags ficam em `src/lib/features.ts` e são lidas em build time (`VITE_FEATURE_*`). O player de
+áudio é a flag atual e vem **desativado por padrão**; quando desligado, o app esconde o player e
+ajusta rótulos/CTAs (ex.: "Ler Resumo", tempo de leitura, "Resumos editoriais").
+
+```bash
+VITE_FEATURE_AUDIO_PLAYER=1 npm run build   # habilita o player
+```
 
 ## PWA
 

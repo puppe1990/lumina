@@ -11,6 +11,7 @@ import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
+import { FEATURES } from '#/lib/features'
 import { signOut } from '#/server/auth'
 import { getLibraryData, saveBookAction } from '#/server/library'
 
@@ -179,12 +180,19 @@ function LibraryPage() {
           </div>
           <div className="flex flex-col items-center rounded-lg bg-surface-container-lowest p-3 text-center shadow-sm">
             <span className="mb-1 grid h-7 w-7 place-items-center rounded-full bg-secondary-fixed/50 text-secondary">
-              <Icon name="headphones" className="text-[16px]" />
+              <Icon
+                name={FEATURES.audioPlayer ? 'headphones' : 'auto_stories'}
+                className="text-[16px]"
+              />
             </span>
             <span className="text-[18px] leading-tight font-bold text-on-surface">
-              {data.stats.audioHours}h
+              {FEATURES.audioPlayer
+                ? `${data.stats.audioHours}h`
+                : `${data.stats.readingHours}h`}
             </span>
-            <span className="text-[10px] text-outline">Áudio</span>
+            <span className="text-[10px] text-outline">
+              {FEATURES.audioPlayer ? 'Áudio' : 'Leitura'}
+            </span>
           </div>
           <div className="flex flex-col items-center rounded-lg bg-surface-container-lowest p-3 text-center shadow-sm">
             <span className="mb-1 grid h-7 w-7 place-items-center rounded-full bg-tertiary-fixed/60 text-tertiary">
@@ -305,7 +313,15 @@ function LibraryPage() {
                       <Icon name="schedule" className="text-[13px]" />
                       {item.status === 'completed'
                         ? 'Concluído'
-                        : `Resta ${Math.max(1, Math.round(((100 - item.progressPercent) / 100) * item.book.audioMinutes))} min`}
+                        : `Resta ${Math.max(
+                            1,
+                            Math.round(
+                              ((100 - item.progressPercent) / 100) *
+                                (FEATURES.audioPlayer
+                                  ? item.book.audioMinutes
+                                  : item.book.readingMinutes),
+                            ),
+                          )} min`}
                     </span>
                     <h3 className="truncate text-[15px] leading-snug font-semibold text-on-surface">
                       {item.book.title}
@@ -429,7 +445,9 @@ function LibraryPage() {
                   Downloads Offline
                 </div>
                 <div className="text-[13px] text-outline">
-                  Ouvir sem internet
+                  {FEATURES.audioPlayer
+                    ? 'Ouvir sem internet'
+                    : 'Ler sem internet'}
                 </div>
               </div>
             </div>
