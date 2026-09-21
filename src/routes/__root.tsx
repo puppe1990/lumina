@@ -7,6 +7,7 @@ import {
 
 import { NavigationProgress } from '../components/navigation-progress'
 import { PwaRegister } from '../components/pwa-register'
+import { THEME_SCRIPT } from '../lib/theme'
 import {
   OG_IMAGE,
   OG_IMAGE_ALT,
@@ -107,6 +108,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="pt-BR">
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
       <body>
         {children}

@@ -311,7 +311,7 @@ function ReaderPage() {
                   type="button"
                   aria-label={playing ? 'Pausar áudio' : 'Reproduzir áudio'}
                   onClick={() => setPlaying((value) => !value)}
-                  className="grid h-14 w-14 place-items-center rounded-full bg-primary-container text-on-primary shadow-[0_8px_20px_rgba(6,78,59,0.3)] active:scale-95"
+                  className="grid h-14 w-14 place-items-center rounded-full bg-primary-container text-on-primary-container shadow-[0_8px_20px_rgba(6,78,59,0.3)] active:scale-95"
                 >
                   <Icon
                     name={playing ? 'pause' : 'play_arrow'}
@@ -413,7 +413,7 @@ function ReaderPage() {
             </div>
           </div>
         ) : tab === 'action' ? (
-          <div className="relative overflow-hidden rounded-2xl bg-primary-container p-5 text-on-primary shadow-sm">
+          <div className="relative overflow-hidden rounded-2xl bg-primary-container p-5 text-on-primary-container shadow-sm">
             <div className="mb-3 flex items-center gap-2">
               <Icon
                 name="checklist"
@@ -518,7 +518,7 @@ function ReaderPage() {
             className={`flex w-full items-center justify-center gap-2 rounded-full py-3 text-[14px] font-semibold shadow-md transition-transform active:scale-95 ${
               completed
                 ? 'bg-secondary-container text-on-secondary-fixed'
-                : 'bg-primary-container text-on-primary'
+                : 'bg-primary-container text-on-primary-container'
             }`}
           >
             <Icon

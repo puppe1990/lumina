@@ -14,6 +14,7 @@ import type { AdvancedFilters } from '#/components/filter-sheet'
 import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
+import { ThemeToggle } from '#/components/theme-toggle'
 import { useToast } from '#/components/toast'
 import { FEATURES } from '#/lib/features'
 import {
@@ -163,17 +164,20 @@ function ExplorePage() {
       <header className="pt-safe sticky top-0 z-40 bg-surface/85 px-5 py-3 backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <Logo />
-          <Link
-            to="/library"
-            aria-label="Perfil"
-            className="grid h-8 w-8 place-items-center rounded-full bg-primary"
-          >
-            <Icon
-              name="person"
-              filled
-              className="text-[18px] text-on-primary"
-            />
-          </Link>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <Link
+              to="/library"
+              aria-label="Perfil"
+              className="grid h-8 w-8 place-items-center rounded-full bg-primary"
+            >
+              <Icon
+                name="person"
+                filled
+                className="text-[18px] text-on-primary"
+              />
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -314,7 +318,7 @@ function ExplorePage() {
                     <Icon name="trending_up" filled className="text-[13px]" />
                     Mais ouvido hoje
                   </span>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-secondary-fixed">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-secondary-fixed-dim">
                     <Icon name="star" filled className="text-[14px]" />
                     {data.featured.rating.toFixed(1)} (
                     {(data.featured.ratingsCount / 1000).toFixed(1)}k)
@@ -330,23 +334,23 @@ function ExplorePage() {
                     className="h-36 w-24 shrink-0 rounded-lg shadow-xl"
                   />
                   <div className="min-w-0 flex-1">
-                    <span className="text-[10px] tracking-wide text-on-primary-container uppercase">
+                    <span className="text-[10px] tracking-wide text-on-primary/70 uppercase">
                       {data.featured.categoryName}
                     </span>
                     <h2 className="font-serif mt-0.5 truncate text-[22px] leading-snug font-medium text-on-primary">
                       {data.featured.title}
                     </h2>
-                    <p className="truncate text-[13px] text-on-primary-container">
+                    <p className="truncate text-[13px] text-on-primary/70">
                       {data.featured.author}
                     </p>
-                    <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-white/80 italic">
+                    <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-on-primary/80 italic">
                       “{data.featured.tagline}”
                     </p>
                   </div>
                 </div>
 
                 <div className="z-10 mt-5 flex items-center justify-between border-t border-white/10 pt-3">
-                  <span className="flex items-center gap-2 text-[10px] text-on-primary-container">
+                  <span className="flex items-center gap-2 text-[10px] text-on-primary/70">
                     <Icon
                       name={
                         FEATURES.audioPlayer ? 'headphones' : 'auto_stories'
@@ -449,15 +453,15 @@ function ExplorePage() {
           </section>
 
           <section className="px-5 pt-4 pb-6">
-            <div className="relative flex flex-col overflow-hidden rounded-xl bg-gradient-to-br from-primary-container via-primary to-primary p-5 text-on-primary shadow-lg">
+            <div className="relative flex flex-col overflow-hidden rounded-xl bg-primary-container p-5 text-on-primary-container shadow-lg">
               <div className="pointer-events-none absolute right-0 bottom-0 h-36 w-36 rounded-full bg-secondary-container/20 blur-2xl" />
               <div className="mb-2 flex items-center gap-2">
                 <Icon
                   name="workspace_premium"
                   filled
-                  className="text-[22px] text-secondary-fixed"
+                  className="text-[22px] text-secondary-fixed-dim"
                 />
-                <span className="text-[10px] font-bold tracking-wider text-secondary-fixed uppercase">
+                <span className="text-[10px] font-bold tracking-wider text-secondary-fixed-dim uppercase">
                   Acesso Ilimitado
                 </span>
               </div>

@@ -181,3 +181,5 @@ npm test
 - Áudio player simulado com velocidade, scrubber, progresso persistido e "Grifar" citação.
 - Biblioteca com trilha em andamento, salvos, concluídos, destaques e recomendações por interesse.
 - Assinatura com trial de 7 dias, troca de plano e cancelamento.
+- Tema claro/escuro com botão switcher, persistido em `localStorage` e aplicado antes do primeiro
+  paint (sem flash). As cores são tokens em `src/styles.css` (`html.dark` sobrescreve `--color-*`).
