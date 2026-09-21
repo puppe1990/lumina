@@ -9,7 +9,7 @@ import {
   subscribe,
 } from '#/domain/plans/service'
 
-import { requireUser } from './context'
+import { requireUser, toPublicUser } from './context'
 import { db } from './db'
 import { runAction } from './result'
 
@@ -18,6 +18,7 @@ export const getPlansData = createServerFn({ method: 'GET' }).handler(
     const user = requireUser()
     const database = db()
     return {
+      user: toPublicUser(user),
       totalBooks: countBooks(database),
       plans: listPlans(database),
       subscription: getSubscription(database, user.id),
