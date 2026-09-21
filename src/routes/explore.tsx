@@ -319,7 +319,7 @@ function ExplorePage() {
                 </span>
               </div>
               <h3 className="font-serif text-[22px] leading-snug font-medium">
-                Desbloqueie mais de 2.500 resumos com o Lúmina Pro
+                Desbloqueie os {data.totalBooks} resumos com o Lúmina Pro
               </h3>
               <p className="mt-1.5 text-[13px] leading-relaxed text-on-primary-container">
                 Áudios narrados por especialistas, mapas conceituais e

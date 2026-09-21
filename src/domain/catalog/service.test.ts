@@ -44,6 +44,20 @@ describe('listCategories', () => {
       'Negócios',
     ])
   })
+
+  it('reports the real number of books per category', () => {
+    const focus = makeCategory(db, { name: 'Foco' })
+    const money = makeCategory(db, { name: 'Dinheiro' })
+    makeBook(db, { categoryId: focus.id })
+    makeBook(db, { categoryId: focus.id })
+    makeBook(db, { categoryId: money.id })
+
+    const counts = Object.fromEntries(
+      listCategories(db).map((category) => [category.name, category.bookCount]),
+    )
+
+    expect(counts).toEqual({ Dinheiro: 1, Foco: 2 })
+  })
 })
 
 describe('listBooks', () => {

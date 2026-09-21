@@ -23,6 +23,7 @@ export const Route = createFileRoute('/onboarding/offer')({
     const plan = plans.plans.find((item) => item.isFeatured) ?? plans.plans[0]
     return {
       plan,
+      totalBooks: plans.totalBooks,
       interests: onboarding.interests,
       preferences: onboarding.preferences,
     }
@@ -30,24 +31,26 @@ export const Route = createFileRoute('/onboarding/offer')({
   component: OfferPage,
 })
 
-const FEATURES = [
-  {
-    title: '+2.500 resumos de alta fidelidade',
-    detail: 'em áudio imersivo e texto editorial.',
-  },
-  {
-    title: 'Modo Offline Instantâneo',
-    detail: 'para ouvir e estudar durante deslocamentos.',
-  },
-  {
-    title: 'Sincronização com Kindle',
-    detail: 'e exportação de mapas mentais em PDF e Notion.',
-  },
-  {
-    title: 'Curadoria diária guiada por IA',
-    detail: 'calibrada com suas metas de carreira.',
-  },
-]
+function buildFeatures(totalBooks: number) {
+  return [
+    {
+      title: `${totalBooks} resumos de alta fidelidade`,
+      detail: 'em áudio imersivo e texto editorial.',
+    },
+    {
+      title: 'Modo Offline Instantâneo',
+      detail: 'para ouvir e estudar durante deslocamentos.',
+    },
+    {
+      title: 'Sincronização com Kindle',
+      detail: 'e exportação de mapas mentais em PDF e Notion.',
+    },
+    {
+      title: 'Curadoria diária guiada por IA',
+      detail: 'calibrada com suas metas de carreira.',
+    },
+  ]
+}
 
 function formatCountdown(totalSeconds: number): string {
   const hours = Math.floor(totalSeconds / 3600)
@@ -60,7 +63,8 @@ function formatCountdown(totalSeconds: number): string {
 function OfferPage() {
   const router = useRouter()
   const { show, toast } = useToast()
-  const { plan, interests, preferences } = Route.useLoaderData()
+  const { plan, totalBooks, interests, preferences } = Route.useLoaderData()
+  const features = buildFeatures(totalBooks)
   const [secondsLeft, setSecondsLeft] = useState(23 * 3600 + 59 * 60 + 42)
   const [submitting, setSubmitting] = useState(false)
 
@@ -255,7 +259,7 @@ function OfferPage() {
             </div>
 
             <ul className="mt-3 mb-3 flex flex-col gap-2">
-              {FEATURES.map((feature) => (
+              {features.map((feature) => (
                 <li key={feature.title} className="flex items-start gap-2">
                   <Icon
                     name="check_circle"

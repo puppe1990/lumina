@@ -115,8 +115,8 @@ function PlansPage() {
             Acelere seu conhecimento em minutos por dia
           </h2>
           <p className="max-w-xs text-[15px] leading-relaxed text-on-surface-variant">
-            Acesso irrestrito a mais de 2.500 sínteses literárias essenciais em
-            áudio imersivo e texto diagramado.
+            Acesso irrestrito aos {data.totalBooks} resumos essenciais em áudio
+            imersivo e texto diagramado.
           </p>
         </div>
 

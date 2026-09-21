@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
 import {
+  countBooks,
   getBookDetail,
   getFeaturedBook,
   listCategories,
@@ -31,6 +32,7 @@ export const getExploreData = createServerFn({ method: 'GET' })
       hasQuery || Boolean(categorySlug && categorySlug !== 'todos')
 
     return {
+      totalBooks: countBooks(database),
       categories: listCategories(database),
       featured: getFeaturedBook(database),
       trending: listTrendingBooks(database, 8),
@@ -40,6 +42,17 @@ export const getExploreData = createServerFn({ method: 'GET' })
         : null,
     }
   })
+
+export const getCatalogStats = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const database = db()
+    return {
+      totalBooks: countBooks(database),
+      totalCategories: listCategories(database).length,
+      totalCollections: listCollections(database).length,
+    }
+  },
+)
 
 export const getBookDetailData = createServerFn({ method: 'GET' })
   .validator(z.object({ idOrSlug: z.string().min(1) }))

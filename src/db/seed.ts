@@ -12,7 +12,6 @@ type CategoryDef = {
   name: string
   description: string
   icon: string
-  bookCount: number
 }
 
 type CollectionDef = {
@@ -34,63 +33,54 @@ const CATEGORIES: CategoryDef[] = [
     name: 'Produtividade & Foco',
     description: 'Gestão de tempo, rotinas e atenção profunda.',
     icon: 'bolt',
-    bookCount: 340,
   },
   {
     slug: 'lideranca-negocios',
     name: 'Liderança & Negócios',
     description: 'Estratégia, tomada de decisão e cultura.',
     icon: 'diversity_3',
-    bookCount: 410,
   },
   {
     slug: 'psicologia-mente',
     name: 'Psicologia & Mente',
     description: 'Viés cognitivo, emoções e decisão.',
     icon: 'psychology',
-    bookCount: 290,
   },
   {
     slug: 'financas-riqueza',
     name: 'Finanças & Riqueza',
     description: 'Liberdade financeira, investimentos e economia.',
     icon: 'payments',
-    bookCount: 225,
   },
   {
     slug: 'comunicacao',
     name: 'Comunicação',
     description: 'Oratória, negociação e empatia.',
     icon: 'record_voice_over',
-    bookCount: 180,
   },
   {
     slug: 'inovacao-tech',
     name: 'Inovação & Tech',
     description: 'Inteligência artificial, startups e criatividade.',
     icon: 'lightbulb',
-    bookCount: 195,
   },
   {
     slug: 'saude-longevidade',
     name: 'Saúde & Longevidade',
     description: 'Sono, energia, respiração e longevidade.',
     icon: 'spa',
-    bookCount: 160,
   },
   {
     slug: 'filosofia-estoica',
     name: 'Filosofia Estoica',
     description: 'Propósito, estoicismo e calma.',
     icon: 'auto_stories',
-    bookCount: 145,
   },
   {
     slug: 'historia-humanidade',
     name: 'História & Humanidade',
     description: 'Grandes narrativas sobre nós e o futuro.',
     icon: 'public',
-    bookCount: 130,
   },
 ]
 

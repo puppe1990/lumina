@@ -9,7 +9,7 @@ import { getExploreData } from '#/server/catalog'
 export const Route = createFileRoute('/onboarding/welcome')({
   loader: async () => {
     const data = await getExploreData({ data: {} })
-    return { trending: data.trending.slice(0, 3) }
+    return { trending: data.trending.slice(0, 3), totalBooks: data.totalBooks }
   },
   component: WelcomePage,
 })
@@ -36,7 +36,7 @@ const PILLARS = [
 ]
 
 function WelcomePage() {
-  const { trending } = Route.useLoaderData()
+  const { trending, totalBooks } = Route.useLoaderData()
 
   return (
     <Screen>
@@ -147,7 +147,7 @@ function WelcomePage() {
           <div className="flex items-center justify-center gap-1.5 rounded-lg bg-surface-container-low py-1.5">
             <Icon name="verified" className="text-[18px] text-primary" />
             <span className="text-[12px] font-medium text-on-surface">
-              Mais de <strong>2.500 títulos</strong> sintetizados por
+              <strong>{totalBooks} títulos</strong> sintetizados por
               especialistas
             </span>
           </div>

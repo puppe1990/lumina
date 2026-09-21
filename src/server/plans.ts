@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 
+import { countBooks } from '#/domain/catalog/service'
 import {
   cancelSubscription,
   getSubscription,
@@ -15,9 +16,11 @@ import { runAction } from './result'
 export const getPlansData = createServerFn({ method: 'GET' }).handler(
   async () => {
     const user = requireUser()
+    const database = db()
     return {
-      plans: listPlans(db()),
-      subscription: getSubscription(db(), user.id),
+      totalBooks: countBooks(database),
+      plans: listPlans(database),
+      subscription: getSubscription(database, user.id),
     }
   },
 )

@@ -64,7 +64,20 @@ function bookCardQuery(db: Db) {
 }
 
 export function listCategories(db: Db): Category[] {
-  return db.select().from(categories).orderBy(asc(categories.name)).all()
+  return db
+    .select({
+      id: categories.id,
+      slug: categories.slug,
+      name: categories.name,
+      description: categories.description,
+      icon: categories.icon,
+      bookCount: sql<number>`count(${books.id})`,
+    })
+    .from(categories)
+    .leftJoin(books, eq(books.categoryId, categories.id))
+    .groupBy(categories.id)
+    .orderBy(asc(categories.name))
+    .all()
 }
 
 export function listBooks(
