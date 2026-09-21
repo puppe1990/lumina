@@ -19,6 +19,12 @@ export function formatCurrencyBRL(cents: number): string {
   })
 }
 
+export function formatDateBRL(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString('pt-BR', {
+    timeZone: 'America/Sao_Paulo',
+  })
+}
+
 export function formatDuration(seconds: number): string {
   const safe = Math.max(0, Math.floor(seconds))
   const minutes = Math.floor(safe / 60)

@@ -5,7 +5,7 @@ import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
-import { formatCurrencyBRL } from '#/lib/text'
+import { formatCurrencyBRL, formatDateBRL } from '#/lib/text'
 import { cancelPlan, getPlansData, subscribeToPlan } from '#/server/plans'
 
 export const Route = createFileRoute('/plans')({
@@ -267,9 +267,7 @@ function PlansPage() {
                   </p>
                   <p className="text-[12px] text-on-surface-variant">
                     {current.plan.name} •{' '}
-                    {new Date(
-                      current.subscription.currentPeriodEnd,
-                    ).toLocaleDateString('pt-BR')}
+                    {formatDateBRL(current.subscription.currentPeriodEnd)}
                   </p>
                 </div>
                 <button
