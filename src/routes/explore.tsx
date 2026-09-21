@@ -8,6 +8,7 @@ import { useState } from 'react'
 
 import { BookCard } from '#/components/book-card'
 import { BookCover } from '#/components/book-cover'
+import { DragScroll } from '#/components/drag-scroll'
 import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
@@ -110,7 +111,7 @@ function ExplorePage() {
         </form>
       </div>
 
-      <div className="no-scrollbar flex w-full items-center gap-2 overflow-x-auto px-5 py-3">
+      <DragScroll className="no-scrollbar flex w-full items-center gap-2 overflow-x-auto px-5 py-3">
         {categories.map((category) => {
           const isActive = (search.category ?? 'todos') === category.slug
           return (
@@ -134,7 +135,7 @@ function ExplorePage() {
             </Link>
           )
         })}
-      </div>
+      </DragScroll>
 
       {isFiltered ? (
         <section className="flex flex-col gap-3 px-5 pt-1 pb-4">
@@ -256,11 +257,11 @@ function ExplorePage() {
                 </p>
               </div>
             </div>
-            <div className="no-scrollbar flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-2">
+            <DragScroll className="no-scrollbar flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-2">
               {data.trending.map((book) => (
                 <BookCard key={book.id} book={book} />
               ))}
-            </div>
+            </DragScroll>
           </section>
 
           <section className="flex flex-col gap-3 px-5 pt-4 pb-2">

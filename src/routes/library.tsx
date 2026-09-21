@@ -7,6 +7,7 @@ import {
 import { useState } from 'react'
 
 import { BookCover } from '#/components/book-cover'
+import { DragScroll } from '#/components/drag-scroll'
 import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
@@ -207,7 +208,7 @@ function LibraryPage() {
       </section>
 
       <section className="pt-4">
-        <div className="no-scrollbar flex gap-2 overflow-x-auto px-5 pb-1">
+        <DragScroll className="no-scrollbar flex gap-2 overflow-x-auto px-5 pb-1">
           {TABS.map((item) => (
             <button
               key={item.key}
@@ -222,7 +223,7 @@ function LibraryPage() {
               {item.label} ({counts[item.key]})
             </button>
           ))}
-        </div>
+        </DragScroll>
       </section>
 
       {tab === 'highlights' ? (
