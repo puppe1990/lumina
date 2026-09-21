@@ -220,8 +220,16 @@ export type SeedSummary = {
   plans: number
 }
 
+// Bump quando a lógica/estrutura do seed mudar (força o re-sync em produção).
+const SEED_VERSION = '2'
+
 export const CATALOG_VERSION = createHash('sha1')
-  .update(CATALOG_BOOKS.map((book) => `${book.slug}:${book.title}`).join('|'))
+  .update(
+    [
+      SEED_VERSION,
+      ...CATALOG_BOOKS.map((book) => `${book.slug}:${book.title}`),
+    ].join('|'),
+  )
   .digest('hex')
   .slice(0, 12)
 
