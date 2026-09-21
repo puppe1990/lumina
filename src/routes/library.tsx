@@ -4,7 +4,7 @@ import {
   redirect,
   useRouter,
 } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { BookCover } from '#/components/book-cover'
 import { DragScroll } from '#/components/drag-scroll'
@@ -13,8 +13,15 @@ import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
 import { FEATURES } from '#/lib/features'
+import { listDownloads } from '#/lib/offline'
+import {
+  notificationsSupported,
+  requestNotificationPermission,
+  useDailyReminder,
+} from '#/lib/reminders'
 import { signOut } from '#/server/auth'
 import { getLibraryData, saveBookAction } from '#/server/library'
+import { saveReminder } from '#/server/onboarding'
 
 export const Route = createFileRoute('/library')({
   beforeLoad: ({ context }) => {
@@ -49,10 +56,21 @@ function LibraryPage() {
   const router = useRouter()
   const { show, toast } = useToast()
   const [tab, setTab] = useState<TabKey>('in_progress')
-  const [reminders, setReminders] = useState(true)
+  const [reminders, setReminders] = useState(data.preferences.reminderEnabled)
+  const [reminderTime, setReminderTime] = useState(
+    data.preferences.reminderTime,
+  )
+  const [savingReminder, setSavingReminder] = useState(false)
+  const [downloadCount, setDownloadCount] = useState(0)
   const [loadingRecommendation, setLoadingRecommendation] = useState<
     string | null
   >(null)
+
+  useDailyReminder(reminders, reminderTime)
+
+  useEffect(() => {
+    setDownloadCount(listDownloads().length)
+  }, [])
 
   const counts: Record<TabKey, number> = {
     in_progress: data.stats.inProgressCount,
@@ -73,6 +91,47 @@ function LibraryPage() {
     }
     show('Adicionado aos seus salvos')
     await router.invalidate()
+  }
+
+  async function persistReminder(enabled: boolean, time: string) {
+    setSavingReminder(true)
+    const result = await saveReminder({
+      data: { reminderEnabled: enabled, reminderTime: time },
+    })
+    setSavingReminder(false)
+    if (!result.ok) {
+      show(result.error.message)
+      return false
+    }
+    return true
+  }
+
+  async function toggleReminders() {
+    const next = !reminders
+    if (next && notificationsSupported()) {
+      const permission = await requestNotificationPermission()
+      if (permission !== 'granted') {
+        show('Permita notificações no navegador para receber o lembrete')
+      }
+    }
+    if (await persistReminder(next, reminderTime)) {
+      setReminders(next)
+      show(
+        next
+          ? `Lembrete ativado para ${reminderTime}`
+          : 'Lembretes desativados',
+      )
+    }
+  }
+
+  async function changeReminderTime(value: string) {
+    if (!value) {
+      return
+    }
+    setReminderTime(value)
+    if (await persistReminder(reminders, value)) {
+      show(`Lembrete atualizado para ${value}`)
+    }
   }
 
   return (
@@ -438,9 +497,8 @@ function LibraryPage() {
             />
           </Link>
 
-          <button
-            type="button"
-            onClick={() => show('Downloads offline em breve')}
+          <Link
+            to="/downloads"
             className="flex items-center justify-between px-4 py-3.5 text-left hover:bg-surface-container-low"
           >
             <div className="flex items-center gap-3">
@@ -452,9 +510,11 @@ function LibraryPage() {
                   Downloads Offline
                 </div>
                 <div className="text-[13px] text-outline">
-                  {FEATURES.audioPlayer
-                    ? 'Ouvir sem internet'
-                    : 'Ler sem internet'}
+                  {downloadCount > 0
+                    ? `${downloadCount} resumo${downloadCount > 1 ? 's' : ''} disponíve${downloadCount > 1 ? 'is' : 'l'} sem internet`
+                    : FEATURES.audioPlayer
+                      ? 'Ouvir sem internet'
+                      : 'Ler sem internet'}
                 </div>
               </div>
             </div>
@@ -462,7 +522,7 @@ function LibraryPage() {
               name="chevron_right"
               className="text-[20px] text-outline-variant"
             />
-          </button>
+          </Link>
 
           <div className="flex items-center justify-between px-4 py-3.5">
             <div className="flex items-center gap-3">
@@ -474,7 +534,9 @@ function LibraryPage() {
                   Lembretes Diários
                 </div>
                 <div className="text-[13px] text-outline">
-                  Notificar ritual às 07:30
+                  {reminders
+                    ? `Notificar ritual às ${reminderTime}`
+                    : 'Lembretes desativados'}
                 </div>
               </div>
             </div>
@@ -482,14 +544,30 @@ function LibraryPage() {
               type="button"
               role="switch"
               aria-checked={reminders}
-              onClick={() => setReminders((value) => !value)}
-              className={`relative h-6 w-11 rounded-full transition-colors ${reminders ? 'bg-primary' : 'bg-surface-container-highest'}`}
+              disabled={savingReminder}
+              onClick={toggleReminders}
+              className={`relative h-6 w-11 rounded-full transition-colors disabled:opacity-60 ${reminders ? 'bg-primary' : 'bg-surface-container-highest'}`}
             >
               <span
                 className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${reminders ? 'left-[22px]' : 'left-0.5'}`}
               />
             </button>
           </div>
+
+          {reminders ? (
+            <div className="flex items-center justify-between px-4 pb-3.5">
+              <span className="pl-11 text-[13px] text-outline">
+                Horário do lembrete
+              </span>
+              <input
+                type="time"
+                value={reminderTime}
+                disabled={savingReminder}
+                onChange={(event) => changeReminderTime(event.target.value)}
+                className="rounded-lg bg-surface-container px-3 py-1.5 text-[13px] font-semibold text-on-surface outline-none disabled:opacity-60"
+              />
+            </div>
+          ) : null}
         </div>
       </section>
       {toast}

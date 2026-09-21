@@ -136,6 +136,38 @@ export function saveGoal(
   return getPreferences(db, userId, now)
 }
 
+export type ReminderInput = {
+  reminderEnabled: boolean
+  reminderTime: string
+}
+
+export function updateReminder(
+  db: Db,
+  userId: string,
+  input: ReminderInput,
+  now = Date.now(),
+): Preferences {
+  if (input.reminderEnabled && !TIME_PATTERN.test(input.reminderTime)) {
+    throw new AppError(
+      'VALIDATION',
+      'Informe um horário de lembrete válido (HH:MM).',
+    )
+  }
+
+  getPreferences(db, userId, now)
+
+  db.update(userPreferences)
+    .set({
+      reminderEnabled: input.reminderEnabled,
+      reminderTime: input.reminderTime,
+      updatedAt: now,
+    })
+    .where(eq(userPreferences.userId, userId))
+    .run()
+
+  return getPreferences(db, userId, now)
+}
+
 export function completeOnboarding(
   db: Db,
   userId: string,

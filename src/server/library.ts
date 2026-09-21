@@ -14,6 +14,7 @@ import {
   saveBook,
   updateProgress,
 } from '#/domain/library/service'
+import { getPreferences } from '#/domain/onboarding/service'
 import { getSubscription } from '#/domain/plans/service'
 
 import { requireUser, toPublicUser } from './context'
@@ -33,6 +34,7 @@ export const getLibraryData = createServerFn({ method: 'GET' }).handler(
       highlights: listHighlights(database, user.id, 20),
       recommendations: getRecommendations(database, user.id, 4),
       subscription: getSubscription(database, user.id),
+      preferences: getPreferences(database, user.id),
     }
   },
 )
