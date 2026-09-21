@@ -20,10 +20,22 @@ const BOOKS = [
   ['inteligencia-emocional', 'Emotional Intelligence', 'Daniel Goleman'],
   ['psicologia-financeira', 'The Psychology of Money', 'Morgan Housel'],
   ['pai-rico-pai-pobre', 'Rich Dad Poor Dad', 'Robert Kiyosaki'],
-  ['o-homem-mais-rico-da-babilonia', 'The Richest Man in Babylon', 'George Clason'],
+  [
+    'o-homem-mais-rico-da-babilonia',
+    'The Richest Man in Babylon',
+    'George Clason',
+  ],
   ['o-investidor-inteligente', 'The Intelligent Investor', 'Benjamin Graham'],
-  ['comunicacao-nao-violenta', 'Nonviolent Communication', 'Marshall Rosenberg'],
-  ['como-fazer-amigos', 'How to Win Friends and Influence People', 'Dale Carnegie'],
+  [
+    'comunicacao-nao-violenta',
+    'Nonviolent Communication',
+    'Marshall Rosenberg',
+  ],
+  [
+    'como-fazer-amigos',
+    'How to Win Friends and Influence People',
+    'Dale Carnegie',
+  ],
   ['a-startup-enxuta', 'The Lean Startup', 'Eric Ries'],
   ['do-zero-ao-um', 'Zero to One', 'Peter Thiel'],
   ['inteligencia-artificial', 'AI Superpowers', 'Kai-Fu Lee'],
@@ -49,7 +61,10 @@ async function search(title, author) {
   url.searchParams.set('title', title)
   url.searchParams.set('author', author)
   url.searchParams.set('limit', '8')
-  url.searchParams.set('fields', 'title,author_name,cover_i,isbn,first_publish_year')
+  url.searchParams.set(
+    'fields',
+    'title,author_name,cover_i,isbn,first_publish_year',
+  )
   const res = await fetch(url)
   if (!res.ok) {
     throw new Error(`search ${res.status}`)
@@ -59,7 +74,9 @@ async function search(title, author) {
 }
 
 function pickCover(docs, title) {
-  const wanted = norm(title).split(' ').filter((w) => w.length > 3)
+  const wanted = norm(title)
+    .split(' ')
+    .filter((w) => w.length > 3)
   const withCover = docs.filter((doc) => doc.cover_i)
   const scored = withCover
     .map((doc) => {
@@ -100,7 +117,9 @@ for (const [slug, title, author] of BOOKS) {
     const buffer = await download(doc.cover_i)
     writeFileSync(`${OUT}${slug}.jpg`, buffer)
     ok.push(slug)
-    console.log(`✓ ${slug.padEnd(32)} ${(buffer.length / 1024).toFixed(0)}KB  "${doc.title}" (${doc.first_publish_year ?? '?'})`)
+    console.log(
+      `✓ ${slug.padEnd(32)} ${(buffer.length / 1024).toFixed(0)}KB  "${doc.title}" (${doc.first_publish_year ?? '?'})`,
+    )
   } catch (error) {
     failed.push([slug, error.message])
     console.log(`✗ ${slug} — ${error.message}`)
