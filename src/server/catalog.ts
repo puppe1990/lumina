@@ -11,6 +11,7 @@ import {
   searchBooks,
 } from '#/domain/catalog/service'
 import { getContinueListening, getLibraryItem } from '#/domain/library/service'
+import { DEFAULT_SORT, SORT_VALUES } from '#/lib/filters'
 
 import { requireUser } from './context'
 import { db } from './db'
@@ -21,6 +22,10 @@ export const getExploreData = createServerFn({ method: 'GET' })
       .object({
         categorySlug: z.string().optional(),
         query: z.string().optional(),
+        minRating: z.number().optional(),
+        minMinutes: z.number().optional(),
+        maxMinutes: z.number().optional(),
+        sort: z.enum(SORT_VALUES).optional(),
       })
       .optional(),
   )
@@ -28,8 +33,16 @@ export const getExploreData = createServerFn({ method: 'GET' })
     const database = db()
     const hasQuery = Boolean(data?.query?.trim())
     const categorySlug = data?.categorySlug
+    const sort = data?.sort
+    const hasAdvanced =
+      typeof data?.minRating === 'number' ||
+      typeof data?.minMinutes === 'number' ||
+      typeof data?.maxMinutes === 'number' ||
+      (sort !== undefined && sort !== DEFAULT_SORT)
     const isFiltered =
-      hasQuery || Boolean(categorySlug && categorySlug !== 'todos')
+      hasQuery ||
+      Boolean(categorySlug && categorySlug !== 'todos') ||
+      hasAdvanced
 
     return {
       totalBooks: countBooks(database),
@@ -38,7 +51,15 @@ export const getExploreData = createServerFn({ method: 'GET' })
       trending: listTrendingBooks(database, 8),
       collections: listCollections(database),
       results: isFiltered
-        ? searchBooks(database, { query: data?.query, categorySlug, limit: 40 })
+        ? searchBooks(database, {
+            query: data?.query,
+            categorySlug,
+            minRating: data?.minRating,
+            minMinutes: data?.minMinutes,
+            maxMinutes: data?.maxMinutes,
+            sort,
+            limit: 60,
+          })
         : null,
     }
   })

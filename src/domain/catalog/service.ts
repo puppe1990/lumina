@@ -1,4 +1,5 @@
-import { and, asc, desc, eq, like, or, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, gt, gte, like, lte, or, sql } from 'drizzle-orm'
+import type { SQL } from 'drizzle-orm'
 
 import type { Db } from '#/db/client'
 import {
@@ -12,6 +13,8 @@ import {
   collections,
 } from '#/db/schema'
 import { AppError } from '#/domain/errors'
+import type { BookSort } from '#/lib/filters'
+import { DEFAULT_SORT } from '#/lib/filters'
 import { normalizeForSearch } from '#/lib/text'
 
 import type {
@@ -124,9 +127,33 @@ export function listTrendingBooks(db: Db, limit = 6): BookCard[] {
     .map(mapCard)
 }
 
+export type SearchBooksOptions = {
+  query?: string
+  categorySlug?: string
+  minRating?: number
+  minMinutes?: number
+  maxMinutes?: number
+  sort?: BookSort
+  limit?: number
+}
+
+function orderFor(sort: BookSort = DEFAULT_SORT): SQL[] {
+  switch (sort) {
+    case 'popular':
+      return [desc(books.ratingsCount), desc(books.rating)]
+    case 'recent':
+      return [desc(books.publishedAt), desc(books.rating)]
+    case 'quickest':
+      return [asc(books.readingMinutes), desc(books.rating)]
+    case 'rating':
+    default:
+      return [desc(books.rating), desc(books.ratingsCount)]
+  }
+}
+
 export function searchBooks(
   db: Db,
-  options: { query?: string; categorySlug?: string; limit?: number } = {},
+  options: SearchBooksOptions = {},
 ): BookCard[] {
   const conditions = []
   const term = options.query?.trim()
@@ -140,9 +167,21 @@ export function searchBooks(
     conditions.push(eq(categories.slug, options.categorySlug))
   }
 
+  if (typeof options.minRating === 'number') {
+    conditions.push(gte(books.rating, options.minRating))
+  }
+
+  if (typeof options.minMinutes === 'number') {
+    conditions.push(gt(books.readingMinutes, options.minMinutes))
+  }
+
+  if (typeof options.maxMinutes === 'number') {
+    conditions.push(lte(books.readingMinutes, options.maxMinutes))
+  }
+
   const query = bookCardQuery(db)
     .where(conditions.length ? and(...conditions) : undefined)
-    .orderBy(desc(books.rating))
+    .orderBy(...orderFor(options.sort))
 
   const rows = options.limit ? query.limit(options.limit).all() : query.all()
   return rows.map(mapCard)
