@@ -51,9 +51,13 @@ npm run assets:generate # gera og.png e ícones da PWA
 ## Catálogo
 
 O catálogo (`src/db/catalog-data.ts`) é alinhado ao acervo local de ebooks em
-`~/Desktop/estudo/Ebooks`: 26 livros que existem de fato na biblioteca, cada um com resumo
-editorial real — 4 capítulos, 4 ideias-chave e 2 citações — distribuídos em 9 categorias e 8
-coleções temáticas. Títulos sem correspondência no acervo foram removidos.
+`~/Desktop/estudo/Ebooks`: 38 livros que existem de fato na biblioteca, cada um com resumo
+editorial real — 8 capítulos, 8 ideias-chave, 4 citações e plano de ação — distribuídos em 9
+categorias e 9 coleções temáticas. Títulos sem correspondência no acervo foram removidos.
+
+Além do catálogo base, `src/db/catalog-indicated/` reúne os 12 livros indicados na pasta
+pessoal `my_life` (aba "Livros" de `o-que-fazer.html`) que também existem no acervo, agrupados na
+coleção **Indicados para a Vida Real**.
 
 As capas reais ficam em `public/covers/<slug>.jpg` e são obtidas via Open Library:
 

@@ -1,6 +1,8 @@
 // Catálogo do Lúmina, alinhado ao acervo local em ~/Desktop/estudo/Ebooks.
 // Cada livro tem resumo editorial profundo: 8 capítulos, 8 ideias-chave, 4 citações e plano de ação.
 
+import { INDICATED_BOOKS } from '#/db/catalog-indicated'
+
 export type CatalogInsight = { title: string; body: string }
 export type CatalogChapter = { title: string; body: string }
 export type CatalogQuote = { text: string; chapterPosition: number }
@@ -2784,4 +2786,5 @@ export const CATALOG_BOOKS: CatalogBook[] = [
       'Não delegue à tecnologia decisões sobre melhorar versus curar: exija debate público antes que vire catálogo genético.',
     ],
   },
+  ...INDICATED_BOOKS,
 ]

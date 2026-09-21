@@ -88,7 +88,7 @@ describe('seedDatabase', () => {
 
     expect(second.id).toBe(first.id)
     expect(second.chapters[0].id).toBe(first.chapters[0].id)
-    expect(countBooks(db)).toBe(26)
+    expect(countBooks(db)).toBe(38)
   })
 
   it('updates legacy rows in place, preserving ids and user progress', () => {
@@ -111,12 +111,12 @@ describe('seedDatabase', () => {
 
     const summary = syncCatalog(db)
 
-    expect(summary.books).toBe(26)
+    expect(summary.books).toBe(38)
     const detail = getBookDetail(db, 'habitos-atomicos')
     expect(detail.id).toBe(legacyBook.id)
     expect(detail.title).toBe('Hábitos Atômicos')
     expect(detail.category.id).toBe(legacyCategory.id)
-    expect(countBooks(db)).toBe(26)
+    expect(countBooks(db)).toBe(38)
     expect(getLibraryItem(db, user.id, legacyBook.id)?.progressPercent).toBe(40)
   })
 

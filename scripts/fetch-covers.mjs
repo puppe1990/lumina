@@ -47,6 +47,26 @@ const BOOKS = [
   ['sobre-a-brevidade-da-vida', 'On the Shortness of Life', 'Seneca'],
   ['sapiens', 'Sapiens A Brief History of Humankind', 'Yuval Noah Harari'],
   ['homo-deus', 'Homo Deus A Brief History of Tomorrow', 'Yuval Noah Harari'],
+  ['how-to-adhd', 'How to ADHD', 'Jessica McCabe'],
+  ['your-brains-not-broken', "Your Brain's Not Broken", 'Tamara Rosier'],
+  ['you-are-not-your-brain', 'You Are Not Your Brain', 'Jeffrey Schwartz'],
+  [
+    'the-organized-mind',
+    'The Organized Mind Thinking Straight in the Age of Information Overload',
+    'Daniel Levitin',
+  ],
+  ['unfuck-your-brain', 'Unfuck Your Brain', 'Faith Harper'],
+  ['dopamine-detox', 'Dopamine Detox', 'Thibaut Meurisse'],
+  ['the-grieving-brain', 'The Grieving Brain', "Mary-Frances O'Connor"],
+  ['the-autistic-brain', 'The Autistic Brain', 'Temple Grandin'],
+  ['aba-em-casa', 'ABA em casa', 'Janaina Xavier'],
+  ['decision-sprint', 'Decision Sprint', 'Atif Rafiq'],
+  [
+    'how-to-fail-at-almost-everything',
+    'How to Fail at Almost Everything and Still Win Big',
+    'Scott Adams',
+  ],
+  ['the-four-workarounds', 'The Four Workarounds', 'Paulo Savaget'],
 ]
 
 const norm = (s) =>
