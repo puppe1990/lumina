@@ -6,6 +6,7 @@ import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
 import { FEATURES } from '#/lib/features'
+import { downloadSubscriptionReceipt } from '#/lib/receipt'
 import { formatCurrencyBRL, formatDateBRL } from '#/lib/text'
 import { cancelPlan, getPlansData, subscribeToPlan } from '#/server/plans'
 
@@ -94,6 +95,26 @@ function PlansPage() {
     }
     show('Assinatura cancelada')
     await router.invalidate()
+  }
+
+  function handleDownloadReceipt() {
+    if (!current) {
+      return
+    }
+    downloadSubscriptionReceipt({
+      customerName: data.user.name,
+      customerEmail: data.user.email,
+      planName: current.plan.name,
+      interval: current.plan.interval,
+      priceCents: current.plan.priceCents,
+      monthlyEquivalentCents: current.plan.monthlyEquivalentCents,
+      status: current.subscription.status,
+      startedAt: current.subscription.startedAt,
+      currentPeriodEnd: current.subscription.currentPeriodEnd,
+      subscriptionId: current.subscription.id,
+      isTrialing: current.isTrialing,
+    })
+    show('Recibo gerado em PNG')
   }
 
   return (
@@ -292,6 +313,14 @@ function PlansPage() {
                   Cancelar
                 </button>
               </div>
+              <button
+                type="button"
+                onClick={handleDownloadReceipt}
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-full border border-primary/30 text-[14px] font-semibold text-primary active:scale-[0.98]"
+              >
+                <Icon name="receipt_long" className="text-[20px]" />
+                Baixar recibo da compra (PNG)
+              </button>
               <button
                 type="button"
                 disabled={submitting || !selectedPlan}
