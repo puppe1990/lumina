@@ -35,6 +35,7 @@ type ExploreSearch = {
   rating?: number
   time?: BookTime
   sort?: BookSort
+  view?: 'all'
 }
 
 export const Route = createFileRoute('/explore')({
@@ -56,6 +57,7 @@ export const Route = createFileRoute('/explore')({
       sort: SORT_VALUES.includes(search.sort as BookSort)
         ? (search.sort as BookSort)
         : undefined,
+      view: search.view === 'all' ? 'all' : undefined,
     }
   },
   loaderDeps: ({ search }) => ({
@@ -64,6 +66,7 @@ export const Route = createFileRoute('/explore')({
     rating: search.rating,
     time: search.time,
     sort: search.sort,
+    view: search.view,
   }),
   loader: async ({ deps }) => {
     const range = timeRange(deps.time)
@@ -75,6 +78,7 @@ export const Route = createFileRoute('/explore')({
         minMinutes: range.min,
         maxMinutes: range.max,
         sort: deps.sort,
+        view: deps.view,
       },
     })
   },
@@ -253,9 +257,18 @@ function ExplorePage() {
       {isFiltered ? (
         <section className="flex flex-col gap-3 px-5 pt-1 pb-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-serif text-[18px] font-semibold text-on-surface">
-              {data.results?.length ?? 0} resultados
-            </h3>
+            <div>
+              <h3 className="font-serif text-[18px] font-semibold text-on-surface">
+                {search.view === 'all'
+                  ? 'Todos os resumos'
+                  : `${data.results?.length ?? 0} resultados`}
+              </h3>
+              {search.view === 'all' ? (
+                <p className="text-[13px] text-on-surface-variant">
+                  {data.results?.length ?? 0} títulos no acervo
+                </p>
+              ) : null}
+            </div>
             <Link
               to="/explore"
               search={{}}
@@ -388,6 +401,13 @@ function ExplorePage() {
                   Leituras essenciais que lideram as conversas
                 </p>
               </div>
+              <Link
+                to="/explore"
+                search={{ view: 'all' }}
+                className="shrink-0 text-[12px] font-semibold text-primary"
+              >
+                Ver todos
+              </Link>
             </div>
             <DragScroll className="no-scrollbar flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-2">
               {data.trending.map((book) => (
