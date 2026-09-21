@@ -27,6 +27,7 @@ export const getExploreData = createServerFn({ method: 'GET' })
         minMinutes: z.number().optional(),
         maxMinutes: z.number().optional(),
         sort: z.enum(SORT_VALUES).optional(),
+        view: z.enum(['all']).optional(),
       })
       .optional(),
   )
@@ -41,6 +42,7 @@ export const getExploreData = createServerFn({ method: 'GET' })
       typeof data?.maxMinutes === 'number' ||
       (sort !== undefined && sort !== DEFAULT_SORT)
     const isFiltered =
+      data?.view === 'all' ||
       hasQuery ||
       Boolean(categorySlug && categorySlug !== 'todos') ||
       hasAdvanced
