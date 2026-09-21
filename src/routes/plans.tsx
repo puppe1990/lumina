@@ -127,8 +127,10 @@ function PlansPage() {
             Acelere seu conhecimento em minutos por dia
           </h2>
           <p className="max-w-xs text-[15px] leading-relaxed text-on-surface-variant">
-            Acesso irrestrito aos {data.totalBooks} resumos essenciais em áudio
-            imersivo e texto diagramado.
+            Acesso irrestrito aos {data.totalBooks} resumos essenciais em{' '}
+            {FEATURES.audioPlayer
+              ? 'áudio imersivo e texto diagramado.'
+              : 'texto editorial diagramado.'}
           </p>
         </div>
 

@@ -89,8 +89,9 @@ function SignUpPage() {
             Comece seu ritual diário de leitura
           </h1>
           <p className="mx-auto mt-2 max-w-xs text-[15px] text-on-surface-variant">
-            Junte-se a mais de 28 mil mentes curiosas e acesse sínteses
-            essenciais em áudio e texto.
+            {FEATURES.audioPlayer
+              ? 'Junte-se a milhares de mentes curiosas e acesse sínteses essenciais em áudio e texto.'
+              : 'Junte-se a milhares de mentes curiosas e acesse sínteses essenciais em texto editorial.'}
           </p>
         </header>
 

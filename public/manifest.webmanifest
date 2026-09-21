@@ -1,7 +1,7 @@
 {
   "name": "Lúmina — Resumos de livros em 15 minutos",
   "short_name": "Lúmina",
-  "description": "Resumos em áudio e texto dos maiores livros de negócios, liderança, psicologia e desenvolvimento pessoal. Sabedoria condensada em 15 minutos por dia.",
+  "description": "Resumos editoriais dos maiores livros de negócios, liderança, psicologia e desenvolvimento pessoal. Sabedoria condensada em 15 minutos por dia.",
   "id": "/",
   "start_url": "/",
   "scope": "/",

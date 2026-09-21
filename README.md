@@ -2,7 +2,8 @@
 
 [![CI](https://github.com/puppe1990/lumina/actions/workflows/ci.yml/badge.svg)](https://github.com/puppe1990/lumina/actions/workflows/ci.yml)
 
-App de assinatura de resumos de livros em áudio e texto. Reconstrução do design "Editorial
+App de assinatura de resumos editoriais de livros (leitura em 15 minutos; player de áudio atrás de
+feature flag). Reconstrução do design "Editorial
 Intellect" (arquivos Stitch) como uma aplicação full-stack com **TanStack Start**, **SQLite** e
 **TDD com Faker**.
 

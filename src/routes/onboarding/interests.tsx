@@ -104,7 +104,7 @@ function InterestsPage() {
             <strong className="font-semibold text-primary">
               3 ou mais tópicos
             </strong>{' '}
-            para refinarmos seus resumos diários em áudio e texto de 15 minutos.
+            para refinarmos seus resumos diários de 15 minutos.
           </p>
         </div>
 

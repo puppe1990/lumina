@@ -185,54 +185,17 @@
         width: 132px;
         height: 196px;
         border-radius: 10px;
-        padding: 14px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        color: #ffffff;
+        object-fit: cover;
+        background: #e2e2e2;
         box-shadow: 0 18px 36px -12px rgba(15, 23, 42, 0.45);
-        position: relative;
-        overflow: hidden;
+        outline: 1px solid rgba(15, 23, 42, 0.08);
+        outline-offset: -1px;
       }
 
       .cover.mid {
         width: 148px;
         height: 220px;
         margin-bottom: 22px;
-      }
-
-      .cover .eyebrow {
-        font-size: 9px;
-        font-weight: 700;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        opacity: 0.85;
-      }
-
-      .cover .rule {
-        width: 26px;
-        height: 2px;
-        background: #fe932c;
-        margin-bottom: 8px;
-      }
-
-      .cover .title {
-        font-family: 'Newsreader', Georgia, serif;
-        font-size: 15px;
-        line-height: 1.12;
-        font-weight: 600;
-      }
-
-      .cover.mid .title {
-        font-size: 17px;
-      }
-
-      .cover .author {
-        margin-top: 6px;
-        font-size: 10px;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        opacity: 0.72;
       }
 
       .bottom {
@@ -295,7 +258,7 @@
           </div>
           <span class="brand-name">Lúmina</span>
         </div>
-        <span class="top-tag">Resumos em áudio &amp; texto</span>
+        <span class="top-tag">Resumos editoriais em 15 min</span>
       </div>
 
       <div class="main">
@@ -307,53 +270,34 @@
             >
           </h1>
           <p class="lead">
-            Ideias práticas de negócios, liderança e psicologia — em áudio
-            imersivo e texto editorial.
+            Ideias práticas de negócios, liderança e psicologia — em resumos
+            editoriais diagramados.
           </p>
           <div class="stats">
-            <span class="stars">★★★★★</span>
-            <span>4.9/5.0</span>
+            <span>26 títulos</span>
             <span class="dot"></span>
-            <span>+2.500 títulos</span>
+            <span>9 categorias</span>
             <span class="dot"></span>
-            <span>+28 mil leitores</span>
+            <span>15 min por dia</span>
           </div>
         </div>
 
         <div class="shelf">
-          <div
+          <img
             class="cover"
-            style="background: linear-gradient(155deg, #262e42 0%, #0b1018 96%)"
-          >
-            <span class="eyebrow">Psicologia</span>
-            <div>
-              <div class="rule"></div>
-              <div class="title">Rápido e Devagar</div>
-              <div class="author">Daniel Kahneman</div>
-            </div>
-          </div>
-          <div
+            src="../public/covers/rapido-e-devagar.jpg"
+            alt="Capa de Rápido e Devagar, de Daniel Kahneman"
+          />
+          <img
             class="cover mid"
-            style="background: linear-gradient(155deg, #064e3b 0%, #04150f 96%)"
-          >
-            <span class="eyebrow">Best-seller</span>
-            <div>
-              <div class="rule"></div>
-              <div class="title">Hábitos Atômicos</div>
-              <div class="author">James Clear</div>
-            </div>
-          </div>
-          <div
+            src="../public/covers/habitos-atomicos.jpg"
+            alt="Capa de Hábitos Atômicos, de James Clear"
+          />
+          <img
             class="cover"
-            style="background: linear-gradient(155deg, #904d00 0%, #2a1700 96%)"
-          >
-            <span class="eyebrow">Finanças</span>
-            <div>
-              <div class="rule"></div>
-              <div class="title">Psicologia Financeira</div>
-              <div class="author">Morgan Housel</div>
-            </div>
-          </div>
+            src="../public/covers/psicologia-financeira.jpg"
+            alt="Capa de Psicologia Financeira, de Morgan Housel"
+          />
         </div>
       </div>
 
@@ -367,12 +311,11 @@
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
             <path
-              d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"
+              d="M12 2l2.4 6.9L21 11l-6.6 2.1L12 20l-2.4-6.9L3 11l6.6-2.1z"
             />
           </svg>
-          Áudio narrado por especialistas
+          Curadoria por especialistas
         </span>
         <span class="item">
           <svg
