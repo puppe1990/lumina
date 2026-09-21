@@ -296,7 +296,7 @@ function PlansPage() {
                 type="button"
                 disabled={submitting || !selectedPlan}
                 onClick={handleSubscribe}
-                className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-primary-container text-[16px] font-semibold text-on-primary shadow-lg transition-transform active:scale-[0.98] disabled:opacity-70"
+                className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-primary-container text-[16px] font-semibold text-on-primary-container shadow-lg transition-transform active:scale-[0.98] disabled:opacity-70"
               >
                 <Icon name="lock_open" className="text-[20px]" />
                 Trocar para {selectedPlan?.name}
@@ -307,7 +307,7 @@ function PlansPage() {
               type="button"
               disabled={submitting}
               onClick={handleSubscribe}
-              className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-primary-container text-[16px] font-semibold text-on-primary shadow-lg transition-transform active:scale-[0.98] disabled:opacity-70"
+              className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-primary-container text-[16px] font-semibold text-on-primary-container shadow-lg transition-transform active:scale-[0.98] disabled:opacity-70"
             >
               <Icon name="lock_open" className="text-[20px]" />
               {selectedPlan && selectedPlan.trialDays > 0

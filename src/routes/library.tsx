@@ -11,6 +11,7 @@ import { DragScroll } from '#/components/drag-scroll'
 import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
+import { ThemeToggle } from '#/components/theme-toggle'
 import { useToast } from '#/components/toast'
 import { FEATURES } from '#/lib/features'
 import { listDownloads } from '#/lib/offline'
@@ -139,18 +140,21 @@ function LibraryPage() {
       <header className="pt-safe sticky top-0 z-40 bg-surface/85 px-5 py-3 backdrop-blur-xl">
         <div className="flex items-center justify-between">
           <Logo />
-          <button
-            type="button"
-            onClick={async () => {
-              await signOut()
-              await router.invalidate()
-              await router.navigate({ to: '/onboarding/welcome' })
-            }}
-            className="flex items-center gap-1 rounded-full bg-surface-container px-3 py-1.5 text-[11px] font-semibold text-on-surface-variant"
-          >
-            <Icon name="logout" className="text-[16px]" />
-            Sair
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              type="button"
+              onClick={async () => {
+                await signOut()
+                await router.invalidate()
+                await router.navigate({ to: '/onboarding/welcome' })
+              }}
+              className="flex items-center gap-1 rounded-full bg-surface-container px-3 py-1.5 text-[11px] font-semibold text-on-surface-variant"
+            >
+              <Icon name="logout" className="text-[16px]" />
+              Sair
+            </button>
+          </div>
         </div>
       </header>
 
@@ -161,7 +165,7 @@ function LibraryPage() {
             <div className="flex items-center gap-3">
               <span className="relative grid h-14 w-14 place-items-center rounded-full bg-primary text-[18px] font-bold text-on-primary">
                 {initials(data.user.name)}
-                <span className="absolute -right-0.5 -bottom-0.5 grid h-5 w-5 place-items-center rounded-full bg-primary text-on-primary ring-2 ring-white">
+                <span className="absolute -right-0.5 -bottom-0.5 grid h-5 w-5 place-items-center rounded-full bg-primary text-on-primary ring-2 ring-surface-container-lowest">
                   <Icon name="verified" filled className="text-[12px]" />
                 </span>
               </span>
