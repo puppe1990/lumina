@@ -9,6 +9,7 @@ import {
   projectAnnualBooks,
   replaceInterests,
   saveGoal as saveGoalCommand,
+  updateReminder,
 } from '#/domain/onboarding/service'
 
 import { currentUser, requireUser, toPublicUser } from './context'
@@ -68,6 +69,20 @@ export const saveGoal = createServerFn({ method: 'POST' })
         preferences,
         annualBooks: projectAnnualBooks(preferences.dailyGoalMinutes),
       }
+    }),
+  )
+
+export const saveReminder = createServerFn({ method: 'POST' })
+  .validator(
+    z.object({
+      reminderEnabled: z.boolean(),
+      reminderTime: z.string(),
+    }),
+  )
+  .handler(async ({ data }) =>
+    runAction(() => {
+      const user = requireUser()
+      return { preferences: updateReminder(db(), user.id, data) }
     }),
   )
 

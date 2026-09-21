@@ -5,6 +5,7 @@ import {
   countBooks,
   getBookDetail,
   getFeaturedBook,
+  listBooks,
   listCategories,
   listCollections,
   listTrendingBooks,
@@ -72,6 +73,13 @@ export const getCatalogStats = createServerFn({ method: 'GET' }).handler(
       totalCategories: listCategories(database).length,
       totalCollections: listCollections(database).length,
     }
+  },
+)
+
+export const getDownloadableBooks = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    requireUser()
+    return { books: listBooks(db()) }
   },
 )
 

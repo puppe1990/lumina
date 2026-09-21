@@ -1,6 +1,7 @@
-const VERSION = 'v1'
+const VERSION = 'v2'
 const SHELL_CACHE = `lumina-shell-${VERSION}`
 const RUNTIME_CACHE = `lumina-runtime-${VERSION}`
+const OFFLINE_CACHE = `lumina-offline-${VERSION}`
 const OFFLINE_URL = '/offline.html'
 
 const PRECACHE = [
@@ -26,10 +27,11 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     (async () => {
+      const keep = [SHELL_CACHE, RUNTIME_CACHE, OFFLINE_CACHE]
       const keys = await caches.keys()
       await Promise.all(
         keys
-          .filter((key) => key !== SHELL_CACHE && key !== RUNTIME_CACHE)
+          .filter((key) => !keep.includes(key))
           .map((key) => caches.delete(key)),
       )
       await self.clients.claim()
@@ -50,6 +52,10 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (request.mode === 'navigate') {
+    if (url.pathname.startsWith('/reader/')) {
+      event.respondWith(offlineFirstReader(request))
+      return
+    }
     event.respondWith(networkFirstNavigation(request))
     return
   }
@@ -58,6 +64,37 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(staleWhileRevalidate(request))
   }
 })
+
+async function offlineFirstReader(request) {
+  const cache = await caches.open(OFFLINE_CACHE)
+  const cached = await cache.match(request)
+
+  const network = fetch(request)
+    .then((response) => {
+      if (response.ok) {
+        cache.put(request, response.clone())
+      }
+      return response
+    })
+    .catch(() => undefined)
+
+  if (cached) {
+    return cached
+  }
+
+  const fresh = await network
+  if (fresh) {
+    return fresh
+  }
+
+  const runtime = await caches.match(request)
+  if (runtime) {
+    return runtime
+  }
+
+  const offline = await caches.match(OFFLINE_URL)
+  return offline ?? Response.error()
+}
 
 async function networkFirstNavigation(request) {
   try {
@@ -95,6 +132,7 @@ function isCacheableAsset(pathname) {
   return (
     pathname.startsWith('/assets/') ||
     pathname.startsWith('/icons/') ||
+    pathname.startsWith('/covers/') ||
     /\.(?:png|svg|jpe?g|webp|ico|woff2?|css|js|webmanifest)$/.test(pathname)
   )
 }

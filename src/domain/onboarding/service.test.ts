@@ -10,6 +10,7 @@ import {
   projectAnnualBooks,
   replaceInterests,
   saveGoal,
+  updateReminder,
 } from '#/domain/onboarding/service'
 import {
   createTestDb,
@@ -140,6 +141,41 @@ describe('goal', () => {
         reminderTime: '99:99',
       }),
     ).toThrowError()
+  })
+})
+
+describe('reminder', () => {
+  it('persists the reminder toggle and time', () => {
+    const user = makeUser(db)
+
+    const enabled = updateReminder(db, user.id, {
+      reminderEnabled: true,
+      reminderTime: '21:30',
+    })
+    expect(enabled.reminderEnabled).toBe(true)
+    expect(enabled.reminderTime).toBe('21:30')
+
+    const disabled = updateReminder(db, user.id, {
+      reminderEnabled: false,
+      reminderTime: '21:30',
+    })
+    expect(disabled.reminderEnabled).toBe(false)
+    expect(disabled.reminderTime).toBe('21:30')
+    expect(getPreferences(db, user.id).reminderEnabled).toBe(false)
+  })
+
+  it('rejects an invalid time when enabling reminders', () => {
+    const user = makeUser(db)
+
+    try {
+      updateReminder(db, user.id, {
+        reminderEnabled: true,
+        reminderTime: '99:99',
+      })
+      throw new Error('expected failure')
+    } catch (error) {
+      expect(isAppError(error) && error.code).toBe('VALIDATION')
+    }
   })
 })
 

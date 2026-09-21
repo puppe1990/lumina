@@ -93,9 +93,14 @@ O app é instalável e funciona offline:
 - `public/manifest.webmanifest` — nome, ícones (`any` + `maskable`), `standalone`, `theme_color` e
   atalhos para Explorar/Biblioteca.
 - `public/sw.js` — service worker com pré-cache do shell, **network-first** para navegação (com
-  fallback para `public/offline.html`) e **stale-while-revalidate** para assets estáticos.
+  fallback para `public/offline.html`), **offline-first** para `/reader/*` baixados e
+  **stale-while-revalidate** para assets estáticos.
 - `src/components/pwa-register.tsx` — registra o SW em produção e exibe o prompt de instalação
   (`beforeinstallprompt`).
+- `src/lib/offline.ts` + `/downloads` — baixa o HTML do leitor, seus assets e o chunk lazy da rota
+  para leitura sem internet (Cache API + metadados em `localStorage`).
+- `src/lib/reminders.ts` — lembrete diário: persiste em `user_preferences` e dispara notificação no
+  horário escolhido enquanto o app estiver aberto.
 
 O service worker é registrado apenas em builds de produção. Para testar:
 
