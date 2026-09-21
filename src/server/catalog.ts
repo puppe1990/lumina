@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 import {
   countBooks,
+  countBooksMatching,
   getBookDetail,
   getFeaturedBook,
   listBooks,
@@ -17,6 +18,8 @@ import { DEFAULT_SORT, SORT_VALUES } from '#/lib/filters'
 import { requireUser } from './context'
 import { db } from './db'
 
+const PAGE_SIZE = 12
+
 export const getExploreData = createServerFn({ method: 'GET' })
   .validator(
     z
@@ -28,6 +31,7 @@ export const getExploreData = createServerFn({ method: 'GET' })
         maxMinutes: z.number().optional(),
         sort: z.enum(SORT_VALUES).optional(),
         view: z.enum(['all']).optional(),
+        page: z.number().optional(),
       })
       .optional(),
   )
@@ -47,23 +51,37 @@ export const getExploreData = createServerFn({ method: 'GET' })
       Boolean(categorySlug && categorySlug !== 'todos') ||
       hasAdvanced
 
+    const filters = {
+      query: data?.query,
+      categorySlug,
+      minRating: data?.minRating,
+      minMinutes: data?.minMinutes,
+      maxMinutes: data?.maxMinutes,
+      sort,
+    }
+
+    let results = null
+    let pagination = null
+    if (isFiltered) {
+      const total = countBooksMatching(database, filters)
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+      const page = Math.min(Math.max(1, data?.page ?? 1), totalPages)
+      results = searchBooks(database, {
+        ...filters,
+        limit: PAGE_SIZE,
+        offset: (page - 1) * PAGE_SIZE,
+      })
+      pagination = { page, pageSize: PAGE_SIZE, total, totalPages }
+    }
+
     return {
       totalBooks: countBooks(database),
       categories: listCategories(database),
       featured: getFeaturedBook(database),
       trending: listTrendingBooks(database, 8),
       collections: listCollections(database),
-      results: isFiltered
-        ? searchBooks(database, {
-            query: data?.query,
-            categorySlug,
-            minRating: data?.minRating,
-            minMinutes: data?.minMinutes,
-            maxMinutes: data?.maxMinutes,
-            sort,
-            limit: 60,
-          })
-        : null,
+      results,
+      pagination,
     }
   })
 

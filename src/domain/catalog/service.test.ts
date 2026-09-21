@@ -4,6 +4,7 @@ import type { Db } from '#/db/client'
 import * as schema from '#/db/schema'
 import {
   countBooks,
+  countBooksMatching,
   getBookDetail,
   getCollection,
   getFeaturedBook,
@@ -203,6 +204,32 @@ describe('searchBooks', () => {
     expect(searchBooks(db, { minMinutes: 15 }).map((b) => b.title)).toEqual([
       'Longo',
     ])
+  })
+
+  it('counts the books matching the filters', () => {
+    const category = makeCategory(db)
+    makeBook(db, { categoryId: category.id, rating: 4.7 })
+    makeBook(db, { categoryId: category.id, rating: 4.2 })
+    makeBook(db, { categoryId: category.id, rating: 3.9 })
+
+    expect(countBooksMatching(db)).toBe(3)
+    expect(countBooksMatching(db, { minRating: 4.5 })).toBe(1)
+    expect(countBooksMatching(db, { categorySlug: 'inexistente' })).toBe(0)
+  })
+
+  it('paginates with limit and offset', () => {
+    const category = makeCategory(db)
+    makeBook(db, { categoryId: category.id, title: 'A', rating: 5 })
+    makeBook(db, { categoryId: category.id, title: 'B', rating: 4.8 })
+    makeBook(db, { categoryId: category.id, title: 'C', rating: 4.6 })
+
+    expect(searchBooks(db, { limit: 2 }).map((b) => b.title)).toEqual([
+      'A',
+      'B',
+    ])
+    expect(
+      searchBooks(db, { limit: 2, offset: 2 }).map((b) => b.title),
+    ).toEqual(['C'])
   })
 
   it('sorts by popularity, recency and reading time', () => {
