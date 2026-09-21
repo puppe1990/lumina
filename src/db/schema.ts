@@ -54,6 +54,7 @@ export const books = sqliteTable('books', {
     .default(false),
   publishedAt: integer('published_at').notNull(),
   searchIndex: text('search_index').notNull().default(''),
+  coverUrl: text('cover_url'),
 })
 
 export const bookChapters = sqliteTable('book_chapters', {

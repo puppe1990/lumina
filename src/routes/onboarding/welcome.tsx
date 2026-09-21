@@ -130,6 +130,7 @@ function WelcomePage() {
                   title={book.title}
                   author={book.author}
                   color={book.coverColor}
+                  coverUrl={book.coverUrl}
                   label={book.categoryName}
                   showAudioBadge
                   className="aspect-[2/3] w-full"

@@ -297,6 +297,7 @@ function LibraryPage() {
                     title={item.book.title}
                     author={item.book.author}
                     color={item.book.coverColor}
+                    coverUrl={item.book.coverUrl}
                     className="h-22 w-16 shrink-0 rounded-md shadow-sm"
                   />
                   <div className="min-w-0 flex-1">
@@ -356,6 +357,7 @@ function LibraryPage() {
                 title={book.title}
                 author={book.author}
                 color={book.coverColor}
+                coverUrl={book.coverUrl}
                 className="h-20 w-14 shrink-0 rounded-md shadow-sm"
               />
               <div className="min-w-0 flex-1">

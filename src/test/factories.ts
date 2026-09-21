@@ -83,6 +83,7 @@ export function makeBook(
     isFeatured: false,
     publishedAt: faker.date.past({ years: 2 }).getTime(),
     searchIndex: normalizeForSearch(`${title} ${author} ${tagline}`),
+    coverUrl: null,
     ...overrides,
   }
   db.insert(schema.books).values(book).run()

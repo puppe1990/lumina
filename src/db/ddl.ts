@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS books (
   ratings_count INTEGER NOT NULL,
   is_featured INTEGER NOT NULL DEFAULT 0,
   published_at INTEGER NOT NULL,
-  search_index TEXT NOT NULL DEFAULT ''
+  search_index TEXT NOT NULL DEFAULT '',
+  cover_url TEXT
 );
 CREATE INDEX IF NOT EXISTS books_category_id_idx ON books(category_id);
 CREATE INDEX IF NOT EXISTS books_search_index_idx ON books(search_index);

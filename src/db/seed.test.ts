@@ -53,6 +53,7 @@ describe('seedDatabase', () => {
       expect(detail.insights).toHaveLength(4)
       expect(detail.quotes).toHaveLength(2)
       expect(detail.description.length).toBeGreaterThan(80)
+      expect(detail.coverUrl).toBe(`/covers/${book.slug}.jpg`)
     }
 
     const allCollections = listCollections(db)

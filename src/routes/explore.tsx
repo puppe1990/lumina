@@ -196,6 +196,7 @@ function ExplorePage() {
                     title={data.featured.title}
                     author={data.featured.author}
                     color={data.featured.coverColor}
+                    coverUrl={data.featured.coverUrl}
                     className="h-36 w-24 shrink-0 rounded-lg shadow-xl"
                   />
                   <div className="min-w-0 flex-1">
@@ -297,7 +298,8 @@ function ExplorePage() {
                   <BookCover
                     title={first.title}
                     author={first.author}
-                    color={collection.coverColor}
+                    color={first.coverColor}
+                    coverUrl={first.coverUrl}
                     className="h-28 w-20 shrink-0 rotate-3 shadow-md"
                   />
                 </Link>

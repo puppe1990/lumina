@@ -299,6 +299,7 @@ export function syncCatalog(db: Db): SeedSummary {
       searchIndex: normalizeForSearch(
         `${book.title} ${book.author} ${book.tagline}`,
       ),
+      coverUrl: `/covers/${book.slug}.jpg`,
     }
 
     db.insert(schema.books)

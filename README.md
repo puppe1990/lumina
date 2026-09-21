@@ -54,6 +54,15 @@ O catálogo (`src/db/catalog-data.ts`) é alinhado ao acervo local de ebooks em
 editorial real — 4 capítulos, 4 ideias-chave e 2 citações — distribuídos em 9 categorias e 8
 coleções temáticas. Títulos sem correspondência no acervo foram removidos.
 
+As capas reais ficam em `public/covers/<slug>.jpg` e são obtidas via Open Library:
+
+```bash
+node scripts/fetch-covers.mjs
+```
+
+O componente `BookCover` usa a imagem quando existe e cai para uma capa gerada (gradiente da
+marca) como fallback.
+
 ## Variáveis de ambiente
 
 | Variável        | Padrão                  | Descrição                                                        |

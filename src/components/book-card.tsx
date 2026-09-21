@@ -8,6 +8,7 @@ export type BookCardData = {
   title: string
   author: string
   coverColor: string
+  coverUrl?: string | null
   categoryName: string
   categorySlug: string
   audioMinutes: number
@@ -33,6 +34,7 @@ export function BookCard({
           title={book.title}
           author={book.author}
           color={book.coverColor}
+          coverUrl={book.coverUrl}
           className="aspect-[3/4.4] w-full"
         />
         <span className="absolute bottom-2 left-2 flex items-center gap-1 rounded-full bg-surface-container-lowest/90 px-2 py-0.5 text-[10px] font-semibold text-on-surface backdrop-blur-sm">

@@ -18,7 +18,25 @@ export function createDatabase(fileName = ':memory:'): Db {
   sqlite.pragma('journal_mode = WAL')
   sqlite.pragma('foreign_keys = ON')
   sqlite.exec(ddl)
+  applyMigrations(sqlite)
   return drizzle(sqlite, { schema })
+}
+
+// Colunas adicionadas depois do schema inicial (bancos já existentes).
+const ADDED_COLUMNS: Array<
+  [table: string, column: string, definition: string]
+> = [['books', 'cover_url', 'TEXT']]
+
+function applyMigrations(sqlite: Database.Database): void {
+  for (const [table, column, definition] of ADDED_COLUMNS) {
+    const columns = sqlite
+      .prepare(`PRAGMA table_info(${table})`)
+      .all()
+      .map((row) => (row as { name: string }).name)
+    if (!columns.includes(column)) {
+      sqlite.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`)
+    }
+  }
 }
 
 let cached: Db | undefined

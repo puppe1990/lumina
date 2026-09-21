@@ -180,6 +180,7 @@ function ReaderPage() {
           title={book.title}
           author={book.author}
           color={book.coverColor}
+          coverUrl={book.coverUrl}
           className="aspect-[2/3] w-36 shrink-0 rounded-xl shadow-[0_12px_32px_rgba(0,53,39,0.18)]"
         />
         <div className="flex flex-1 flex-col items-center gap-1 text-center sm:items-start sm:text-left">
