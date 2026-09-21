@@ -9,16 +9,31 @@ import { useState } from 'react'
 import { BookCard } from '#/components/book-card'
 import { BookCover } from '#/components/book-cover'
 import { DragScroll } from '#/components/drag-scroll'
+import { FilterSheet } from '#/components/filter-sheet'
+import type { AdvancedFilters } from '#/components/filter-sheet'
 import { Icon } from '#/components/icon'
 import { Logo } from '#/components/logo'
 import { Screen } from '#/components/screen'
 import { useToast } from '#/components/toast'
 import { FEATURES } from '#/lib/features'
+import {
+  DEFAULT_SORT,
+  RATING_OPTIONS,
+  SORT_OPTIONS,
+  SORT_VALUES,
+  TIME_OPTIONS,
+  TIME_VALUES,
+  timeRange,
+} from '#/lib/filters'
+import type { BookSort, BookTime } from '#/lib/filters'
 import { getExploreData } from '#/server/catalog'
 
 type ExploreSearch = {
   category?: string
   q?: string
+  rating?: number
+  time?: BookTime
+  sort?: BookSort
 }
 
 export const Route = createFileRoute('/explore')({
@@ -27,13 +42,41 @@ export const Route = createFileRoute('/explore')({
       throw redirect({ to: '/login' })
     }
   },
-  validateSearch: (search: Record<string, unknown>): ExploreSearch => ({
-    category: typeof search.category === 'string' ? search.category : undefined,
-    q: typeof search.q === 'string' ? search.q : undefined,
+  validateSearch: (search: Record<string, unknown>): ExploreSearch => {
+    const rating = Number(search.rating)
+    return {
+      category:
+        typeof search.category === 'string' ? search.category : undefined,
+      q: typeof search.q === 'string' ? search.q : undefined,
+      rating: Number.isFinite(rating) && rating > 0 ? rating : undefined,
+      time: TIME_VALUES.includes(search.time as BookTime)
+        ? (search.time as BookTime)
+        : undefined,
+      sort: SORT_VALUES.includes(search.sort as BookSort)
+        ? (search.sort as BookSort)
+        : undefined,
+    }
+  },
+  loaderDeps: ({ search }) => ({
+    category: search.category,
+    q: search.q,
+    rating: search.rating,
+    time: search.time,
+    sort: search.sort,
   }),
-  loaderDeps: ({ search }) => ({ category: search.category, q: search.q }),
-  loader: async ({ deps }) =>
-    getExploreData({ data: { categorySlug: deps.category, query: deps.q } }),
+  loader: async ({ deps }) => {
+    const range = timeRange(deps.time)
+    return getExploreData({
+      data: {
+        categorySlug: deps.category,
+        query: deps.q,
+        minRating: deps.rating,
+        minMinutes: range.min,
+        maxMinutes: range.max,
+        sort: deps.sort,
+      },
+    })
+  },
   component: ExplorePage,
 })
 
@@ -41,8 +84,9 @@ function ExplorePage() {
   const data = Route.useLoaderData()
   const search = Route.useSearch()
   const navigate = useNavigate()
-  const { show, toast } = useToast()
+  const { toast } = useToast()
   const [query, setQuery] = useState(search.q ?? '')
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const categories = [
     { id: 'todos', slug: 'todos', name: 'Todos', icon: 'auto_awesome' },
@@ -50,11 +94,67 @@ function ExplorePage() {
   ]
   const isFiltered = Boolean(data.results)
 
+  const baseSearch = {
+    category: search.category,
+    q: search.q,
+    rating: search.rating,
+    time: search.time,
+    sort: search.sort,
+  }
+
+  const activeFilters: AdvancedFilters = {
+    rating: search.rating,
+    time: search.time,
+    sort: search.sort,
+  }
+
+  const activeTags = [
+    search.rating
+      ? (RATING_OPTIONS.find((option) => option.value === search.rating)
+          ?.label ?? `${search.rating}+`)
+      : null,
+    search.time
+      ? (TIME_OPTIONS.find((option) => option.value === search.time)?.label ??
+        null)
+      : null,
+    search.sort && search.sort !== DEFAULT_SORT
+      ? (SORT_OPTIONS.find((option) => option.value === search.sort)?.label ??
+        null)
+      : null,
+  ].filter((tag): tag is string => Boolean(tag))
+  const activeCount = activeTags.length
+
   function submitSearch(event: React.FormEvent) {
     event.preventDefault()
     navigate({
       to: '/explore',
-      search: { category: search.category, q: query.trim() || undefined },
+      search: { ...baseSearch, q: query.trim() || undefined },
+    })
+  }
+
+  function applyFilters(next: AdvancedFilters) {
+    setFiltersOpen(false)
+    navigate({
+      to: '/explore',
+      search: {
+        ...baseSearch,
+        rating: next.rating,
+        time: next.time,
+        sort: next.sort,
+      },
+    })
+  }
+
+  function clearAdvancedFilters() {
+    setFiltersOpen(false)
+    navigate({
+      to: '/explore',
+      search: {
+        ...baseSearch,
+        rating: undefined,
+        time: undefined,
+        sort: undefined,
+      },
     })
   }
 
@@ -102,11 +202,20 @@ function ExplorePage() {
           </div>
           <button
             type="button"
-            onClick={() => show('Filtros avançados em breve')}
-            aria-label="Filtrar conteúdo"
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-surface-container-high text-on-surface shadow-sm active:scale-95"
+            onClick={() => setFiltersOpen(true)}
+            aria-label="Filtros avançados"
+            className={`relative grid h-11 w-11 shrink-0 place-items-center rounded-full shadow-sm active:scale-95 ${
+              activeCount > 0
+                ? 'bg-primary text-on-primary'
+                : 'bg-surface-container-high text-on-surface'
+            }`}
           >
             <Icon name="tune" className="text-[20px]" />
+            {activeCount > 0 ? (
+              <span className="absolute -top-0.5 -right-0.5 grid h-4 w-4 place-items-center rounded-full bg-secondary text-[9px] font-bold text-on-secondary">
+                {activeCount}
+              </span>
+            ) : null}
           </button>
         </form>
       </div>
@@ -119,8 +228,8 @@ function ExplorePage() {
               key={category.id}
               to="/explore"
               search={{
+                ...baseSearch,
                 category: category.slug === 'todos' ? undefined : category.slug,
-                q: search.q,
               }}
               className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-semibold whitespace-nowrap transition-all active:scale-95 ${
                 isActive
@@ -151,6 +260,25 @@ function ExplorePage() {
               Limpar
             </Link>
           </div>
+          {activeCount > 0 ? (
+            <div className="flex flex-wrap items-center gap-1.5">
+              {activeTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full bg-secondary-fixed px-2.5 py-1 text-[11px] font-semibold text-on-secondary-fixed"
+                >
+                  {tag}
+                </span>
+              ))}
+              <button
+                type="button"
+                onClick={clearAdvancedFilters}
+                className="text-[11px] font-semibold text-on-surface-variant underline"
+              >
+                limpar filtros
+              </button>
+            </div>
+          ) : null}
           {data.results && data.results.length > 0 ? (
             <div className="grid grid-cols-2 gap-3">
               {data.results.map((book) => (
@@ -354,6 +482,13 @@ function ExplorePage() {
           </section>
         </>
       )}
+      <FilterSheet
+        open={filtersOpen}
+        value={activeFilters}
+        onClose={() => setFiltersOpen(false)}
+        onApply={applyFilters}
+        onClear={clearAdvancedFilters}
+      />
       {toast}
     </Screen>
   )

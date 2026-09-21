@@ -163,6 +163,76 @@ describe('searchBooks', () => {
     })
     expect(results.map((b) => b.title)).toEqual(['Hábitos de Riqueza'])
   })
+
+  it('filters by minimum rating', () => {
+    const category = makeCategory(db)
+    makeBook(db, { categoryId: category.id, title: 'Boa', rating: 4.7 })
+    makeBook(db, { categoryId: category.id, title: 'Média', rating: 4.2 })
+    makeBook(db, { categoryId: category.id, title: 'Baixa', rating: 3.9 })
+
+    expect(searchBooks(db, { minRating: 4.5 }).map((b) => b.title)).toEqual([
+      'Boa',
+    ])
+    expect(
+      searchBooks(db, { minRating: 4 })
+        .map((b) => b.title)
+        .sort(),
+    ).toEqual(['Boa', 'Média'])
+  })
+
+  it('filters by reading time range (min exclusive, max inclusive)', () => {
+    const category = makeCategory(db)
+    makeBook(db, { categoryId: category.id, title: 'Curto', readingMinutes: 8 })
+    makeBook(db, {
+      categoryId: category.id,
+      title: 'Médio',
+      readingMinutes: 12,
+    })
+    makeBook(db, {
+      categoryId: category.id,
+      title: 'Longo',
+      readingMinutes: 18,
+    })
+
+    expect(searchBooks(db, { maxMinutes: 10 }).map((b) => b.title)).toEqual([
+      'Curto',
+    ])
+    expect(
+      searchBooks(db, { minMinutes: 10, maxMinutes: 15 }).map((b) => b.title),
+    ).toEqual(['Médio'])
+    expect(searchBooks(db, { minMinutes: 15 }).map((b) => b.title)).toEqual([
+      'Longo',
+    ])
+  })
+
+  it('sorts by popularity, recency and reading time', () => {
+    const category = makeCategory(db)
+    makeBook(db, {
+      categoryId: category.id,
+      title: 'Popular',
+      ratingsCount: 9000,
+      readingMinutes: 20,
+      publishedAt: 1,
+    })
+    makeBook(db, {
+      categoryId: category.id,
+      title: 'Recente',
+      ratingsCount: 10,
+      readingMinutes: 15,
+      publishedAt: 9_999,
+    })
+    makeBook(db, {
+      categoryId: category.id,
+      title: 'Rápido',
+      ratingsCount: 10,
+      readingMinutes: 5,
+      publishedAt: 5,
+    })
+
+    expect(searchBooks(db, { sort: 'popular' })[0].title).toBe('Popular')
+    expect(searchBooks(db, { sort: 'recent' })[0].title).toBe('Recente')
+    expect(searchBooks(db, { sort: 'quickest' })[0].title).toBe('Rápido')
+  })
 })
 
 describe('collections', () => {
