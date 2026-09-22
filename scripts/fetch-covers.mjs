@@ -67,6 +67,7 @@ const BOOKS = [
     'Scott Adams',
   ],
   ['the-four-workarounds', 'The Four Workarounds', 'Paulo Savaget'],
+  ['the-heartmath-solution', 'The HeartMath Solution', 'Doc Childre'],
 ]
 
 const norm = (s) =>
