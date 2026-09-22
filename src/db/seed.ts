@@ -156,12 +156,12 @@ const COLLECTIONS: CollectionDef[] = [
   },
   {
     slug: 'ciencia-da-vida-longa',
-    eyebrow: '3 Obras de Saúde',
+    eyebrow: '4 Obras de Saúde',
     title: 'Ciência da Vida Longa',
-    description: 'Sono, respiração e metabolismo para viver mais e melhor.',
+    description: 'Sono, respiração, metabolismo e coerência cardíaca.',
     icon: 'spa',
     color: '#064e3b',
-    books: ['outlive', 'respire', 'a-dieta-da-mente'],
+    books: ['outlive', 'respire', 'a-dieta-da-mente', 'the-heartmath-solution'],
   },
   {
     slug: 'startups-e-futuro',
