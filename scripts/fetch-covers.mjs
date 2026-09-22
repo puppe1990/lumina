@@ -68,6 +68,19 @@ const BOOKS = [
   ],
   ['the-four-workarounds', 'The Four Workarounds', 'Paulo Savaget'],
   ['the-heartmath-solution', 'The HeartMath Solution', 'Doc Childre'],
+  ['the-resilience-workbook', 'The Resilience Workbook', 'Glenn Schiraldi'],
+  [
+    'breaking-the-habit-of-being-yourself',
+    'Breaking the Habit of Being Yourself',
+    'Joe Dispenza',
+  ],
+  ['mind-to-matter', 'Mind to Matter', 'Dawson Church'],
+  ['mind-magic', 'Mind Magic The Neuroscience of Manifestation', 'James Doty'],
+  [
+    'the-body-keeps-the-score',
+    'The Body Keeps the Score',
+    'Bessel van der Kolk',
+  ],
 ]
 
 const norm = (s) =>
