@@ -2,6 +2,7 @@
 // Cada livro tem resumo editorial profundo: 8 capítulos, 8 ideias-chave, 4 citações e plano de ação.
 
 import { ADDITIONAL_BOOKS } from '#/db/catalog-additions'
+import { CLASSIC_BOOKS } from '#/db/catalog-classicos'
 import { INDICATED_BOOKS } from '#/db/catalog-indicated'
 
 export type CatalogInsight = { title: string; body: string }
@@ -2789,4 +2790,5 @@ export const CATALOG_BOOKS: CatalogBook[] = [
   },
   ...INDICATED_BOOKS,
   ...ADDITIONAL_BOOKS,
+  ...CLASSIC_BOOKS,
 ]
