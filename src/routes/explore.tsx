@@ -249,24 +249,28 @@ function ExplorePage() {
       <DragScroll className="no-scrollbar flex w-full items-center gap-2 overflow-x-auto px-5 py-3">
         {categories.map((category) => {
           const isActive = (search.category ?? 'todos') === category.slug
+          const className = `flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-semibold whitespace-nowrap transition-all active:scale-95 ${
+            isActive
+              ? 'bg-primary text-on-primary shadow-sm'
+              : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
+          }`
+
+          if (category.slug === 'todos') {
+            return (
+              <Link key={category.id} to="/books" className={className}>
+                <Icon name="auto_awesome" className="text-[15px]" />
+                {category.name}
+              </Link>
+            )
+          }
+
           return (
             <Link
               key={category.id}
               to="/explore"
-              search={{
-                ...baseSearch,
-                category: category.slug === 'todos' ? undefined : category.slug,
-                view: category.slug === 'todos' ? 'all' : undefined,
-              }}
-              className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-[12px] font-semibold whitespace-nowrap transition-all active:scale-95 ${
-                isActive
-                  ? 'bg-primary text-on-primary shadow-sm'
-                  : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container'
-              }`}
+              search={{ ...baseSearch, category: category.slug }}
+              className={className}
             >
-              {category.slug === 'todos' ? (
-                <Icon name="auto_awesome" className="text-[15px]" />
-              ) : null}
               {category.name}
             </Link>
           )
@@ -445,6 +449,13 @@ function ExplorePage() {
                   Leituras essenciais que lideram as conversas
                 </p>
               </div>
+              <Link
+                to="/books"
+                className="flex items-center gap-1 text-[12px] font-semibold text-primary"
+              >
+                Ver todos
+                <Icon name="arrow_forward" className="text-[15px]" />
+              </Link>
             </div>
             <DragScroll className="no-scrollbar flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-5 pb-2">
               {data.trending.map((book) => (
@@ -475,8 +486,8 @@ function ExplorePage() {
               return (
                 <Link
                   key={collection.id}
-                  to="/reader/$bookId"
-                  params={{ bookId: first.id }}
+                  to="/collection/$collectionId"
+                  params={{ collectionId: collection.slug }}
                   className="flex items-center justify-between rounded-xl bg-surface-container-lowest p-4 shadow-sm active:scale-[0.99]"
                 >
                   <div className="z-10 flex max-w-[62%] flex-col">

@@ -11,6 +11,7 @@ dist-ssr
 .vinxi
 __unconfig*
 todos.json
+.playwright-cli
 
 # Local SQLite database
 data/

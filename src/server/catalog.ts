@@ -5,6 +5,7 @@ import {
   countBooks,
   countBooksMatching,
   getBookDetail,
+  getCollection,
   getFeaturedBook,
   listBooks,
   listCategories,
@@ -83,6 +84,50 @@ export const getExploreData = createServerFn({ method: 'GET' })
       results,
       pagination,
     }
+  })
+
+export const getAllBooks = createServerFn({ method: 'GET' })
+  .validator(
+    z
+      .object({
+        categorySlug: z.string().optional(),
+        query: z.string().optional(),
+        sort: z.enum(SORT_VALUES).optional(),
+        page: z.number().optional(),
+      })
+      .optional(),
+  )
+  .handler(async ({ data }) => {
+    const database = db()
+    const filters = {
+      query: data?.query,
+      categorySlug: data?.categorySlug,
+      sort: data?.sort,
+    }
+    const total = countBooksMatching(database, filters)
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+    const page = Math.min(Math.max(1, data?.page ?? 1), totalPages)
+    const books = searchBooks(database, {
+      ...filters,
+      limit: PAGE_SIZE,
+      offset: (page - 1) * PAGE_SIZE,
+    })
+
+    return {
+      total,
+      page,
+      pageSize: PAGE_SIZE,
+      totalPages,
+      books,
+      categories: listCategories(database),
+    }
+  })
+
+export const getCollectionCatalog = createServerFn({ method: 'GET' })
+  .validator(z.object({ slug: z.string().min(1) }))
+  .handler(async ({ data }) => {
+    const database = db()
+    return { collection: getCollection(database, data.slug) }
   })
 
 export const getCatalogStats = createServerFn({ method: 'GET' }).handler(

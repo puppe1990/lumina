@@ -81,6 +81,26 @@ const BOOKS = [
     'The Body Keeps the Score',
     'Bessel van der Kolk',
   ],
+  ['the-power-of-regret', 'The Power of Regret', 'Daniel H. Pink'],
+  [
+    'four-thousand-weeks',
+    'Four Thousand Weeks Time Management for Mortals',
+    'Oliver Burkeman',
+  ],
+  [
+    'the-almanack-of-naval-ravikant',
+    'The Almanack of Naval Ravikant',
+    'Eric Jorgenson',
+  ],
+  ['mans-search-for-meaning', "Man's Search for Meaning", 'Viktor Frankl'],
+  ['how-to-be-resilient', 'How to Be Resilient', 'Gail Gazelle'],
+  ['the-daily-laws', 'The Daily Laws', 'Robert Greene'],
+  [
+    'the-subtle-art-of-not-giving-a-fuck',
+    'The Subtle Art of Not Giving a Fuck',
+    'Mark Manson',
+  ],
+  ['the-life-brief', 'The Life Brief', 'Bonnie Wan'],
 ]
 
 const norm = (s) =>
