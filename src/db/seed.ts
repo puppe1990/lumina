@@ -182,6 +182,29 @@ const COLLECTIONS: CollectionDef[] = [
     books: ['sapiens', 'homo-deus'],
   },
   {
+    slug: 'classicos-essenciais',
+    eyebrow: '12 Obras Essenciais',
+    title: 'Clássicos Essenciais',
+    description:
+      'Sêneca a Naval: doze livros que atravessam estoicismo, hábitos, arrependimento, resiliência e dinheiro para pensar tempo, escolha e sentido.',
+    icon: 'auto_stories',
+    color: '#4c1d95',
+    books: [
+      'sobre-a-brevidade-da-vida',
+      'os-7-habitos',
+      'the-power-of-regret',
+      'four-thousand-weeks',
+      'habitos-atomicos',
+      'the-almanack-of-naval-ravikant',
+      'deep-work',
+      'mans-search-for-meaning',
+      'how-to-be-resilient',
+      'the-daily-laws',
+      'the-subtle-art-of-not-giving-a-fuck',
+      'the-life-brief',
+    ],
+  },
+  {
     slug: 'indicados-vida-real',
     eyebrow: '12 Obras do Acervo',
     title: 'Indicados para a Vida Real',
@@ -245,7 +268,7 @@ export type SeedSummary = {
 }
 
 // Bump quando a lógica/estrutura do seed mudar (força o re-sync em produção).
-const SEED_VERSION = '3'
+const SEED_VERSION = '4'
 
 export const CATALOG_VERSION = createHash('sha1')
   .update(
