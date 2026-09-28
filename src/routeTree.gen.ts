@@ -10,12 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BooksRouteImport } from './routes/books'
 import { Route as DownloadsRouteImport } from './routes/downloads'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlansRouteImport } from './routes/plans'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as CollectionCollectionIdRouteImport } from './routes/collection/$collectionId'
 import { Route as OnboardingGoalRouteImport } from './routes/onboarding/goal'
 import { Route as OnboardingInterestsRouteImport } from './routes/onboarding/interests'
 import { Route as OnboardingOfferRouteImport } from './routes/onboarding/offer'
@@ -26,6 +28,11 @@ import { Route as ReaderBookIdRouteImport } from './routes/reader/$bookId'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BooksRoute = BooksRouteImport.update({
+  id: '/books',
+  path: '/books',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DownloadsRoute = DownloadsRouteImport.update({
@@ -56,6 +63,11 @@ const PlansRoute = PlansRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectionCollectionIdRoute = CollectionCollectionIdRouteImport.update({
+  id: '/collection/$collectionId',
+  path: '/collection/$collectionId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingGoalRoute = OnboardingGoalRouteImport.update({
@@ -91,12 +103,14 @@ const ReaderBookIdRoute = ReaderBookIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/books': typeof BooksRoute
   '/downloads': typeof DownloadsRoute
   '/explore': typeof ExploreRoute
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/plans': typeof PlansRoute
   '/signup': typeof SignupRoute
+  '/collection/$collectionId': typeof CollectionCollectionIdRoute
   '/onboarding/goal': typeof OnboardingGoalRoute
   '/onboarding/interests': typeof OnboardingInterestsRoute
   '/onboarding/offer': typeof OnboardingOfferRoute
@@ -106,12 +120,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/books': typeof BooksRoute
   '/downloads': typeof DownloadsRoute
   '/explore': typeof ExploreRoute
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/plans': typeof PlansRoute
   '/signup': typeof SignupRoute
+  '/collection/$collectionId': typeof CollectionCollectionIdRoute
   '/onboarding/goal': typeof OnboardingGoalRoute
   '/onboarding/interests': typeof OnboardingInterestsRoute
   '/onboarding/offer': typeof OnboardingOfferRoute
@@ -122,12 +138,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/books': typeof BooksRoute
   '/downloads': typeof DownloadsRoute
   '/explore': typeof ExploreRoute
   '/library': typeof LibraryRoute
   '/login': typeof LoginRoute
   '/plans': typeof PlansRoute
   '/signup': typeof SignupRoute
+  '/collection/$collectionId': typeof CollectionCollectionIdRoute
   '/onboarding/goal': typeof OnboardingGoalRoute
   '/onboarding/interests': typeof OnboardingInterestsRoute
   '/onboarding/offer': typeof OnboardingOfferRoute
@@ -139,12 +157,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/books'
     | '/downloads'
     | '/explore'
     | '/library'
     | '/login'
     | '/plans'
     | '/signup'
+    | '/collection/$collectionId'
     | '/onboarding/goal'
     | '/onboarding/interests'
     | '/onboarding/offer'
@@ -154,12 +174,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/books'
     | '/downloads'
     | '/explore'
     | '/library'
     | '/login'
     | '/plans'
     | '/signup'
+    | '/collection/$collectionId'
     | '/onboarding/goal'
     | '/onboarding/interests'
     | '/onboarding/offer'
@@ -169,12 +191,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/books'
     | '/downloads'
     | '/explore'
     | '/library'
     | '/login'
     | '/plans'
     | '/signup'
+    | '/collection/$collectionId'
     | '/onboarding/goal'
     | '/onboarding/interests'
     | '/onboarding/offer'
@@ -185,12 +209,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BooksRoute: typeof BooksRoute
   DownloadsRoute: typeof DownloadsRoute
   ExploreRoute: typeof ExploreRoute
   LibraryRoute: typeof LibraryRoute
   LoginRoute: typeof LoginRoute
   PlansRoute: typeof PlansRoute
   SignupRoute: typeof SignupRoute
+  CollectionCollectionIdRoute: typeof CollectionCollectionIdRoute
   OnboardingGoalRoute: typeof OnboardingGoalRoute
   OnboardingInterestsRoute: typeof OnboardingInterestsRoute
   OnboardingOfferRoute: typeof OnboardingOfferRoute
@@ -206,6 +232,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/books': {
+      id: '/books'
+      path: '/books'
+      fullPath: '/books'
+      preLoaderRoute: typeof BooksRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/downloads': {
@@ -248,6 +281,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collection/$collectionId': {
+      id: '/collection/$collectionId'
+      path: '/collection/$collectionId'
+      fullPath: '/collection/$collectionId'
+      preLoaderRoute: typeof CollectionCollectionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding/goal': {
@@ -297,12 +337,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BooksRoute: BooksRoute,
   DownloadsRoute: DownloadsRoute,
   ExploreRoute: ExploreRoute,
   LibraryRoute: LibraryRoute,
   LoginRoute: LoginRoute,
   PlansRoute: PlansRoute,
   SignupRoute: SignupRoute,
+  CollectionCollectionIdRoute: CollectionCollectionIdRoute,
   OnboardingGoalRoute: OnboardingGoalRoute,
   OnboardingInterestsRoute: OnboardingInterestsRoute,
   OnboardingOfferRoute: OnboardingOfferRoute,
