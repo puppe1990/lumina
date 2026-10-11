@@ -177,6 +177,9 @@ npm test
 
 ## Recursos
 
+- Exportação do resumo completo em EPUB ou PDF pelos botões no leitor, incluindo capítulos,
+  ideias-chave, citações e plano de ação. Os arquivos são gerados no navegador; o EPUB inclui
+  sumário navegável e o PDF usa formato A4 com paginação e fontes para acentos em português.
 - Busca de resumos insensível a acentos e maiúsculas (índice `search_index` normalizado).
 - Áudio player simulado com velocidade, scrubber, progresso persistido e "Grifar" citação.
 - Biblioteca com trilha em andamento, salvos, concluídos, destaques e recomendações por interesse.

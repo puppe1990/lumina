@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { BookCover } from '#/components/book-cover'
 import { Icon } from '#/components/icon'
 import { Screen } from '#/components/screen'
+import { SummaryExport } from '#/components/summary-export'
 import { useToast } from '#/components/toast'
 import { FEATURES } from '#/lib/features'
 import { formatDuration } from '#/lib/text'
@@ -230,6 +231,8 @@ function ReaderPage() {
           </div>
         </div>
       </div>
+
+      <SummaryExport book={book} />
 
       {book.forWho ? (
         <div className="mb-4 px-5">
